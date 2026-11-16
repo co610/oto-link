@@ -1,0 +1,930 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ライブを告知する - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .live-form-group {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e5e1;
+    }
+
+    .live-form-group h3 {
+      margin: 0 0 16px;
+      font-size: 19px;
+    }
+
+    .live-form-help {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .live-login-box {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 32px 24px;
+      border: 1px solid #eadfc5;
+      background: #fffdf2;
+      text-align: center;
+    }
+
+    .live-login-box p {
+      line-height: 1.8;
+    }
+
+    .live-login-box a {
+      display: inline-block;
+      margin-top: 12px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    /* ヘッダーの探すメニュー */
+    header .global-search-menu {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    header .global-search-menu > summary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 13px;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    header .global-search-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    header .global-search-menu[open] {
+      z-index: 1000;
+    }
+
+    header .global-search-panel {
+      position: absolute !important;
+      top: calc(100% + 10px) !important;
+      left: 0 !important;
+      display: block !important;
+      width: 430px !important;
+      max-width: calc(100vw - 40px) !important;
+      box-sizing: border-box;
+      padding: 10px !important;
+      background: #fff !important;
+      border: 1px solid #deded9 !important;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1) !important;
+      z-index: 1001;
+    }
+
+    header .global-search-card {
+      display: grid !important;
+      grid-template-columns: 44px minmax(0, 1fr) 20px !important;
+      align-items: center;
+      gap: 12px;
+      min-height: 76px;
+      box-sizing: border-box;
+      padding: 14px 15px !important;
+      color: #171717;
+      background: #fff;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    header .global-search-card:hover {
+      background: #f5f5f2 !important;
+      border-color: #e1e1dc !important;
+      transform: translateX(2px);
+    }
+
+    header .global-search-icon {
+      width: 42px;
+      height: 42px;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      background: #eeeeeb;
+      font-size: 21px;
+    }
+
+    header .global-search-text {
+      display: block !important;
+      min-width: 0;
+    }
+
+    header .global-search-text strong {
+      display: block !important;
+      margin-bottom: 2px;
+      font-size: 14px;
+      white-space: normal;
+    }
+
+    header .global-search-text small {
+      display: block !important;
+      color: #858585;
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: normal;
+    }
+
+    header .global-search-arrow {
+      display: block !important;
+      color: #888;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .live-login-box {
+        padding: 24px 16px;
+      }
+
+      header .global-search-panel {
+        width: 430px !important;
+        max-width: calc(100vw - 24px) !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す
+        <span class="menu-chevron">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブ情報やイベントを見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount">
+    <a href="login.html?returnTo=live-create.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>自分たちのライブを告知する</h1>
+  <p>開催日時や会場、出演者などの情報を共有しよう。</p>
+</section>
+
+<section class="post-section">
+  <div class="post-form-box" id="postArea">
+    <p>読み込み中...</p>
+  </div>
+</section>
+
+<div class="section" style="text-align:center;margin-top:25px;">
+  <a href="live.html">← ライブ一覧に戻る</a>
+</div>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+/* HTMLエスケープ */
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* URLの安全性チェック */
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.href
+      : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+/* 時間の入力形式を統一 */
+function normalizeOptionalTime(value, label) {
+  let time = String(value || "").trim();
+
+  if (!time) return "";
+
+  time = time
+    .replace(/[０-９]/g, function(char) {
+      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(/：/g, ":");
+
+  let match = time.match(/^(\d{1,2}):(\d{2})$/);
+
+  if (!match && /^\d{3,4}$/.test(time)) {
+    const hourPart = time.length === 3
+      ? time.slice(0, 1)
+      : time.slice(0, 2);
+
+    const minutePart = time.slice(-2);
+    match = [time, hourPart, minutePart];
+  }
+
+  if (!match) {
+    throw new Error(
+      label + "は「18:30」または「1830」の形式で入力してください。"
+    );
+  }
+
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    throw new Error(
+      label + "は00:00〜23:59の範囲で入力してください。"
+    );
+  }
+
+  return String(hours).padStart(2, "0") + ":" +
+    String(minutes).padStart(2, "0");
+}
+
+/* ヘッダーのログイン表示 */
+async function renderHeaderAccount() {
+  const area = document.getElementById("headerAccount");
+
+  if (!area) return;
+
+  const user = await window.OTOAuth.getCurrentUser();
+
+  if (user) {
+    let userName = "プロフィール未設定";
+
+    const profileResult = await window.OTO_SUPABASE
+      .from("profiles")
+      .select("id, data")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (
+      !profileResult.error &&
+      profileResult.data?.data?.name
+    ) {
+      userName = profileResult.data.data.name;
+    } else {
+      userName =
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        userName;
+    }
+
+    area.innerHTML = `
+      <a href="profile.html">${escapeHtml(userName)}</a>
+      <button type="button" id="logoutButton" class="logout-button">ログアウト</button>
+    `;
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async function() {
+        try {
+          await window.OTOAuth.logout();
+          window.location.href = "index.html";
+        } catch (error) {
+          console.error("ログアウトエラー:", error);
+          alert("ログアウトできませんでした。もう一度お試しください。");
+        }
+      });
+
+  } else {
+    area.innerHTML = `
+      <a href="login.html?returnTo=live-create.html">ログイン</a>
+      <a href="signup.html">新規登録</a>
+    `;
+  }
+}
+
+/* ログインしていない場合 */
+function renderLoginRequired() {
+  const postArea = document.getElementById("postArea");
+
+  postArea.innerHTML = `
+    <div class="live-login-box">
+      <h2>ログインが必要です</h2>
+      <p>
+        ライブ・イベントの情報を告知するにはログインしてください。
+        ライブ一覧や詳細の閲覧は、ログインしなくてもできます。
+      </p>
+      <a
+        href="login.html?returnTo=live-create.html"
+        class="profile-button post-login-button"
+      >ログインして投稿する</a>
+      <p class="form-link">
+        アカウントがない場合は
+        <a href="signup.html">新規登録</a>
+      </p>
+    </div>
+  `;
+}
+
+/* 投稿フォーム */
+function renderLiveForm() {
+  const postArea = document.getElementById("postArea");
+
+  postArea.innerHTML = `
+    <div class="post-form-box-inner">
+      <h2>自分たちのライブを告知する</h2>
+
+      <p class="post-note">
+        自分たちが開催するライブ・イベントの情報を告知できます。
+        開催日時、会場、出演者、観覧・チケット情報などを入力してください。
+        任意の項目は空欄でも投稿できます。
+        出演者や協力者を募集する場合は、
+        <a href="member.html">メンバー・協力者を探す</a>
+        から投稿してください。
+      </p>
+
+      <form id="livePostForm">
+        <div class="live-form-group">
+          <h3>基本情報</h3>
+
+          <label>
+            ライブ名・イベント名
+            <input
+              type="text"
+              id="liveName"
+              required
+              maxlength="150"
+              placeholder="例：高校生ライブ OTO LINK"
+            >
+          </label>
+
+          <label>
+            開催日
+            <input type="date" id="liveDate" required>
+          </label>
+
+          <label>
+            開場時間（任意）
+            <input
+              type="text"
+              id="liveOpenTime"
+              placeholder="例：18:00"
+              maxlength="5"
+              autocomplete="off"
+            >
+          </label>
+
+          <label>
+            開演時間（任意）
+            <input
+              type="text"
+              id="liveStartTime"
+              placeholder="例：18:30"
+              maxlength="5"
+              autocomplete="off"
+            >
+          </label>
+
+          <label>
+            終演予定時間（任意）
+            <input
+              type="text"
+              id="liveEndTime"
+              placeholder="例：20:30"
+              maxlength="5"
+              autocomplete="off"
+            >
+          </label>
+
+          <p class="live-form-help">
+            時間は「18:30」のように直接入力できます。
+            「1830」のような4桁入力にも対応しています。
+          </p>
+
+          <label>
+            開催状況
+            <select id="liveStatus" required>
+              <option value="開催予定" selected>開催予定</option>
+              <option value="観覧・チケット受付中">観覧・チケット受付中</option>
+              <option value="受付終了">受付終了</option>
+              <option value="開催終了">開催終了</option>
+              <option value="延期">延期</option>
+              <option value="中止">中止</option>
+            </select>
+          </label>
+
+          <label>
+            ジャンル・イベントの種類（任意）
+            <input
+              type="text"
+              id="liveGenre"
+              placeholder="例：ロック、弾き語り、学生ライブ"
+            >
+          </label>
+
+          <label>
+            出演者・出演アーティスト（任意）
+            <textarea
+              id="livePerformers"
+              placeholder="出演者名や出演順など"
+            ></textarea>
+          </label>
+
+          <label>
+            ライブの説明・イベント内容
+            <textarea
+              id="liveDescription"
+              required
+              maxlength="10000"
+              placeholder="どんなライブなのか、何を楽しめるのかを書こう"
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="live-form-group">
+          <h3>会場・観覧情報</h3>
+
+          <label>
+            会場名・場所
+            <input
+              type="text"
+              id="livePlace"
+              required
+              placeholder="例：岐阜市文化センター"
+            >
+          </label>
+
+          <label>
+            会場住所（任意）
+            <input
+              type="text"
+              id="liveAddress"
+              placeholder="例：岐阜県岐阜市○○"
+            >
+          </label>
+
+          <label>
+            最寄り駅・アクセス（任意）
+            <textarea
+              id="liveAccess"
+              placeholder="最寄り駅、徒歩時間、駐車場など"
+            ></textarea>
+          </label>
+
+          <label>
+            観覧対象・参加条件（任意）
+            <input
+              type="text"
+              id="liveAudience"
+              placeholder="例：一般観覧可、高校生限定"
+            >
+          </label>
+
+          <label>
+            年齢制限（任意）
+            <input
+              type="text"
+              id="liveAgeLimit"
+              placeholder="例：年齢制限なし、18歳以上"
+            >
+          </label>
+        </div>
+
+        <div class="live-form-group">
+          <h3>チケット情報</h3>
+
+          <label>
+            入場料金（任意）
+            <input
+              type="text"
+              id="liveTicketPrice"
+              placeholder="例：前売1,500円／当日2,000円"
+            >
+          </label>
+
+          <label>
+            予約・購入方法（任意）
+            <textarea
+              id="liveTicketMethod"
+              placeholder="予約方法、支払い方法、受付期間など"
+            ></textarea>
+          </label>
+
+          <label>
+            チケット予約・購入URL（任意）
+            <input
+              type="url"
+              id="liveTicketUrl"
+              inputmode="url"
+              placeholder="https://..."
+            >
+          </label>
+        </div>
+
+        <div class="live-form-group">
+          <h3>主催者・問い合わせ先</h3>
+
+          <label>
+            主催者名（任意）
+            <input type="text" id="liveOrganizer">
+          </label>
+
+          <label>
+            問い合わせ先（任意）
+            <input
+              type="text"
+              id="liveContact"
+              placeholder="メールアドレス、問い合わせ窓口など"
+            >
+          </label>
+
+          <label>
+            公式サイトURL（任意）
+            <input
+              type="url"
+              id="liveOfficialUrl"
+              inputmode="url"
+              placeholder="https://..."
+            >
+          </label>
+
+          <label>
+            公式SNS・告知URL（任意）
+            <input
+              type="url"
+              id="liveSocialUrl"
+              inputmode="url"
+              placeholder="https://..."
+            >
+          </label>
+        </div>
+
+        <div class="live-form-group">
+          <h3>当日の案内</h3>
+
+          <label>
+            音響・会場設備（任意）
+            <textarea
+              id="liveEquipment"
+              placeholder="マイク、アンプ、ドラムセット、PA設備など"
+            ></textarea>
+          </label>
+
+          <label>
+            グッズ・物販情報（任意）
+            <textarea
+              id="liveGoods"
+              placeholder="物販の有無、販売するものなど"
+            ></textarea>
+          </label>
+
+          <label>
+            物販時間（任意）
+            <input
+              type="text"
+              id="liveGoodsTime"
+              placeholder="例：開場後、終演後"
+            >
+          </label>
+
+          <label>
+            お知らせ・変更情報（任意）
+            <textarea
+              id="liveNotice"
+              placeholder="追加情報、変更、当日の連絡など"
+            ></textarea>
+          </label>
+
+          <label>
+            注意事項・備考（任意）
+            <textarea
+              id="liveNotes"
+              placeholder="撮影可否、再入場、持ち物など"
+            ></textarea>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="profile-button"
+          id="submitLive"
+        >ライブを告知する</button>
+      </form>
+    </div>
+  `;
+
+  setupLiveForm();
+}
+
+/* 投稿フォームの処理 */
+function setupLiveForm() {
+  const form = document.getElementById("livePostForm");
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const submitButton = document.getElementById("submitLive");
+
+    if (submitButton.disabled) return;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "入力内容を確認しています…";
+
+    try {
+      /* ログイン状態の確認 */
+      const authenticatedUser = await window.OTOAuth.requireUser();
+
+      if (!authenticatedUser) {
+        renderLoginRequired();
+        return;
+      }
+
+      /* URLの確認 */
+      const urlFields = [
+        ["liveTicketUrl", "チケット予約・購入URL"],
+        ["liveOfficialUrl", "公式サイトURL"],
+        ["liveSocialUrl", "公式SNS・告知URL"]
+      ];
+
+      const checkedUrls = {};
+
+      for (const [id, label] of urlFields) {
+        const value = document.getElementById(id).value.trim();
+
+        if (!value) {
+          checkedUrls[id] = "";
+          continue;
+        }
+
+        const safeUrl = safeHttpUrl(value);
+
+        if (!safeUrl) {
+          alert(
+            label +
+            "は https:// または http:// から始まるURLを入力してください。"
+          );
+
+          document.getElementById(id).focus();
+          return;
+        }
+
+        checkedUrls[id] = safeUrl;
+      }
+
+      /* 時間の確認 */
+      let openTime;
+      let startTime;
+      let endTime;
+
+      try {
+        openTime = normalizeOptionalTime(
+          document.getElementById("liveOpenTime").value,
+          "開場時間"
+        );
+
+        startTime = normalizeOptionalTime(
+          document.getElementById("liveStartTime").value,
+          "開演時間"
+        );
+
+        endTime = normalizeOptionalTime(
+          document.getElementById("liveEndTime").value,
+          "終演予定時間"
+        );
+      } catch (error) {
+        alert(error.message);
+
+        const timeIds = [
+          "liveOpenTime",
+          "liveStartTime",
+          "liveEndTime"
+        ];
+
+        const invalidTimeId = timeIds.find(function(id) {
+          const input = document.getElementById(id);
+
+          if (!input.value.trim()) return false;
+
+          try {
+            normalizeOptionalTime(input.value, "時間");
+            return false;
+          } catch (validationError) {
+            return true;
+          }
+        });
+
+        if (invalidTimeId) {
+          document.getElementById(invalidTimeId).focus();
+        }
+
+        return;
+      }
+
+      /* 保存直前にログインユーザーを再確認 */
+      const activeUser = await window.OTOAuth.getCurrentUser();
+
+      if (!activeUser) {
+        renderLoginRequired();
+        return;
+      }
+
+      if (activeUser.id !== authenticatedUser.id) {
+        alert(
+          "ログイン中のアカウントが変わりました。" +
+          "内容を確認して、もう一度投稿してください。"
+        );
+        return;
+      }
+
+      /* 投稿データ */
+      const postId = makeId();
+
+      const post = {
+        id: postId,
+        userId: activeUser.id,
+
+        name: document.getElementById("liveName").value.trim(),
+        date: document.getElementById("liveDate").value,
+        openTime: openTime,
+        startTime: startTime,
+        endTime: endTime,
+        status: document.getElementById("liveStatus").value,
+        genre: document.getElementById("liveGenre").value.trim(),
+        performers: document.getElementById("livePerformers").value.trim(),
+        description: document.getElementById("liveDescription").value.trim(),
+
+        place: document.getElementById("livePlace").value.trim(),
+        address: document.getElementById("liveAddress").value.trim(),
+        access: document.getElementById("liveAccess").value.trim(),
+        audience: document.getElementById("liveAudience").value.trim(),
+        ageLimit: document.getElementById("liveAgeLimit").value.trim(),
+
+        ticketPrice: document.getElementById("liveTicketPrice").value.trim(),
+        ticketMethod: document.getElementById("liveTicketMethod").value.trim(),
+        ticketUrl: checkedUrls.liveTicketUrl,
+
+        organizer: document.getElementById("liveOrganizer").value.trim(),
+        contact: document.getElementById("liveContact").value.trim(),
+        officialUrl: checkedUrls.liveOfficialUrl,
+        socialUrl: checkedUrls.liveSocialUrl,
+
+        equipment: document.getElementById("liveEquipment").value.trim(),
+        goods: document.getElementById("liveGoods").value.trim(),
+        goodsTime: document.getElementById("liveGoodsTime").value.trim(),
+        notice: document.getElementById("liveNotice").value.trim(),
+        notes: document.getElementById("liveNotes").value.trim(),
+
+        createdAt: new Date().toISOString()
+      };
+
+      /* Supabaseへ保存 */
+      submitButton.textContent = "告知しています…";
+
+      const result = await window.OTO_SUPABASE
+        .from("posts")
+        .insert({
+          id: postId,
+          user_id: activeUser.id,
+          post_type: "live",
+          data: post
+        })
+        .select("id")
+        .single();
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      alert("ライブ情報を告知しました。");
+      window.location.href = "live-detail.html?id=" +
+        encodeURIComponent(postId);
+
+    } catch (error) {
+      console.error("ライブ投稿エラー:", error);
+
+      alert(
+        "ライブ情報を投稿できませんでした。\n" +
+        (error.message || "時間をおいて、もう一度お試しください。")
+      );
+
+    } finally {
+      const currentButton = document.getElementById("submitLive");
+
+      if (currentButton) {
+        currentButton.disabled = false;
+        currentButton.textContent = "ライブを告知する";
+      }
+    }
+  });
+}
+
+/* 投稿ID生成 */
+function makeId() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+
+  return String(Date.now()) + Math.random().toString(16).slice(2);
+}
+
+/* ページ初期化 */
+async function initializeLiveCreate() {
+  try {
+    await window.OTOAuth.ready;
+
+    await renderHeaderAccount();
+
+    const currentUser = await window.OTOAuth.getCurrentUser();
+
+    if (!currentUser) {
+      renderLoginRequired();
+      return;
+    }
+
+    renderLiveForm();
+
+  } catch (error) {
+    console.error("ライブ告知ページ初期化エラー:", error);
+
+    document.getElementById("postArea").innerHTML = `
+      <div class="live-login-box">
+        <h2>ページを読み込めませんでした</h2>
+        <p>通信状態を確認して、もう一度ページを読み込んでください。</p>
+      </div>
+    `;
+  }
+}
+
+initializeLiveCreate();
+</script>
+
+</body>
+</html>

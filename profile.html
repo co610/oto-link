@@ -1,0 +1,1776 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロフィール - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --profile-bg: #f5f5f5;
+      --profile-card: #fff;
+      --profile-text: #171717;
+      --profile-muted: #666;
+      --profile-border: #dedede;
+      --profile-black: #111;
+      --profile-radius: 12px;
+    }
+
+    body {
+      color: var(--profile-text);
+      background: var(--profile-bg);
+    }
+
+    .page-header {
+      padding: 36px 20px 28px;
+      text-align: center;
+    }
+
+    .profile-page {
+      width: min(100% - 32px, 960px);
+      margin: 0 auto 56px;
+    }
+
+    .profile-intro {
+      margin: 0 0 24px;
+      color: var(--profile-muted);
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .profile-card {
+      margin-bottom: 22px;
+      padding: 26px;
+      background: var(--profile-card);
+      border: 1px solid var(--profile-border);
+      border-radius: var(--profile-radius);
+      box-shadow: 0 3px 12px rgb(0 0 0 / 3%);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 8px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .section-description {
+      margin: 0 0 22px;
+      color: var(--profile-muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .profile-form label,
+    .field-label {
+      display: block;
+      margin: 0 0 7px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .profile-form input:not([type="checkbox"]):not([type="file"]),
+    .profile-form select,
+    .profile-form textarea,
+    .work-form input,
+    .work-form select,
+    .work-form textarea,
+    .link-form input,
+    .link-form select {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 12px;
+      color: var(--profile-text);
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .profile-form textarea,
+    .work-form textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .profile-form input:focus,
+    .profile-form select:focus,
+    .profile-form textarea:focus,
+    .work-form input:focus,
+    .work-form select:focus,
+    .work-form textarea:focus,
+    .link-form input:focus,
+    .link-form select:focus {
+      outline: 2px solid #888;
+      outline-offset: 1px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .field {
+      min-width: 0;
+      margin-bottom: 20px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field small {
+      display: block;
+      margin-top: 6px;
+      color: var(--profile-muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .avatar-editor {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 26px;
+      padding: 18px;
+      background: #fafafa;
+      border: 1px solid var(--profile-border);
+      border-radius: 10px;
+    }
+
+    .avatar-preview {
+      display: flex;
+      flex: 0 0 92px;
+      align-items: center;
+      justify-content: center;
+      width: 92px;
+      height: 92px;
+      overflow: hidden;
+      background: #eee;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      font-size: 32px;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-controls {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avatar-controls input[type="file"] {
+      display: block;
+      max-width: 100%;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .avatar-note,
+    .avatar-status {
+      margin: 8px 0 0;
+      color: var(--profile-muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .profile-form label.option-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      box-sizing: border-box;
+      min-width: 0;
+      min-height: 58px;
+      margin: 0 !important;
+      padding: 12px 14px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 13px !important;
+      font-weight: 400 !important;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .profile-form label.option-item:has(input:checked) {
+      background: #f0f0f0;
+      border-color: #222;
+    }
+
+    .profile-form .option-item input[type="checkbox"] {
+      display: block;
+      flex: 0 0 16px;
+      width: 16px;
+      height: 16px;
+      min-height: 16px;
+      margin: 0;
+      padding: 0;
+      accent-color: #111;
+      cursor: pointer;
+    }
+
+    .inline-add {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid #111;
+      border-radius: 7px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .button-primary {
+      color: #fff;
+      background: #111;
+    }
+
+    .button-primary:hover {
+      background: #333;
+    }
+
+    .button-secondary {
+      color: #111;
+      background: #fff;
+    }
+
+    .button-secondary:hover {
+      background: #eee;
+    }
+
+    .button-danger {
+      color: #555;
+      background: #fff;
+      border-color: #ccc;
+    }
+
+    .button-danger:hover {
+      color: #111;
+      border-color: #111;
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .work-form,
+    .link-form {
+      margin: 0 0 22px;
+      padding: 18px;
+      background: #fafafa;
+      border: 1px solid var(--profile-border);
+      border-radius: 9px;
+    }
+
+    .work-form h3,
+    .link-form h3 {
+      margin: 0 0 18px;
+      font-size: 16px;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .work-form .field,
+    .link-form .field {
+      margin-bottom: 15px;
+    }
+
+    .work-form .field:last-child,
+    .link-form .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .work-form-actions,
+    .link-form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .work-list,
+    .link-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .work-card {
+      min-width: 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--profile-border);
+      border-radius: 9px;
+    }
+
+    .work-thumbnail {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #ededed;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .work-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .work-card-content {
+      padding: 15px;
+    }
+
+    .work-type {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      background: #eee;
+      border-radius: 4px;
+      color: #333;
+      font-size: 11px;
+    }
+
+    .work-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .work-description {
+      margin: 0;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .work-url {
+      display: inline-block;
+      margin-top: 12px;
+      color: #111;
+      font-size: 13px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .card-actions .button {
+      min-height: 34px;
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid var(--profile-border);
+      border-radius: 9px;
+    }
+
+    .link-card-content {
+      min-width: 0;
+    }
+
+    .link-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .link-card a {
+      color: #333;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .link-card .card-actions {
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 24px 14px;
+      color: #777;
+      background: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .form-message {
+      margin: 12px 0 0;
+      color: #444;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .form-message:empty {
+      display: none;
+    }
+
+    .required-note {
+      color: #666;
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    @media (max-width: 650px) {
+      .profile-page {
+        width: calc(100% - 22px);
+      }
+
+      .profile-card {
+        padding: 18px;
+      }
+
+      .field-grid,
+      .work-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .option-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .work-list,
+      .link-list {
+        grid-template-columns: 1fr;
+      }
+
+      .avatar-editor {
+        align-items: flex-start;
+        padding: 14px;
+      }
+
+      .avatar-preview {
+        flex-basis: 72px;
+        width: 72px;
+        height: 72px;
+      }
+
+      .section-heading h2 {
+        font-size: 19px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .option-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .avatar-editor {
+        flex-direction: column;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブ情報やイベントを見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account"><span id="loginArea"></span></div>
+</header>
+
+<section class="page-header">
+  <h1>プロフィール</h1>
+  <p>自分の音楽活動や作品を紹介しよう。</p>
+</section>
+
+<main class="profile-page">
+  <p class="profile-intro">
+    好きな音楽も、作った作品も、これからやってみたいことも。<br>
+    自分らしいプロフィールを作ろう。
+  </p>
+
+  <form id="profileForm" class="profile-form">
+    <section class="profile-card">
+      <div class="section-heading">
+        <h2>プロフィール情報</h2>
+      </div>
+      <p class="section-description">
+        基本情報と、音楽活動について教えてください。
+      </p>
+
+      <div class="avatar-editor">
+        <div id="avatarPreview" class="avatar-preview"
+             aria-label="プロフィールアイコンのプレビュー">♪</div>
+
+        <div class="avatar-controls">
+          <label for="avatarFile">プロフィールアイコン</label>
+          <input type="file" id="avatarFile" accept="image/*">
+          <p class="avatar-note">
+            JPG・PNG・WebPなど。画像は自動で縮小して保存します（元画像10MB以下）。
+          </p>
+          <p class="avatar-status" id="avatarStatus">
+            画像を設定するとプロフィールに表示されます。
+          </p>
+          <button type="button" class="button button-secondary"
+                  id="removeAvatarButton">画像を外す</button>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label for="name">名前・ニックネーム</label>
+          <input id="name" type="text" maxlength="60"
+                 placeholder="例：こうた" required>
+        </div>
+
+        <div class="field">
+          <label for="age">年齢（任意）</label>
+          <input id="age" type="number" min="1" max="120"
+                 placeholder="例：17">
+          <small>年齢は非公開情報として保存されます。</small>
+        </div>
+
+        <div class="field">
+          <label for="grade">学年・立場</label>
+          <select id="grade" required>
+            <option value="">選択してください</option>
+            <option value="高校1年生">高校1年生</option>
+            <option value="高校2年生">高校2年生</option>
+            <option value="高校3年生">高校3年生</option>
+            <option value="大学生">大学生</option>
+            <option value="専門学生">専門学生</option>
+            <option value="社会人">社会人</option>
+            <option value="プロ">プロ</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="area">活動地域</label>
+          <input id="area" type="text" maxlength="100"
+                 placeholder="例：岐阜県">
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">音楽活動での担当・得意分野（複数選択可）</span>
+        <div class="option-grid" id="partsOptions">
+          <label class="option-item"><input type="checkbox" name="parts" value="ボーカル">ボーカル</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="ギター">ギター</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="ベース">ベース</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="ドラム">ドラム</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="キーボード">キーボード</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="作曲">作曲</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="作詞">作詞</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="編曲">編曲</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="DTM">DTM・トラック制作</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="ミックス">ミックス・マスタリング</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="映像制作">映像・MV制作</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="写真">写真・デザイン</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="ライブ企画">ライブ・イベント企画</label>
+          <label class="option-item"><input type="checkbox" name="parts" value="その他">その他</label>
+        </div>
+        <small>当てはまるものをいくつでも選べます。</small>
+      </div>
+
+      <div class="field">
+        <span class="field-label">好きな音楽ジャンル（複数選択可）</span>
+        <div class="option-grid" id="genresOptions">
+          <label class="option-item"><input type="checkbox" name="genres" value="ロック">ロック</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="ポップス">ポップス</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="オルタナティブ">オルタナティブ</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="インディー">インディー</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="テクノ">テクノ</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="エレクトロニカ">エレクトロニカ</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="EDM">EDM</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="ダンス">ダンスミュージック</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="ヒップホップ">ヒップホップ</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="ジャズ">ジャズ</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="クラシック">クラシック</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="フォーク">フォーク</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="アコースティック">アコースティック</label>
+          <label class="option-item"><input type="checkbox" name="genres" value="その他">その他</label>
+        </div>
+
+        <div class="field" style="margin-top:12px">
+          <label for="customGenres">ほかのジャンル（任意）</label>
+          <input id="customGenres" type="text"
+                 placeholder="例：サイケデリック、ニューウェーブ">
+          <small>複数ある場合は「、」で区切ってください。</small>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="artist">好きなアーティスト</label>
+        <input id="artist" type="text" maxlength="300"
+               placeholder="例：サカナクション、好きなアーティストなど">
+      </div>
+
+      <div class="field">
+        <label for="activityStatus">現在の活動状況</label>
+        <select id="activityStatus">
+          <option value="">選択してください（任意）</option>
+          <option value="活動中">音楽活動中</option>
+          <option value="準備中">活動を始める準備中</option>
+          <option value="仲間募集中">一緒に活動する仲間を探している</option>
+          <option value="作品制作中">作品を制作中</option>
+          <option value="これから始めたい">これから始めたい</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="introduction">自己紹介</label>
+        <textarea id="introduction" maxlength="2000"
+          placeholder="好きな音楽、やっていること、自分について紹介しよう。"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="wantToTry">これからやってみたいこと</label>
+        <textarea id="wantToTry" maxlength="1500"
+          placeholder="例：オリジナル曲を作りたい、ライブに出演したい、映像を作りたい。"></textarea>
+      </div>
+    </section>
+
+    <section class="profile-card">
+      <div class="section-heading">
+        <h2>自分の作品</h2>
+        <span class="required-note">任意・複数登録可</span>
+      </div>
+      <p class="section-description">
+        オリジナル曲、弾き語り、動画、作詞、ミックス、デザインなど、
+        自分が制作・参加した作品を紹介できます。
+      </p>
+
+      <div class="work-form">
+        <h3 id="workFormTitle">作品を追加</h3>
+
+        <div class="work-grid">
+          <div class="field">
+            <label for="workTitle">作品タイトル</label>
+            <input id="workTitle" type="text" maxlength="120"
+                   placeholder="例：オリジナル曲「夜明け」">
+          </div>
+
+          <div class="field">
+            <label for="workType">作品種別</label>
+            <select id="workType">
+              <option value="オリジナル曲">オリジナル曲</option>
+              <option value="弾き語り・カバー">弾き語り・カバー</option>
+              <option value="演奏動画">演奏動画</option>
+              <option value="作詞">作詞</option>
+              <option value="作曲・編曲">作曲・編曲</option>
+              <option value="ミックス・音源制作">ミックス・音源制作</option>
+              <option value="MV・映像">MV・映像</option>
+              <option value="デザイン・写真">デザイン・写真</option>
+              <option value="ライブ映像">ライブ映像</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="workDescription">作品の説明</label>
+          <textarea id="workDescription" maxlength="1500"
+            placeholder="制作のきっかけや、こだわったところなど"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="workThumbnail">サムネイル画像URL（任意）</label>
+          <input id="workThumbnail" type="url" maxlength="2000"
+                 placeholder="https://example.com/image.jpg">
+          <small>公開されている画像のURLを入力してください。未入力でも登録できます。</small>
+        </div>
+
+        <div class="field">
+          <label for="workUrl">作品URL（任意）</label>
+          <input id="workUrl" type="url" maxlength="2000"
+                 placeholder="https://youtube.com/...">
+          <small>YouTube、SoundCloud、Spotifyなどの作品ページを登録できます。</small>
+        </div>
+
+        <div class="work-form-actions">
+          <button type="button" class="button button-primary" id="saveWorkButton">
+            作品を追加
+          </button>
+          <button type="button" class="button button-secondary"
+                  id="cancelWorkEditButton" hidden>編集をキャンセル</button>
+        </div>
+        <p id="workMessage" class="form-message" aria-live="polite"></p>
+      </div>
+
+      <div id="workList" class="work-list">
+        <p class="empty-state">まだ作品が登録されていません。最初の作品を追加してみよう。</p>
+      </div>
+    </section>
+
+    <section class="profile-card">
+      <div class="section-heading">
+        <h2>作品・活動リンク</h2>
+        <span class="required-note">任意・複数登録可</span>
+      </div>
+      <p class="section-description">
+        YouTubeチャンネル、SNS、配信ページ、公式サイトなど、
+        自分の活動を見てもらうためのリンクをまとめられます。
+      </p>
+
+      <div class="link-form">
+        <h3 id="linkFormTitle">活動リンクを追加</h3>
+
+        <div class="work-grid">
+          <div class="field">
+            <label for="linkLabel">リンク名</label>
+            <input id="linkLabel" type="text" maxlength="100"
+                   placeholder="例：YouTubeチャンネル">
+          </div>
+
+          <div class="field">
+            <label for="linkType">サービス・種類</label>
+            <select id="linkType">
+              <option value="YouTube">YouTube</option>
+              <option value="SoundCloud">SoundCloud</option>
+              <option value="Spotify">Spotify</option>
+              <option value="Instagram">Instagram</option>
+              <option value="TikTok">TikTok</option>
+              <option value="X">X</option>
+              <option value="公式サイト">公式サイト</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="linkUrl">URL</label>
+          <input id="linkUrl" type="url" maxlength="2000"
+                 placeholder="https://...">
+        </div>
+
+        <div class="link-form-actions">
+          <button type="button" class="button button-primary" id="saveLinkButton">
+            リンクを追加
+          </button>
+          <button type="button" class="button button-secondary"
+                  id="cancelLinkEditButton" hidden>編集をキャンセル</button>
+        </div>
+        <p id="linkMessage" class="form-message" aria-live="polite"></p>
+      </div>
+
+      <div id="linkList" class="link-list">
+        <p class="empty-state">まだリンクが登録されていません。</p>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <button type="submit" class="button button-primary" id="saveProfileButton">
+        プロフィールを登録・更新
+      </button>
+    </div>
+
+    <p id="profileMessage" class="form-message" aria-live="polite"></p>
+  </form>
+</main>
+
+<footer><p>© 2026 OTO LINK</p></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+(async function () {
+  "use strict";
+
+  const supabase = window.OTO_SUPABASE;
+  let currentUserId = null;
+  const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+
+  let savedAvatarData = "";
+  let pendingAvatarData = null;
+  let works = [];
+  let activityLinks = [];
+  let editingWorkId = null;
+  let editingLinkId = null;
+  let profileExists = false;
+
+  const $ = function (id) {
+    return document.getElementById(id);
+  };
+
+  function showProfileMessage(message) {
+    $("profileMessage").textContent = message;
+  }
+
+  if (!supabase || !window.OTOAuth) {
+    showProfileMessage("Supabaseまたは認証機能を読み込めませんでした。");
+    return;
+  }
+
+  try {
+    await window.OTOAuth.ready;
+
+    const currentUser = await window.OTOAuth.getCurrentUser();
+
+    if (!currentUser) {
+      alert("プロフィールを作成・編集するにはログインしてください。");
+      window.location.href = "login.html?returnTo=profile.html";
+      return;
+    }
+
+    currentUserId = currentUser.id;
+  } catch (error) {
+    console.error("認証確認エラー:", error);
+    alert("ログイン状態を確認できませんでした。もう一度ログインしてください。");
+    window.location.href = "login.html?returnTo=profile.html";
+    return;
+  }
+
+  $("loginArea").innerHTML =
+    '<button type="button" id="logoutButton">ログアウト</button>';
+
+  $("logoutButton").addEventListener("click", async function () {
+    const button = this;
+    button.disabled = true;
+
+    try {
+      await window.OTOAuth.logout();
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("ログアウトエラー:", error);
+      alert("ログアウトできませんでした。時間をおいて再度お試しください。");
+      button.disabled = false;
+    }
+  });
+
+  function makeId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+
+    return "item-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+  }
+
+  function safeString(value) {
+    return typeof value === "string" ? value : "";
+  }
+
+  function isSafeImageData(value) {
+    return typeof value === "string" &&
+      /^data:image\/(jpeg|png|webp|gif);base64,/i.test(value);
+  }
+
+  function safeHttpUrl(value) {
+    if (typeof value !== "string" || !value.trim()) return "";
+
+    try {
+      const url = new URL(value.trim());
+
+      return url.protocol === "https:" || url.protocol === "http:"
+        ? url.href
+        : "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function checkedValues(name) {
+    return Array.from(
+      document.querySelectorAll('input[name="' + name + '"]:checked')
+    ).map(function (input) {
+      return input.value;
+    });
+  }
+
+  function setCheckedValues(name, values) {
+    const set = new Set(Array.isArray(values) ? values : []);
+
+    document.querySelectorAll('input[name="' + name + '"]').forEach(function (input) {
+      input.checked = set.has(input.value);
+    });
+  }
+
+  function normalizeStringArray(value) {
+    if (Array.isArray(value)) {
+      return value.filter(function (item) {
+        return typeof item === "string" && item.trim();
+      });
+    }
+
+    if (typeof value === "string" && value.trim()) {
+      return value.split(/[、,，]/).map(function (item) {
+        return item.trim();
+      }).filter(Boolean);
+    }
+
+    return [];
+  }
+
+  function renderAvatarPreview(dataUrl) {
+    const preview = $("avatarPreview");
+    preview.replaceChildren();
+
+    if (isSafeImageData(dataUrl)) {
+      const image = document.createElement("img");
+      image.src = dataUrl;
+      image.alt = "プロフィールアイコンのプレビュー";
+      preview.appendChild(image);
+    } else {
+      preview.textContent = "♪";
+    }
+  }
+
+  function compressImage(file, maxSide, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file || !file.type || !file.type.startsWith("image/")) {
+        reject(new Error("画像ファイルを選択してください。"));
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        reject(new Error("画像ファイルは10MB以下にしてください。"));
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onerror = function () {
+        reject(new Error("画像を読み込めませんでした。"));
+      };
+
+      reader.onload = function () {
+        const image = new Image();
+
+        image.onerror = function () {
+          reject(new Error("画像を開けませんでした。別の画像を選んでください。"));
+        };
+
+        image.onload = function () {
+          try {
+            const scale = Math.min(
+              1,
+              maxSide / Math.max(image.naturalWidth, image.naturalHeight)
+            );
+
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+
+            const context = canvas.getContext("2d");
+
+            if (!context) {
+              throw new Error("画像を処理できませんでした。");
+            }
+
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          } catch (error) {
+            reject(error);
+          }
+        };
+
+        image.src = String(reader.result || "");
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderCollectionMessage(container, message) {
+    const p = document.createElement("p");
+    p.className = "empty-state";
+    p.textContent = message;
+    container.replaceChildren(p);
+  }
+
+  function normalizeWorks(value) {
+    if (!Array.isArray(value)) return [];
+
+    return value.filter(function (item) {
+      return item && typeof item === "object";
+    }).map(function (item) {
+      return {
+        id: safeString(item.id) || makeId(),
+        title: safeString(item.title),
+        description: safeString(item.description),
+        type: safeString(item.type) || "その他",
+        thumbnail: safeString(item.thumbnail),
+        url: safeString(item.url)
+      };
+    });
+  }
+
+  function normalizeLinks(value) {
+    if (!Array.isArray(value)) return [];
+
+    return value.filter(function (item) {
+      return item && typeof item === "object";
+    }).map(function (item) {
+      return {
+        id: safeString(item.id) || makeId(),
+        label: safeString(item.label),
+        type: safeString(item.type) || "その他",
+        url: safeString(item.url)
+      };
+    });
+  }
+
+  function renderWorks() {
+    const container = $("workList");
+    container.replaceChildren();
+
+    if (works.length === 0) {
+      renderCollectionMessage(
+        container,
+        "まだ作品が登録されていません。最初の作品を追加してみよう。"
+      );
+      return;
+    }
+
+    works.forEach(function (work) {
+      const card = document.createElement("article");
+      card.className = "work-card";
+
+      const thumbnail = document.createElement("div");
+      thumbnail.className = "work-thumbnail";
+
+      const thumbnailUrl = safeHttpUrl(work.thumbnail);
+
+      if (thumbnailUrl) {
+        const image = document.createElement("img");
+        image.src = thumbnailUrl;
+        image.alt = work.title ? work.title + "のサムネイル" : "作品サムネイル";
+        image.loading = "lazy";
+        image.referrerPolicy = "no-referrer";
+
+        image.onerror = function () {
+          thumbnail.replaceChildren();
+          thumbnail.textContent = "画像を表示できません";
+        };
+
+        thumbnail.appendChild(image);
+      } else {
+        thumbnail.textContent = "NO IMAGE";
+      }
+
+      const content = document.createElement("div");
+      content.className = "work-card-content";
+
+      const type = document.createElement("span");
+      type.className = "work-type";
+      type.textContent = work.type || "その他";
+
+      const title = document.createElement("h3");
+      title.textContent = work.title;
+
+      const description = document.createElement("p");
+      description.className = "work-description";
+      description.textContent = work.description || "説明は登録されていません。";
+
+      content.append(type, title, description);
+
+      const url = safeHttpUrl(work.url);
+
+      if (url) {
+        const anchor = document.createElement("a");
+        anchor.className = "work-url";
+        anchor.href = url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.textContent = "作品を見る ↗";
+        content.appendChild(anchor);
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "card-actions";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "button button-secondary";
+      editButton.textContent = "編集";
+      editButton.addEventListener("click", function () {
+        beginWorkEdit(work.id);
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "button button-danger";
+      deleteButton.textContent = "削除";
+      deleteButton.addEventListener("click", function () {
+        deleteWork(work.id);
+      });
+
+      actions.append(editButton, deleteButton);
+      content.appendChild(actions);
+      card.append(thumbnail, content);
+      container.appendChild(card);
+    });
+  }
+
+  function renderLinks() {
+    const container = $("linkList");
+    container.replaceChildren();
+
+    if (activityLinks.length === 0) {
+      renderCollectionMessage(container, "まだリンクが登録されていません。");
+      return;
+    }
+
+    activityLinks.forEach(function (link) {
+      const card = document.createElement("article");
+      card.className = "link-card";
+
+      const content = document.createElement("div");
+      content.className = "link-card-content";
+
+      const title = document.createElement("strong");
+      title.textContent = link.label + " · " + link.type;
+
+      const url = safeHttpUrl(link.url);
+      const anchor = document.createElement("a");
+
+      if (url) {
+        anchor.href = url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.textContent = link.url;
+      } else {
+        anchor.textContent = "有効なURLが設定されていません";
+      }
+
+      content.append(title, anchor);
+
+      const actions = document.createElement("div");
+      actions.className = "card-actions";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "button button-secondary";
+      editButton.textContent = "編集";
+      editButton.addEventListener("click", function () {
+        beginLinkEdit(link.id);
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "button button-danger";
+      deleteButton.textContent = "削除";
+      deleteButton.addEventListener("click", function () {
+        deleteLink(link.id);
+      });
+
+      actions.append(editButton, deleteButton);
+      card.append(content, actions);
+      container.appendChild(card);
+    });
+  }
+
+  function resetWorkForm() {
+    editingWorkId = null;
+    $("workTitle").value = "";
+    $("workDescription").value = "";
+    $("workType").value = "オリジナル曲";
+    $("workThumbnail").value = "";
+    $("workUrl").value = "";
+    $("workFormTitle").textContent = "作品を追加";
+    $("saveWorkButton").textContent = "作品を追加";
+    $("cancelWorkEditButton").hidden = true;
+    $("workMessage").textContent = "";
+  }
+
+  function beginWorkEdit(id) {
+    const work = works.find(function (item) {
+      return item.id === id;
+    });
+
+    if (!work) return;
+
+    editingWorkId = id;
+    $("workTitle").value = work.title;
+    $("workDescription").value = work.description;
+    $("workType").value = work.type;
+    $("workThumbnail").value = work.thumbnail;
+    $("workUrl").value = work.url;
+    $("workFormTitle").textContent = "作品を編集";
+    $("saveWorkButton").textContent = "変更を反映";
+    $("cancelWorkEditButton").hidden = false;
+    $("workMessage").textContent = "";
+
+    $("workFormTitle").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+  function deleteWork(id) {
+    if (!confirm("この作品を削除しますか？")) return;
+
+    works = works.filter(function (item) {
+      return item.id !== id;
+    });
+
+    if (editingWorkId === id) resetWorkForm();
+
+    renderWorks();
+  }
+
+  $("saveWorkButton").addEventListener("click", function () {
+    const title = $("workTitle").value.trim();
+    const description = $("workDescription").value.trim();
+    const type = $("workType").value;
+    const rawThumbnail = $("workThumbnail").value.trim();
+    const rawUrl = $("workUrl").value.trim();
+
+    if (!title) {
+      $("workMessage").textContent = "作品タイトルを入力してください。";
+      $("workTitle").focus();
+      return;
+    }
+
+    const thumbnail = rawThumbnail ? safeHttpUrl(rawThumbnail) : "";
+    const url = rawUrl ? safeHttpUrl(rawUrl) : "";
+
+    if (rawThumbnail && !thumbnail) {
+      $("workMessage").textContent =
+        "サムネイルにはhttpまたはhttpsで始まるURLを入力してください。";
+      return;
+    }
+
+    if (rawUrl && !url) {
+      $("workMessage").textContent =
+        "作品URLにはhttpまたはhttpsで始まるURLを入力してください。";
+      return;
+    }
+
+    const work = {
+      id: editingWorkId || makeId(),
+      title: title,
+      description: description,
+      type: type,
+      thumbnail: thumbnail,
+      url: url
+    };
+
+    if (editingWorkId) {
+      works = works.map(function (item) {
+        return item.id === editingWorkId ? work : item;
+      });
+    } else {
+      works.push(work);
+    }
+
+    renderWorks();
+    resetWorkForm();
+
+    $("workMessage").textContent =
+      "作品を一覧に反映しました。最後にプロフィールを保存してください。";
+  });
+
+  $("cancelWorkEditButton").addEventListener("click", resetWorkForm);
+
+  function resetLinkForm() {
+    editingLinkId = null;
+    $("linkLabel").value = "";
+    $("linkType").value = "YouTube";
+    $("linkUrl").value = "";
+    $("linkFormTitle").textContent = "活動リンクを追加";
+    $("saveLinkButton").textContent = "リンクを追加";
+    $("cancelLinkEditButton").hidden = true;
+    $("linkMessage").textContent = "";
+  }
+
+  function beginLinkEdit(id) {
+    const link = activityLinks.find(function (item) {
+      return item.id === id;
+    });
+
+    if (!link) return;
+
+    editingLinkId = id;
+    $("linkLabel").value = link.label;
+    $("linkType").value = link.type;
+    $("linkUrl").value = link.url;
+    $("linkFormTitle").textContent = "活動リンクを編集";
+    $("saveLinkButton").textContent = "変更を反映";
+    $("cancelLinkEditButton").hidden = false;
+    $("linkMessage").textContent = "";
+
+    $("linkFormTitle").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+  function deleteLink(id) {
+    if (!confirm("この活動リンクを削除しますか？")) return;
+
+    activityLinks = activityLinks.filter(function (item) {
+      return item.id !== id;
+    });
+
+    if (editingLinkId === id) resetLinkForm();
+
+    renderLinks();
+  }
+
+  $("saveLinkButton").addEventListener("click", function () {
+    const label = $("linkLabel").value.trim();
+    const type = $("linkType").value;
+    const rawUrl = $("linkUrl").value.trim();
+    const url = safeHttpUrl(rawUrl);
+
+    if (!label) {
+      $("linkMessage").textContent = "リンク名を入力してください。";
+      $("linkLabel").focus();
+      return;
+    }
+
+    if (!url) {
+      $("linkMessage").textContent =
+        "有効なhttpまたはhttpsのURLを入力してください。";
+      $("linkUrl").focus();
+      return;
+    }
+
+    const link = {
+      id: editingLinkId || makeId(),
+      label: label,
+      type: type,
+      url: url
+    };
+
+    if (editingLinkId) {
+      activityLinks = activityLinks.map(function (item) {
+        return item.id === editingLinkId ? link : item;
+      });
+    } else {
+      activityLinks.push(link);
+    }
+
+    renderLinks();
+    resetLinkForm();
+
+    $("linkMessage").textContent =
+      "リンクを一覧に反映しました。最後にプロフィールを保存してください。";
+  });
+
+  $("cancelLinkEditButton").addEventListener("click", resetLinkForm);
+
+  $("avatarFile").addEventListener("change", async function () {
+    const file = this.files && this.files[0];
+
+    if (!file) return;
+
+    $("avatarStatus").textContent = "画像を読み込んでいます…";
+
+    try {
+      const dataUrl = await compressImage(file, 512, 0.82);
+
+      pendingAvatarData = dataUrl;
+      renderAvatarPreview(dataUrl);
+
+      $("avatarStatus").textContent =
+        "新しい画像を選択しました。プロフィールを保存すると反映されます。";
+    } catch (error) {
+      alert(error.message || "画像を読み込めませんでした。");
+      this.value = "";
+
+      $("avatarStatus").textContent = savedAvatarData
+        ? "現在のアイコン画像を使用します。"
+        : "画像を設定するとプロフィールに表示されます。";
+    }
+  });
+
+  $("removeAvatarButton").addEventListener("click", function () {
+    pendingAvatarData = "";
+    $("avatarFile").value = "";
+    renderAvatarPreview("");
+
+    $("avatarStatus").textContent =
+      "アイコン画像を外す設定です。保存すると標準アイコンに戻ります。";
+  });
+
+  async function loadProfile() {
+    showProfileMessage("プロフィールを読み込んでいます…");
+
+    const [publicResult, privateResult] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("data")
+        .eq("id", currentUserId)
+        .maybeSingle(),
+
+      supabase
+        .from("profile_private")
+        .select("age")
+        .eq("id", currentUserId)
+        .maybeSingle()
+    ]);
+
+    if (publicResult.error) {
+      throw new Error(
+        "プロフィール情報を読み込めませんでした: " +
+        publicResult.error.message
+      );
+    }
+
+    if (privateResult.error) {
+      throw new Error(
+        "非公開情報を読み込めませんでした: " +
+        privateResult.error.message
+      );
+    }
+
+    const profile = publicResult.data && publicResult.data.data
+      ? publicResult.data.data
+      : null;
+
+    const privateProfile = privateResult.data || null;
+
+    $("age").value = privateProfile && privateProfile.age != null
+      ? String(privateProfile.age)
+      : "";
+
+    if (!profile) {
+      renderWorks();
+      renderLinks();
+      showProfileMessage("新しいプロフィールを作成できます。");
+      return;
+    }
+
+    profileExists = true;
+
+    $("name").value = safeString(profile.name);
+    $("grade").value = safeString(profile.grade);
+    $("area").value = safeString(profile.area);
+    $("artist").value = safeString(profile.artist);
+    $("activityStatus").value = safeString(profile.activityStatus);
+    $("introduction").value = safeString(profile.introduction);
+    $("wantToTry").value = safeString(profile.wantToTry);
+
+    const parts = normalizeStringArray(
+      profile.parts !== undefined ? profile.parts : profile.part
+    );
+
+    const genres = normalizeStringArray(
+      profile.genres !== undefined ? profile.genres : profile.genre
+    );
+
+    setCheckedValues("parts", parts);
+    setCheckedValues("genres", genres);
+
+    const knownGenres = new Set(
+      Array.from(document.querySelectorAll('input[name="genres"]')).map(function (input) {
+        return input.value;
+      })
+    );
+
+    const customGenres = genres.filter(function (genre) {
+      return !knownGenres.has(genre);
+    });
+
+    if (typeof profile.customGenres === "string" && profile.customGenres.trim()) {
+      $("customGenres").value = profile.customGenres;
+    } else {
+      $("customGenres").value = customGenres.join("、");
+    }
+
+    savedAvatarData = isSafeImageData(profile.avatar)
+      ? profile.avatar
+      : "";
+
+    renderAvatarPreview(savedAvatarData);
+
+    $("avatarStatus").textContent = savedAvatarData
+      ? "現在のアイコン画像を設定しています。変更もできます。"
+      : "画像を設定するとプロフィールに表示されます。";
+
+    works = normalizeWorks(profile.works);
+    activityLinks = normalizeLinks(profile.activityLinks || profile.links);
+
+    renderWorks();
+    renderLinks();
+
+    showProfileMessage("");
+  }
+
+  $("profileForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const name = $("name").value.trim();
+    const grade = $("grade").value;
+
+    if (!name || !grade) {
+      showProfileMessage("名前と学年・立場を入力してください。");
+      return;
+    }
+
+    const ageText = $("age").value.trim();
+    const age = ageText ? Number(ageText) : null;
+
+    if (ageText && (!Number.isInteger(age) || age < 1 || age > 120)) {
+      showProfileMessage("年齢は1〜120の整数で入力してください。");
+      $("age").focus();
+      return;
+    }
+
+    const parts = checkedValues("parts");
+    const genres = checkedValues("genres");
+    const customGenresText = $("customGenres").value.trim();
+
+    const customGenres = customGenresText
+      ? customGenresText.split(/[、,，]/).map(function (item) {
+          return item.trim();
+        }).filter(Boolean)
+      : [];
+
+    const allGenres = Array.from(new Set(genres.concat(customGenres)));
+
+    const saveButton = $("saveProfileButton");
+    saveButton.disabled = true;
+    saveButton.textContent = "保存しています…";
+    showProfileMessage("");
+
+    try {
+      const currentUser = await window.OTOAuth.getCurrentUser();
+
+      if (!currentUser || currentUser.id !== currentUserId) {
+        throw new Error("ログイン状態を確認できません。もう一度ログインしてください。");
+      }
+
+      const avatar = pendingAvatarData !== null
+        ? pendingAvatarData
+        : savedAvatarData;
+
+      const publicProfile = {
+        userId: currentUserId,
+        name: name,
+        grade: grade,
+        area: $("area").value.trim(),
+        parts: parts,
+        genres: allGenres,
+        customGenres: customGenresText,
+
+        // 既存ページとの互換性のため旧形式も保持する。
+        part: parts.join("、"),
+        genre: allGenres.join("、"),
+
+        artist: $("artist").value.trim(),
+        activityStatus: $("activityStatus").value,
+        introduction: $("introduction").value.trim(),
+        wantToTry: $("wantToTry").value.trim(),
+        avatar: avatar,
+        works: works,
+        activityLinks: activityLinks
+      };
+
+      /*
+       * 公開プロフィールを保存する。
+       * 年齢は公開プロフィールに含めない。
+       * profiles.updated_at列の存在を前提にしない。
+       */
+      const { error: publicError } = await supabase
+        .from("profiles")
+        .upsert(
+          {
+            id: currentUserId,
+            data: publicProfile
+          },
+          {
+            onConflict: "id"
+          }
+        );
+
+      if (publicError) {
+        throw new Error(
+          "公開プロフィールを保存できませんでした: " +
+          publicError.message
+        );
+      }
+
+      /*
+       * 年齢はprofile_privateに保存する。
+       * updated_at列の存在を前提にしない。
+       */
+      const { error: privateError } = await supabase
+        .from("profile_private")
+        .upsert(
+          {
+            id: currentUserId,
+            age: age
+          },
+          {
+            onConflict: "id"
+          }
+        );
+
+      if (privateError) {
+        throw new Error(
+          "公開プロフィールは保存されましたが、年齢情報を保存できませんでした: " +
+          privateError.message
+        );
+      }
+
+      savedAvatarData = avatar;
+      pendingAvatarData = null;
+
+      const wasExistingProfile = profileExists;
+      profileExists = true;
+
+      $("avatarStatus").textContent = savedAvatarData
+        ? "現在のアイコン画像を設定しています。変更もできます。"
+        : "画像を設定するとプロフィールに表示されます。";
+
+      alert(
+        wasExistingProfile
+          ? "プロフィールを更新しました。"
+          : "プロフィールを作成しました。"
+      );
+
+      showProfileMessage("プロフィールをSupabaseに保存しました。");
+
+    } catch (error) {
+      console.error("プロフィール保存エラー:", error);
+
+      showProfileMessage(
+        error && error.message
+          ? error.message
+          : "プロフィールを保存できませんでした。通信状態とSupabaseの設定を確認してください。"
+      );
+
+    } finally {
+      saveButton.disabled = false;
+      saveButton.textContent = "プロフィールを登録・更新";
+    }
+  });
+
+  try {
+    await loadProfile();
+  } catch (error) {
+    console.error("プロフィール読み込みエラー:", error);
+
+    showProfileMessage(
+      error && error.message
+        ? error.message
+        : "プロフィールを読み込めませんでした。通信状態とSupabaseの設定を確認してください。"
+    );
+
+    renderWorks();
+    renderLinks();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1356 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>募集の詳細 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .member-detail {
+      width: min(850px, calc(100% - 40px));
+      margin: 45px auto 80px;
+    }
+
+    .member-detail-label {
+      color: #777;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .member-detail h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      margin: 0 0 20px;
+    }
+
+    .member-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 12px 0;
+    }
+
+    .member-detail-tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .member-detail-info {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      border-top: 1px solid #e5e5e5;
+      margin: 30px 0;
+    }
+
+    .member-detail-info dt,
+    .member-detail-info dd {
+      margin: 0;
+      padding: 16px 10px;
+      border-bottom: 1px solid #e5e5e5;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .member-detail-info dt {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .member-detail-info dd {
+      white-space: pre-wrap;
+    }
+
+    .member-detail-section {
+      margin-top: 38px;
+    }
+
+    .member-detail-section h2 {
+      font-size: 21px;
+      margin-bottom: 15px;
+    }
+
+    .member-detail-description {
+      padding: 22px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      line-height: 2;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .member-theme {
+      padding: 24px;
+      background: #f5f5f5;
+      border-left: 3px solid #333;
+      line-height: 2;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .member-detail-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .member-detail-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid #ddd;
+      background: #fff;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      transition: background 0.2s ease;
+    }
+
+    .member-detail-link:hover {
+      background: #f5f5f5;
+    }
+
+    .member-detail-link strong {
+      font-size: 14px;
+    }
+
+    .member-detail-link span {
+      color: #777;
+      flex-shrink: 0;
+    }
+
+    .member-audio-player {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .member-audio-filename {
+      margin-top: 8px;
+      color: #777;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .member-audio-message {
+      padding: 14px;
+      background: #f5f5f5;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* 募集した人：チャットページのプロフィールカードに合わせた表示 */
+    .member-poster-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 24px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+    }
+
+    .member-poster-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 76px;
+      width: 76px;
+      height: 76px;
+      overflow: hidden;
+      border: 1px solid #e5e5e5;
+      border-radius: 50%;
+      background: #f5f5f5;
+      color: #555;
+      font-size: 25px;
+    }
+
+    .member-poster-avatar img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .member-poster-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .member-poster-name {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .member-author-link {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+    }
+
+    .member-author-link:hover {
+      color: #555;
+    }
+
+    .member-poster-meta {
+      margin: 0 0 12px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .member-poster-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+
+    .member-poster-tag {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #f5f5f5;
+      color: #555;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .member-poster-summary {
+      margin: 0 0 10px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .member-poster-link {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 12px 18px;
+      background: #171717;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .member-poster-link:hover {
+      background: #333;
+    }
+
+    .member-detail-back {
+      display: inline-block;
+      margin-top: 30px;
+      color: #333;
+    }
+
+    .member-detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .member-detail-edit,
+    .member-detail-delete {
+      display: inline-block;
+      margin-top: 0;
+      padding: 12px 18px;
+      border: 1px solid #222;
+      background: #fff;
+      color: #222;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .member-detail-edit:hover {
+      background: #f5f5f5;
+    }
+
+    .member-detail-delete {
+      border-color: #c0392b;
+      color: #c0392b;
+    }
+
+    .member-detail-delete:hover {
+      background: #fff8f7;
+    }
+
+    .member-edit-panel {
+      margin-top: 35px;
+      padding: 28px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+    }
+
+    .member-edit-panel h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .member-edit-note,
+    .member-edit-help {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .member-edit-note {
+      margin-bottom: 25px;
+    }
+
+    .member-edit-panel label {
+      display: block;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .member-edit-panel input:not([type="checkbox"]),
+    .member-edit-panel select,
+    .member-edit-panel textarea {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #fff;
+      color: #171717;
+      font: inherit;
+    }
+
+    .member-edit-panel textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .member-edit-panel input[type="file"] {
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .member-edit-current-file {
+      margin-top: 8px;
+      color: #666;
+      font-size: 13px;
+      font-weight: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .member-edit-remove-option {
+      display: flex !important;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 10px !important;
+      font-size: 13px;
+      font-weight: normal !important;
+    }
+
+    .member-edit-remove-option input {
+      margin-top: 5px;
+      flex: 0 0 auto;
+    }
+
+    .member-edit-links-heading {
+      margin: 28px 0 8px;
+      font-size: 19px;
+    }
+
+    .member-edit-link-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.7fr) minmax(0, 1.3fr) auto;
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+
+    .member-edit-link-row label {
+      margin-bottom: 0;
+      min-width: 0;
+      font-size: 13px;
+    }
+
+    .member-edit-link-row button,
+    .member-edit-add-link {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .member-edit-link-row button:hover,
+    .member-edit-add-link:hover {
+      background: #f5f5f5;
+    }
+
+    .member-edit-add-link {
+      margin: 8px 0 25px;
+    }
+
+    .member-edit-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .member-edit-save,
+    .member-edit-cancel {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1px solid #171717;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .member-edit-save {
+      background: #171717;
+      color: #fff;
+    }
+
+    .member-edit-save:hover {
+      background: #333;
+    }
+
+    .member-edit-cancel {
+      background: #fff;
+      color: #171717;
+    }
+
+    .member-edit-cancel:hover {
+      background: #f5f5f5;
+    }
+
+    .member-edit-save:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .member-detail-empty {
+      padding: 35px 20px;
+      background: #f7f7f7;
+      line-height: 1.9;
+    }
+
+    @media (max-width: 600px) {
+      .member-detail {
+        width: calc(100% - 30px);
+        margin-top: 25px;
+      }
+
+      .member-detail-info {
+        grid-template-columns: 105px minmax(0, 1fr);
+      }
+
+      .member-detail-info dt,
+      .member-detail-info dd {
+        padding: 12px 7px;
+        font-size: 13px;
+      }
+
+      .member-detail-description,
+      .member-theme {
+        padding: 17px;
+      }
+
+      .member-detail-links {
+        grid-template-columns: 1fr;
+      }
+
+      .member-poster-card {
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .member-poster-avatar {
+        flex-basis: 68px;
+        width: 68px;
+        height: 68px;
+      }
+
+      .member-poster-name {
+        font-size: 19px;
+      }
+
+      .member-poster-link {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .member-edit-panel {
+        padding: 18px;
+      }
+
+      .member-edit-link-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .member-edit-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す
+        <span class="menu-chevron">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>募集の詳細</h1>
+  <p>募集内容や音源を知って、一緒に活動するイメージを広げよう。</p>
+</section>
+
+<main class="member-detail" id="memberDetail">
+  <p>募集情報を読み込んでいます…</p>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const MEMBER_AUDIO_BUCKET = "oto-member-audio";
+const MAX_AUDIO_SIZE = 50 * 1024 * 1024;
+
+let currentPost = null;
+let currentUser = null;
+let currentPosterProfile = null;
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.href
+      : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function getPostType(post) {
+  return post?.type || post?.instrument || "";
+}
+
+function getDisplayTitle(post) {
+  const title = String(post?.title || "").trim();
+  const bandName = String(post?.band || "").trim();
+
+  if (["募集", "メンバー募集", "メンバー・協力者募集"].includes(title)) {
+    if (bandName) return bandName;
+    const firstLine = String(post?.description || "")
+      .split(/\r?\n/)[0]
+      .trim();
+    return firstLine && firstLine.length <= 80
+      ? firstLine
+      : "一緒に活動する仲間を探しています";
+  }
+
+  return title || bandName || "メンバー・協力者募集";
+}
+
+function getRecruitLinks(post) {
+  if (Array.isArray(post?.links) && post.links.length > 0) {
+    return post.links.map(function(item) {
+      return {
+        label: String(item.label || "参考リンク"),
+        url: safeHttpUrl(item.url)
+      };
+    }).filter(function(item) {
+      return item.url !== "";
+    });
+  }
+
+  const oldLink = safeHttpUrl(post?.link);
+  return oldLink ? [{ label: "参考リンク", url: oldLink }] : [];
+}
+
+function formatPostedDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  }).format(date);
+}
+
+function showNotFound() {
+  document.getElementById("memberDetail").innerHTML = `
+    <div class="member-detail-empty">
+      <h2>募集が見つかりません</h2>
+      <p>投稿が削除されたか、指定された募集情報が存在しません。</p>
+      <a class="member-detail-back" href="member.html">← 募集一覧に戻る</a>
+    </div>
+  `;
+}
+
+function getProfileValue(profile, keys) {
+  for (const key of keys) {
+    const value = profile?.[key];
+    if (value !== undefined && value !== null && String(value).trim() !== "") {
+      return value;
+    }
+  }
+  return "";
+}
+
+function renderPosterAvatar(profile, name) {
+  const avatar = getProfileValue(profile, [
+    "avatar", "icon", "iconUrl", "profileImage", "image"
+  ]);
+  const safeAvatar = String(avatar || "");
+
+  if (/^https?:\/\//i.test(safeAvatar) || /^data:image\//i.test(safeAvatar)) {
+    return `<img src="${escapeHtml(safeAvatar)}" alt="${escapeHtml(name)}のプロフィール画像">`;
+  }
+
+  return escapeHtml(String(name || "♪").trim().charAt(0) || "♪");
+}
+
+function renderPosterCard(poster, posterName, posterUrl) {
+  if (!poster) {
+    return `
+      <div class="member-poster-card">
+        <div class="member-poster-avatar">♪</div>
+        <div class="member-poster-content">
+          <p class="member-poster-name">${escapeHtml(posterName)}</p>
+          <p class="member-poster-summary">この投稿者のプロフィールはまだ登録されていません。</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const name = getProfileValue(poster, ["name", "nickname"]) || posterName;
+  const grade = getProfileValue(poster, ["grade", "stage"]);
+  const age = getProfileValue(poster, ["age"]);
+  const area = getProfileValue(poster, ["area"]);
+  const status = getProfileValue(poster, ["activityStatus", "status", "activity"]);
+  const parts = getProfileValue(poster, ["parts", "part", "musicField", "specialty"]);
+  const genres = getProfileValue(poster, ["genres", "genre"]);
+  const introduction = getProfileValue(poster, [
+    "introduction", "selfIntroduction", "bio", "about"
+  ]);
+
+  const summaryLine = [grade, age !== "" ? age + "歳" : "", area]
+    .filter(Boolean)
+    .join(" / ");
+
+  const tags = [
+    ...String(Array.isArray(parts) ? parts.join("・") : parts)
+      .split(/[、,・]/).map(value => value.trim()).filter(Boolean),
+    ...String(Array.isArray(genres) ? genres.join("・") : genres)
+      .split(/[、,・]/).map(value => value.trim()).filter(Boolean)
+  ];
+  const uniqueTags = [...new Set(tags)];
+
+  return `
+    <div class="member-poster-card">
+      <div class="member-poster-avatar">${renderPosterAvatar(poster, name)}</div>
+      <div class="member-poster-content">
+        <p class="member-poster-name">${escapeHtml(name)}</p>
+        ${summaryLine ? `<p class="member-poster-meta">${escapeHtml(summaryLine)}</p>` : ""}
+        ${status ? `<p class="member-poster-meta">${escapeHtml(status)}</p>` : ""}
+        ${uniqueTags.length ? `
+          <div class="member-poster-tags">
+            ${uniqueTags.map(tag => `<span class="member-poster-tag">${escapeHtml(tag)}</span>`).join("")}
+          </div>
+        ` : ""}
+        ${introduction ? `<p class="member-poster-summary">${escapeHtml(introduction)}</p>` : ""}
+        ${posterUrl ? `
+          <a class="member-poster-link" href="${escapeHtml(posterUrl)}">
+            募集した人のプロフィールを見る →
+          </a>
+        ` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function renderEditLinkRow(link) {
+  const safeLink = link || { label: "", url: "" };
+  return `
+    <div class="member-edit-link-row">
+      <label>
+        リンク名
+        <input type="text" class="member-edit-link-label"
+          value="${escapeHtml(safeLink.label || "")}"
+          placeholder="例：YouTube" maxlength="60">
+      </label>
+      <label>
+        URL
+        <input type="url" class="member-edit-link-url"
+          value="${escapeHtml(safeLink.url || "")}"
+          placeholder="https://..." inputmode="url">
+      </label>
+      <button type="button" class="member-edit-remove-link">削除</button>
+    </div>
+  `;
+}
+
+function getAudioPublicUrl(post) {
+  if (post.audioPath) {
+    const result = window.OTO_SUPABASE.storage
+      .from(MEMBER_AUDIO_BUCKET)
+      .getPublicUrl(post.audioPath);
+    return result?.data?.publicUrl || "";
+  }
+  return safeHttpUrl(post.audioUrl);
+}
+
+function attachAudioPlayer(post) {
+  const player = document.getElementById("memberAudio");
+  const message = document.getElementById("memberAudioMessage");
+  if (!player || !message) return;
+
+  const audioUrl = getAudioPublicUrl(post);
+  if (!audioUrl) {
+    player.hidden = true;
+    message.textContent = "音源を読み込めませんでした。";
+    message.hidden = false;
+    return;
+  }
+
+  player.src = audioUrl;
+  player.hidden = false;
+  message.hidden = true;
+  player.addEventListener("error", function() {
+    player.hidden = true;
+    message.textContent = "音源を再生できませんでした。";
+    message.hidden = false;
+  }, { once: true });
+}
+
+function renderMemberDetail(post, poster) {
+  const detail = document.getElementById("memberDetail");
+  const type = getPostType(post);
+  const title = getDisplayTitle(post);
+  const links = getRecruitLinks(post);
+  const posterName = poster
+    ? getProfileValue(poster, ["name", "nickname"]) || "名前未設定"
+    : "プロフィール未登録";
+  const posterUrl = post.user_id
+    ? "profile-detail.html?id=" + encodeURIComponent(post.user_id)
+    : "";
+  const postedDate = formatPostedDate(post.createdAt || post.created_at);
+  const audioExists = Boolean(post.audioPath || post.audioUrl || post.audioFileName);
+  const linksMarkup = links.length ? `
+    <section class="member-detail-section">
+      <h2>参考音源・作品リンク</h2>
+      <div class="member-detail-links">
+        ${links.map(link => `
+          <a class="member-detail-link" href="${escapeHtml(link.url)}"
+            target="_blank" rel="noopener noreferrer">
+            <strong>${escapeHtml(link.label)}</strong><span>↗</span>
+          </a>
+        `).join("")}
+      </div>
+    </section>
+  ` : "";
+
+  const isOwner = Boolean(currentUser && String(currentUser.id) === String(post.user_id));
+
+  detail.innerHTML = `
+    <p class="member-detail-label">MEMBER / COLLABORATOR</p>
+    <h1>${escapeHtml(title)}</h1>
+
+    <div class="member-detail-tags">
+      ${type ? `<span class="member-detail-tag">${escapeHtml(type)}</span>` : ""}
+      ${post.genre ? `<span class="member-detail-tag">${escapeHtml(post.genre)}</span>` : ""}
+      ${post.area ? `<span class="member-detail-tag">${escapeHtml(post.area)}</span>` : ""}
+    </div>
+
+    <dl class="member-detail-info">
+      <dt>募集タイトル</dt><dd>${escapeHtml(title)}</dd>
+      <dt>募集する分野</dt><dd>${escapeHtml(type)}</dd>
+      ${post.genre ? `<dt>ジャンル</dt><dd>${escapeHtml(post.genre)}</dd>` : ""}
+      ${post.area ? `<dt>活動地域</dt><dd>${escapeHtml(post.area)}</dd>` : ""}
+      <dt>投稿者</dt>
+      <dd>${posterUrl
+        ? `<a class="member-author-link" href="${escapeHtml(posterUrl)}">${escapeHtml(posterName)}</a>`
+        : escapeHtml(posterName)}</dd>
+      ${postedDate ? `<dt>投稿日</dt><dd>${escapeHtml(postedDate)}</dd>` : ""}
+    </dl>
+
+    <section class="member-detail-section">
+      <h2>募集した人</h2>
+      ${renderPosterCard(poster, posterName, posterUrl)}
+    </section>
+
+    ${post.theme ? `
+      <section class="member-detail-section">
+        <h2>活動のテーマ</h2>
+        <div class="member-theme">${escapeHtml(post.theme)}</div>
+      </section>
+    ` : ""}
+
+    <section class="member-detail-section">
+      <h2>募集内容</h2>
+      <div class="member-detail-description">${escapeHtml(post.description || "")}</div>
+    </section>
+
+    ${audioExists ? `
+      <section class="member-detail-section">
+        <h2>参考音源</h2>
+        <audio id="memberAudio" class="member-audio-player"
+          controls preload="metadata" hidden></audio>
+        <p class="member-audio-filename">${escapeHtml(post.audioFileName || "")}</p>
+        <p class="member-audio-message" id="memberAudioMessage" hidden></p>
+      </section>
+    ` : ""}
+
+    ${linksMarkup}
+
+    <a class="member-detail-back" href="member.html">← 募集一覧に戻る</a>
+
+    ${isOwner ? `
+      <div class="member-detail-actions">
+        <button type="button" class="member-detail-edit" id="editMemberPost">募集を編集</button>
+        <button type="button" class="member-detail-delete" id="deleteMemberPost">自分の投稿を削除</button>
+      </div>
+      <section id="memberEditPanel" class="member-edit-panel" hidden></section>
+    ` : ""}
+  `;
+
+  if (audioExists) attachAudioPlayer(post);
+
+  const editButton = document.getElementById("editMemberPost");
+  if (editButton) {
+    editButton.addEventListener("click", function() {
+      openMemberEditForm(post);
+    });
+  }
+
+  const deleteButton = document.getElementById("deleteMemberPost");
+  if (deleteButton) {
+    deleteButton.addEventListener("click", function() {
+      deleteMemberPost(post, deleteButton);
+    });
+  }
+}
+
+function openMemberEditForm(post) {
+  const panel = document.getElementById("memberEditPanel");
+  const editButton = document.getElementById("editMemberPost");
+  if (!panel || !editButton) return;
+
+  if (!panel.hidden) {
+    panel.hidden = true;
+    editButton.textContent = "募集を編集";
+    return;
+  }
+
+  const typeOptions = [
+    "バンドメンバー", "ボーカル", "ギター", "ベース", "ドラム",
+    "キーボード", "その他の楽器演奏", "作曲", "作詞", "編曲",
+    "DTM・トラックメイク", "MIX・マスタリング", "MV・映像制作",
+    "ジャケット・デザイン", "写真・撮影", "DJ",
+    "ライブ・イベント企画", "ライブ・イベントスタッフ", "その他"
+  ];
+  const selectedType = getPostType(post);
+  if (selectedType && !typeOptions.includes(selectedType)) {
+    typeOptions.unshift(selectedType);
+  }
+
+  const typeOptionsHtml = typeOptions.map(type => `
+    <option value="${escapeHtml(type)}" ${selectedType === type ? "selected" : ""}>
+      ${escapeHtml(type)}
+    </option>
+  `).join("");
+
+  const currentLinks = getRecruitLinks(post);
+  const hasAudio = Boolean(post.audioPath || post.audioUrl || post.audioFileName);
+
+  panel.innerHTML = `
+    <h2>募集を編集</h2>
+    <p class="member-edit-note">
+      募集内容を変更できます。音源ファイルを選ばなければ現在の音源を維持します。
+      保存・削除の操作は投稿者本人だけが行えます。
+    </p>
+
+    <form id="memberEditForm">
+      <label>
+        募集タイトル
+        <input type="text" id="memberEditTitle"
+          value="${escapeHtml(post.title || "")}" required>
+      </label>
+
+      <label>
+        募集する分野
+        <select id="memberEditType" required>
+          <option value="">選択してください</option>
+          ${typeOptionsHtml}
+        </select>
+      </label>
+
+      <label>
+        ジャンル（任意）
+        <input type="text" id="memberEditGenre" value="${escapeHtml(post.genre || "")}">
+      </label>
+
+      <label>
+        活動のテーマ（任意）
+        <textarea id="memberEditTheme">${escapeHtml(post.theme || "")}</textarea>
+      </label>
+
+      <label>
+        活動地域
+        <input type="text" id="memberEditArea"
+          value="${escapeHtml(post.area || "")}" required>
+      </label>
+
+      <label>
+        募集内容
+        <textarea id="memberEditDescription" required>${escapeHtml(post.description || "")}</textarea>
+      </label>
+
+      <h3 class="member-edit-links-heading">参考音源・作品リンク</h3>
+      <p class="member-edit-help">
+        リンク名とURLを入力してください。URLは https:// または http:// から始まる必要があります。
+      </p>
+      <div id="memberEditLinksRows">
+        ${currentLinks.length
+          ? currentLinks.map(renderEditLinkRow).join("")
+          : renderEditLinkRow({ label: "", url: "" })}
+      </div>
+
+      <button type="button" id="memberEditAddLink" class="member-edit-add-link">
+        ＋ リンクを追加
+      </button>
+
+      <div class="member-edit-audio-group">
+        <label>
+          参考音源ファイル（任意）
+          <input type="file" id="memberEditAudio" accept="audio/*">
+          <p class="member-edit-help">新しい音源を選ぶと置き換えます。50MB以下の音声ファイルを選択してください。</p>
+          <p class="member-edit-current-file">
+            現在の音源：${escapeHtml(post.audioFileName || (hasAudio ? "登録済み" : "なし"))}
+          </p>
+        </label>
+        ${hasAudio ? `
+          <label class="member-edit-remove-option">
+            <input type="checkbox" id="memberEditRemoveAudio">
+            <span>現在の音源を削除する</span>
+          </label>
+        ` : ""}
+      </div>
+
+      <div class="member-edit-actions">
+        <button type="submit" class="member-edit-save" id="memberEditSave">変更を保存する</button>
+        <button type="button" class="member-edit-cancel" id="memberEditCancel">キャンセル</button>
+      </div>
+    </form>
+  `;
+
+  panel.hidden = false;
+  editButton.textContent = "編集フォームを閉じる";
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const linksRows = document.getElementById("memberEditLinksRows");
+  document.getElementById("memberEditAddLink").addEventListener("click", function() {
+    linksRows.insertAdjacentHTML("beforeend", renderEditLinkRow({ label: "", url: "" }));
+  });
+
+  linksRows.addEventListener("click", function(event) {
+    const removeButton = event.target.closest(".member-edit-remove-link");
+    if (removeButton) removeButton.closest(".member-edit-link-row")?.remove();
+  });
+
+  const audioInput = document.getElementById("memberEditAudio");
+  const removeAudioCheckbox = document.getElementById("memberEditRemoveAudio");
+
+  if (audioInput && removeAudioCheckbox) {
+    audioInput.addEventListener("change", function() {
+      if (audioInput.files.length > 0) removeAudioCheckbox.checked = false;
+    });
+    removeAudioCheckbox.addEventListener("change", function() {
+      if (removeAudioCheckbox.checked) audioInput.value = "";
+    });
+  }
+
+  document.getElementById("memberEditCancel").addEventListener("click", function() {
+    panel.hidden = true;
+    panel.innerHTML = "";
+    editButton.textContent = "募集を編集";
+    editButton.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  document.getElementById("memberEditForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const activeUser = await window.OTOAuth.getCurrentUser();
+    if (!activeUser || String(activeUser.id) !== String(post.user_id)) {
+      alert("自分の募集だけ編集できます。ログイン状態も確認してください。");
+      return;
+    }
+
+    const title = document.getElementById("memberEditTitle").value.trim();
+    const type = document.getElementById("memberEditType").value;
+    const genre = document.getElementById("memberEditGenre").value.trim();
+    const theme = document.getElementById("memberEditTheme").value.trim();
+    const area = document.getElementById("memberEditArea").value.trim();
+    const description = document.getElementById("memberEditDescription").value.trim();
+    const audioFile = audioInput.files[0] || null;
+    const removeAudio = Boolean(removeAudioCheckbox?.checked);
+
+    if (!title || !type || !area || !description) {
+      alert("募集タイトル・分野・地域・募集内容を入力してください。");
+      return;
+    }
+
+    if (audioFile && !audioFile.type.startsWith("audio/")) {
+      alert("音声ファイルを選択してください。");
+      return;
+    }
+    if (audioFile && audioFile.size > MAX_AUDIO_SIZE) {
+      alert("音源ファイルは50MB以下にしてください。");
+      return;
+    }
+
+    const updatedLinks = [];
+    const rows = Array.from(linksRows.querySelectorAll(".member-edit-link-row"));
+    for (const row of rows) {
+      const label = row.querySelector(".member-edit-link-label").value.trim();
+      const value = row.querySelector(".member-edit-link-url").value.trim();
+      if (!label && !value) continue;
+      if (!label || !value) {
+        alert("参考リンクはリンク名とURLの両方を入力してください。");
+        return;
+      }
+      const url = safeHttpUrl(value);
+      if (!url) {
+        alert("参考リンクのURLは https:// または http:// から始まるURLを入力してください。");
+        row.querySelector(".member-edit-link-url").focus();
+        return;
+      }
+      updatedLinks.push({ label, url });
+    }
+
+    const saveButton = document.getElementById("memberEditSave");
+    saveButton.disabled = true;
+    saveButton.textContent = "保存しています…";
+
+    const oldAudioPath = post.audioPath || "";
+    let newAudioPath = oldAudioPath;
+    let newAudioUrl = post.audioUrl || "";
+    let uploadedAudioPath = "";
+
+    try {
+      const latestUser = await window.OTOAuth.getCurrentUser();
+      if (!latestUser || String(latestUser.id) !== String(post.user_id)) {
+        throw new Error("ログイン状態が変わったため、保存できませんでした。");
+      }
+
+      if (audioFile) {
+        const safeFileName = audioFile.name
+          .replace(/[^\w.\-ぁ-んァ-ヶ一-龠]/g, "_")
+          .slice(-100) || "audio";
+        uploadedAudioPath =
+          `${activeUser.id}/${post.id}/${Date.now()}_${safeFileName}`;
+
+        const uploadResult = await window.OTO_SUPABASE.storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .upload(uploadedAudioPath, audioFile, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: audioFile.type
+          });
+
+        if (uploadResult.error) throw uploadResult.error;
+
+        newAudioPath = uploadedAudioPath;
+        const publicResult = window.OTO_SUPABASE.storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .getPublicUrl(newAudioPath);
+        newAudioUrl = publicResult?.data?.publicUrl || "";
+      } else if (removeAudio) {
+        newAudioPath = "";
+        newAudioUrl = "";
+      }
+
+      const updatedData = {
+        ...post,
+        id: post.id,
+        userId: activeUser.id,
+        title,
+        type,
+        genre,
+        theme,
+        area,
+        description,
+        links: updatedLinks,
+        audioPath: newAudioPath,
+        audioUrl: newAudioUrl,
+        audioFileName: removeAudio ? "" : (audioFile ? audioFile.name : (post.audioFileName || ""))
+      };
+
+      delete updatedData.user_id;
+      delete updatedData.created_at;
+      delete updatedData.updated_at;
+
+      const updateResult = await window.OTO_SUPABASE
+        .from("posts")
+        .update({ data: updatedData })
+        .eq("id", post.id)
+        .eq("user_id", activeUser.id)
+        .eq("post_type", "member")
+        .select("id")
+        .maybeSingle();
+
+      if (updateResult.error) throw updateResult.error;
+      if (!updateResult.data) {
+        throw new Error("募集を更新できませんでした。投稿者本人としてログインしているか確認してください。");
+      }
+
+      if ((audioFile || removeAudio) && oldAudioPath && oldAudioPath !== newAudioPath) {
+        const removeResult = await window.OTO_SUPABASE.storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .remove([oldAudioPath]);
+        if (removeResult.error) {
+          console.warn("古い音源ファイルを削除できませんでした:", removeResult.error);
+        }
+      }
+
+      alert("募集内容を更新しました。");
+      window.location.reload();
+    } catch (error) {
+      if (uploadedAudioPath) {
+        await window.OTO_SUPABASE.storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .remove([uploadedAudioPath])
+          .catch(() => {});
+      }
+      console.error("募集の更新エラー:", error);
+      alert(error.message || "募集を更新できませんでした。");
+      saveButton.disabled = false;
+      saveButton.textContent = "変更を保存する";
+    }
+  });
+}
+
+async function deleteMemberPost(post, deleteButton) {
+  const activeUser = await window.OTOAuth.getCurrentUser();
+  if (!activeUser || String(activeUser.id) !== String(post.user_id)) {
+    alert("自分の募集だけ削除できます。ログイン状態も確認してください。");
+    return;
+  }
+
+  if (!confirm("このメンバー募集を削除しますか？")) return;
+
+  deleteButton.disabled = true;
+  deleteButton.textContent = "削除しています…";
+
+  try {
+    const latestUser = await window.OTOAuth.getCurrentUser();
+    if (!latestUser || String(latestUser.id) !== String(post.user_id)) {
+      throw new Error("ログイン状態が変わったため削除できませんでした。");
+    }
+
+    const deleteResult = await window.OTO_SUPABASE
+      .from("posts")
+      .delete()
+      .eq("id", post.id)
+      .eq("user_id", activeUser.id)
+      .eq("post_type", "member")
+      .select("id")
+      .maybeSingle();
+
+    if (deleteResult.error) throw deleteResult.error;
+    if (!deleteResult.data) {
+      throw new Error("募集を削除できませんでした。投稿者本人としてログインしているか確認してください。");
+    }
+
+    if (post.audioPath) {
+      const storageResult = await window.OTO_SUPABASE.storage
+        .from(MEMBER_AUDIO_BUCKET)
+        .remove([post.audioPath]);
+      if (storageResult.error) {
+        console.warn("募集は削除されましたが、音源ファイルの削除に失敗しました:", storageResult.error);
+        alert("募集は削除しましたが、音源ファイルの削除に失敗しました。");
+      }
+    }
+
+    window.location.href = "member.html";
+  } catch (error) {
+    console.error("募集の削除エラー:", error);
+    alert(error.message || "募集を削除できませんでした。");
+    deleteButton.disabled = false;
+    deleteButton.textContent = "自分の投稿を削除";
+  }
+}
+
+async function displayMemberDetail() {
+  const detail = document.getElementById("memberDetail");
+  const params = new URLSearchParams(window.location.search);
+  const postId = params.get("id");
+
+  if (!postId) {
+    showNotFound();
+    return;
+  }
+
+  try {
+    await window.OTOAuth.ready;
+    currentUser = await window.OTOAuth.getCurrentUser();
+
+    const postResult = await window.OTO_SUPABASE
+      .from("posts")
+      .select("id, user_id, data, created_at, updated_at")
+      .eq("id", postId)
+      .eq("post_type", "member")
+      .maybeSingle();
+
+    if (postResult.error) throw postResult.error;
+    if (!postResult.data) {
+      showNotFound();
+      return;
+    }
+
+    const row = postResult.data;
+    const data = row.data && typeof row.data === "object" ? row.data : {};
+    currentPost = {
+      ...data,
+      id: row.id,
+      user_id: row.user_id,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+      createdAt: data.createdAt || row.created_at
+    };
+
+    let poster = null;
+    const profileResult = await window.OTO_SUPABASE
+      .from("profiles")
+      .select("id, data")
+      .eq("id", row.user_id)
+      .maybeSingle();
+
+    if (profileResult.error) {
+      console.warn("投稿者プロフィールを読み込めませんでした:", profileResult.error);
+    } else if (profileResult.data?.data && typeof profileResult.data.data === "object") {
+      poster = profileResult.data.data;
+    }
+
+    currentPosterProfile = poster;
+    renderMemberDetail(currentPost, poster);
+  } catch (error) {
+    console.error("募集詳細の読み込みエラー:", error);
+    detail.innerHTML = `
+      <div class="member-detail-empty">
+        <h2>募集情報を読み込めませんでした</h2>
+        <p>通信状態を確認して、もう一度ページを読み込んでください。</p>
+        <a class="member-detail-back" href="member.html">← 募集一覧に戻る</a>
+      </div>
+    `;
+  }
+}
+
+displayMemberDetail();
+</script>
+
+</body>
+</html>

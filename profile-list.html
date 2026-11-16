@@ -1,0 +1,1011 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OTO LINKで音楽をする仲間を探そう。プロフィールから音楽の好みや活動地域を確認できます。">
+  <title>プロフィール一覧 | OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .profile-list-page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 48px auto 80px;
+    }
+
+    .profile-list-intro {
+      margin-bottom: 28px;
+      line-height: 1.9;
+      color: #666;
+    }
+
+    .profile-list-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .profile-search-input {
+      width: 100%;
+      min-width: 0;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      background: #fff;
+      font: inherit;
+    }
+
+    .profile-search-button {
+      padding: 12px 22px;
+      border: 1px solid #171717;
+      background: #171717;
+      color: #fff;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .profile-search-button:hover {
+      background: #444;
+    }
+
+    .profile-list-status {
+      margin-bottom: 18px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .profile-list-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .profile-list-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 24px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      transition: border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .profile-list-card:hover {
+      border-color: #999;
+    }
+
+    .profile-list-card:focus-visible {
+      outline: 2px solid #171717;
+      outline-offset: 3px;
+    }
+
+    .profile-list-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .profile-list-avatar {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 58px;
+      overflow: hidden;
+      border: 1px solid #e5e5e1;
+      border-radius: 50%;
+      background: #f2f2ef;
+      font-size: 23px;
+    }
+
+    .profile-list-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-list-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .profile-list-subtitle {
+      margin-top: 5px;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .profile-list-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .profile-list-tag {
+      display: inline-block;
+      padding: 5px 9px;
+      background: #f0f0ed;
+      color: #555;
+      font-size: 12px;
+    }
+
+    .profile-list-field {
+      margin-bottom: 10px;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-list-field strong {
+      color: #222;
+    }
+
+    .profile-list-description {
+      display: -webkit-box;
+      overflow: hidden;
+      margin-top: 4px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
+    }
+
+    .profile-list-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: auto;
+      padding-top: 22px;
+    }
+
+    .profile-list-link {
+      display: inline-block;
+      padding: 10px 14px;
+      border: 1px solid #171717;
+      background: #171717;
+      color: #fff;
+      font-size: 13px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .profile-list-link:hover {
+      background: #444;
+    }
+
+    .profile-list-link.secondary {
+      background: #fff;
+      color: #171717;
+    }
+
+    .profile-list-link.secondary:hover {
+      background: #f5f5f2;
+    }
+
+    .profile-list-empty {
+      grid-column: 1 / -1;
+      padding: 38px 24px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      color: #666;
+      line-height: 1.9;
+      text-align: center;
+    }
+
+    .profile-list-empty a {
+      color: #171717;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 32px 0 12px;
+    }
+
+    .pagination-button {
+      min-width: 42px;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #171717;
+      font: inherit;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .pagination-button:hover:not(:disabled) {
+      border-color: #171717;
+    }
+
+    .pagination-button.is-current {
+      background: #171717;
+      border-color: #171717;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .pagination-button:disabled {
+      color: #aaa;
+      background: #f5f5f5;
+      cursor: not-allowed;
+    }
+
+    .pagination-ellipsis {
+      padding: 0 3px;
+      color: #777;
+    }
+
+    .pagination-info {
+      width: 100%;
+      margin-top: 4px;
+      color: #666;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .profile-list-create {
+      margin-top: 36px;
+      padding: 28px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .profile-list-create h2 {
+      margin-bottom: 10px;
+      font-size: 21px;
+    }
+
+    .profile-list-create p {
+      margin-bottom: 18px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .profile-list-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .profile-list-page {
+        width: calc(100% - 28px);
+        margin-top: 30px;
+      }
+
+      .profile-list-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-list-toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-search-button {
+        min-height: 46px;
+      }
+
+      .profile-list-card {
+        padding: 20px;
+      }
+
+      .profile-list-actions {
+        flex-direction: column;
+      }
+
+      .profile-list-link {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .pagination {
+        gap: 5px;
+        margin-top: 26px;
+      }
+
+      .pagination-button {
+        min-width: 36px;
+        height: 38px;
+        padding: 0 9px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo">OTO LINK</a>
+
+    <nav class="global-nav">
+      <a href="index.html" class="global-home">ホーム</a>
+
+      <details class="global-search-menu">
+        <summary>探す <span class="menu-chevron">⌄</span></summary>
+
+        <div class="global-search-panel">
+          <a href="bands.html" class="global-search-card">
+            <span class="global-search-icon">🎵</span>
+            <span class="global-search-text">
+              <strong>音楽活動を探す</strong>
+              <small>いろいろな音楽活動を見つける</small>
+            </span>
+            <span class="global-search-arrow">→</span>
+          </a>
+
+          <a href="member.html" class="global-search-card">
+            <span class="global-search-icon">👥</span>
+            <span class="global-search-text">
+              <strong>メンバー・協力者を探す</strong>
+              <small>一緒に活動する仲間を見つける</small>
+            </span>
+            <span class="global-search-arrow">→</span>
+          </a>
+
+          <a href="live.html" class="global-search-card">
+            <span class="global-search-icon">🎤</span>
+            <span class="global-search-text">
+              <strong>ライブを探す</strong>
+              <small>出演できるライブやイベント</small>
+            </span>
+            <span class="global-search-arrow">→</span>
+          </a>
+
+          <a href="chat.html" class="global-search-card">
+            <span class="global-search-icon">💬</span>
+            <span class="global-search-text">
+              <strong>チャット</strong>
+              <small>音楽仲間と会話する</small>
+            </span>
+            <span class="global-search-arrow">→</span>
+          </a>
+        </div>
+      </details>
+
+      <a href="profile-list.html">プロフィール</a>
+      <a href="chat.html">チャット</a>
+    </nav>
+
+    <div class="header-account" id="headerAccount"></div>
+  </header>
+
+  <section class="page-header">
+    <h1>プロフィール一覧</h1>
+    <p>音楽を通じて、一緒に活動する仲間を見つけよう。</p>
+  </section>
+
+  <main class="profile-list-page">
+    <section aria-labelledby="profileListHeading">
+      <div class="profile-list-intro">
+        <p>
+          音楽の担当、好きなジャンル、活動地域。
+          プロフィールを見ながら、自分と気の合いそうな仲間を探してみよう。
+        </p>
+      </div>
+
+      <h2 id="profileListHeading" class="section-heading">
+        みんなのプロフィール
+      </h2>
+
+      <form id="profileSearchForm" class="profile-list-toolbar" role="search">
+        <input
+          type="search"
+          id="profileSearch"
+          class="profile-search-input"
+          name="q"
+          placeholder="名前・地域・担当・ジャンルで検索"
+          aria-label="プロフィールを検索"
+        >
+
+        <button type="submit" class="profile-search-button">
+          検索する
+        </button>
+      </form>
+
+      <p
+        id="profileListStatus"
+        class="profile-list-status"
+        aria-live="polite"
+      ></p>
+
+      <div
+        id="profileList"
+        class="profile-list-grid"
+        aria-labelledby="profileListHeading"
+      >
+        <p class="profile-list-empty">プロフィールを読み込んでいます…</p>
+      </div>
+
+      <nav
+        id="profilePagination"
+        class="pagination"
+        aria-label="プロフィール一覧のページ移動"
+        hidden
+      ></nav>
+    </section>
+
+    <section class="profile-list-create" aria-labelledby="profileCreateHeading">
+      <h2 id="profileCreateHeading">自分のプロフィールを登録しよう</h2>
+      <p>
+        好きな音楽や担当、活動地域を登録すると、
+        ほかの人に自分のことを知ってもらいやすくなるよ。
+      </p>
+
+      <a href="profile.html" class="profile-list-link">
+        プロフィールを登録・編集する →
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <a href="index.html" class="footer-logo">OTO LINK</a>
+        <p>音楽と仲間に、出会える場所。</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="フッターナビゲーション">
+        <a href="bands.html">音楽活動を探す</a>
+        <a href="member.html">メンバー・協力者を探す</a>
+        <a href="live.html">ライブを探す</a>
+        <a href="profile-list.html">プロフィール</a>
+        <a href="chat.html">チャット</a>
+      </nav>
+    </div>
+
+    <p class="copyright">© 2026 OTO LINK</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    "use strict";
+
+    const supabase = window.OTO_SUPABASE;
+
+    const profileList = document.getElementById("profileList");
+    const profileSearch = document.getElementById("profileSearch");
+    const profileSearchForm = document.getElementById("profileSearchForm");
+    const profileListStatus = document.getElementById("profileListStatus");
+    const profilePagination = document.getElementById("profilePagination");
+
+    const ITEMS_PER_PAGE = 18;
+
+    let allProfiles = [];
+    let currentPage = 1;
+    let currentUser = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getProfileValue(profile, keys) {
+      for (const key of keys) {
+        const value = profile[key];
+
+        if (
+          value !== undefined &&
+          value !== null &&
+          String(value).trim() !== ""
+        ) {
+          return String(value).trim();
+        }
+      }
+
+      return "";
+    }
+
+    function normalizeText(value) {
+      return String(value || "")
+        .normalize("NFKC")
+        .toLocaleLowerCase("ja")
+        .trim();
+    }
+
+    function matchesSearch(profile, query) {
+      if (!query) {
+        return true;
+      }
+
+      const searchableValues = [
+        profile.name,
+        profile.grade,
+        profile.area,
+        profile.part,
+        profile.genre,
+        profile.artist,
+        profile.introduction
+      ];
+
+      return searchableValues.some(function(value) {
+        return normalizeText(value).includes(query);
+      });
+    }
+
+    function getAvatarMarkup(profile, name) {
+      const iconUrl = getProfileValue(profile, [
+        "avatar",
+        "iconUrl",
+        "icon",
+        "profileImage",
+        "image"
+      ]);
+
+      if (
+        iconUrl &&
+        (
+          /^https?:\/\//i.test(iconUrl) ||
+          /^data:image\/(png|jpeg|jpg|gif|webp);base64,/i.test(iconUrl)
+        )
+      ) {
+        return `
+          <div class="profile-list-avatar">
+            <img
+              src="${escapeHtml(iconUrl)}"
+              alt=""
+              loading="lazy"
+            >
+          </div>
+        `;
+      }
+
+      return `
+        <div class="profile-list-avatar" aria-hidden="true">
+          ${escapeHtml(name.charAt(0) || "♪")}
+        </div>
+      `;
+    }
+
+    function createProfileCard(profile) {
+      const userId = String(profile.userId ?? "");
+      const name = getProfileValue(profile, ["name"]) || "名前未設定";
+      const grade = getProfileValue(profile, ["grade"]);
+      const area = getProfileValue(profile, ["area"]);
+      const part = getProfileValue(profile, ["part"]);
+      const genre = getProfileValue(profile, ["genre"]);
+      const artist = getProfileValue(profile, ["artist"]);
+      const introduction = getProfileValue(profile, ["introduction"]);
+
+      const isOwnProfile =
+        Boolean(currentUser) &&
+        String(currentUser.id) === userId;
+
+      const detailUrl =
+        "profile-detail.html?id=" + encodeURIComponent(userId);
+
+      const cardUrl = isOwnProfile ? "profile.html" : detailUrl;
+
+      const card = document.createElement("article");
+      card.className = "profile-list-card";
+      card.setAttribute("role", "link");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute(
+        "aria-label",
+        isOwnProfile
+          ? "自分のプロフィールを編集"
+          : name + "のプロフィールを見る"
+      );
+
+      card.addEventListener("click", function(event) {
+        if (event.target.closest("a, button")) {
+          return;
+        }
+
+        window.location.href = cardUrl;
+      });
+
+      card.addEventListener("keydown", function(event) {
+        if (event.target !== card) {
+          return;
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          window.location.href = cardUrl;
+        }
+      });
+
+      const tags = [grade, area]
+        .filter(Boolean)
+        .map(function(value) {
+          return `<span class="profile-list-tag">${escapeHtml(value)}</span>`;
+        })
+        .join("");
+
+      const actions = isOwnProfile
+        ? `
+          <div class="profile-list-actions">
+            <a class="profile-list-link" href="profile.html">
+              自分のプロフィールを編集
+            </a>
+          </div>
+        `
+        : `
+          <div class="profile-list-actions">
+            <a class="profile-list-link" href="${escapeHtml(detailUrl)}">
+              プロフィールを見る →
+            </a>
+          </div>
+        `;
+
+      card.innerHTML = `
+        <div class="profile-list-card-top">
+          ${getAvatarMarkup(profile, name)}
+
+          <div>
+            <h3 class="profile-list-name">${escapeHtml(name)}</h3>
+            <p class="profile-list-subtitle">
+              ${escapeHtml([grade, area].filter(Boolean).join(" ・ ") || "プロフィール情報")}
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-list-tags">
+          ${tags}
+        </div>
+
+        ${part ? `
+          <p class="profile-list-field">
+            <strong>担当：</strong>${escapeHtml(part)}
+          </p>
+        ` : ""}
+
+        ${genre ? `
+          <p class="profile-list-field">
+            <strong>好きなジャンル：</strong>${escapeHtml(genre)}
+          </p>
+        ` : ""}
+
+        ${artist ? `
+          <p class="profile-list-field">
+            <strong>好きなアーティスト：</strong>${escapeHtml(artist)}
+          </p>
+        ` : ""}
+
+        <p class="profile-list-description">
+          ${escapeHtml(introduction || "自己紹介はまだ登録されていません。")}
+        </p>
+
+        ${actions}
+      `;
+
+      return card;
+    }
+
+    function getVisiblePages(page, totalPages) {
+      if (totalPages <= 7) {
+        return Array.from(
+          { length: totalPages },
+          function(_, index) {
+            return index + 1;
+          }
+        );
+      }
+
+      const pages = [1];
+
+      if (page > 4) {
+        pages.push("ellipsis-start");
+      }
+
+      const start = Math.max(2, page - 1);
+      const end = Math.min(totalPages - 1, page + 1);
+
+      for (let number = start; number <= end; number++) {
+        pages.push(number);
+      }
+
+      if (page < totalPages - 3) {
+        pages.push("ellipsis-end");
+      }
+
+      pages.push(totalPages);
+
+      return pages;
+    }
+
+    function scrollToProfileList() {
+      const top =
+        profileList.getBoundingClientRect().top + window.scrollY - 110;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: "smooth"
+      });
+    }
+
+    function renderPagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      profilePagination.replaceChildren();
+
+      if (totalPages <= 1) {
+        profilePagination.hidden = true;
+        return;
+      }
+
+      profilePagination.hidden = false;
+
+      function addButton(label, page, options) {
+        const settings = options || {};
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "pagination-button";
+        button.textContent = label;
+
+        if (settings.current) {
+          button.classList.add("is-current");
+          button.setAttribute("aria-current", "page");
+        }
+
+        if (settings.disabled) {
+          button.disabled = true;
+        }
+
+        button.addEventListener("click", function() {
+          if (button.disabled || page === currentPage) {
+            return;
+          }
+
+          currentPage = page;
+          displayProfiles(profileSearch.value);
+          scrollToProfileList();
+        });
+
+        profilePagination.appendChild(button);
+      }
+
+      addButton("前へ", currentPage - 1, {
+        disabled: currentPage === 1
+      });
+
+      getVisiblePages(currentPage, totalPages).forEach(function(page) {
+        if (typeof page === "string") {
+          const ellipsis = document.createElement("span");
+          ellipsis.className = "pagination-ellipsis";
+          ellipsis.textContent = "…";
+          ellipsis.setAttribute("aria-hidden", "true");
+          profilePagination.appendChild(ellipsis);
+          return;
+        }
+
+        addButton(String(page), page, {
+          current: page === currentPage
+        });
+      });
+
+      addButton("次へ", currentPage + 1, {
+        disabled: currentPage === totalPages
+      });
+
+      const info = document.createElement("span");
+      info.className = "pagination-info";
+
+      const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+      const endItem = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+
+      info.textContent =
+        totalItems + "件中 " + startItem + "〜" + endItem + "件を表示";
+
+      profilePagination.appendChild(info);
+    }
+
+    function displayProfiles(query) {
+      const normalizedQuery = normalizeText(query);
+
+      const filteredProfiles = allProfiles.filter(function(profile) {
+        return matchesSearch(profile, normalizedQuery);
+      });
+
+      const totalPages = Math.ceil(
+        filteredProfiles.length / ITEMS_PER_PAGE
+      );
+
+      if (totalPages === 0) {
+        currentPage = 1;
+      } else if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      profileList.replaceChildren();
+
+      profileListStatus.textContent =
+        filteredProfiles.length + "件のプロフィール";
+
+      if (filteredProfiles.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "profile-list-empty";
+
+        if (allProfiles.length === 0) {
+          empty.innerHTML = `
+            <p>まだプロフィールがありません。</p>
+            <p>最初のプロフィールを登録してみよう。</p>
+            <p><a href="profile.html">プロフィールを登録する →</a></p>
+          `;
+        } else {
+          empty.textContent =
+            "検索条件に一致するプロフィールがありません。別の言葉で検索してみてください。";
+        }
+
+        profileList.appendChild(empty);
+        renderPagination(0);
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const visibleProfiles = filteredProfiles.slice(
+        startIndex,
+        startIndex + ITEMS_PER_PAGE
+      );
+
+      visibleProfiles.forEach(function(profile) {
+        profileList.appendChild(createProfileCard(profile));
+      });
+
+      renderPagination(filteredProfiles.length);
+    }
+
+    /*
+     * Supabaseのprofilesテーブルからプロフィールを取得する。
+     * profiles.dataにプロフィール情報、profiles.idにAuthのユーザーIDが入っている。
+     */
+    async function loadProfiles() {
+      profileList.innerHTML = `
+        <p class="profile-list-empty">プロフィールを読み込んでいます…</p>
+      `;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, data");
+
+      if (error) {
+        console.error("プロフィール取得エラー:", error);
+
+        profileListStatus.textContent = "";
+
+        profileList.innerHTML = `
+          <div class="profile-list-empty">
+            プロフィールを読み込めませんでした。<br>
+            時間をおいて、もう一度お試しください。
+          </div>
+        `;
+
+        return;
+      }
+
+      allProfiles = (data || [])
+        .filter(function(row) {
+          return row && row.id;
+        })
+        .map(function(row) {
+          const profileData =
+            row.data && typeof row.data === "object" && !Array.isArray(row.data)
+              ? row.data
+              : {};
+
+          return {
+            ...profileData,
+            userId: String(row.id)
+          };
+        });
+
+      currentPage = 1;
+      displayProfiles(profileSearch.value);
+    }
+
+    /*
+     * ヘッダーのアカウント表示
+     */
+    async function renderHeaderAccount() {
+      if (
+        window.OTOAuth &&
+        typeof window.OTOAuth.updateHeaderAccount === "function"
+      ) {
+        await window.OTOAuth.updateHeaderAccount();
+        return;
+      }
+
+      const headerAccount = document.getElementById("headerAccount");
+
+      if (!currentUser) {
+        headerAccount.innerHTML = `
+          <a href="login.html">ログイン</a>
+          <a href="signup.html">新規登録</a>
+        `;
+        return;
+      }
+
+      headerAccount.innerHTML = `
+        <a href="profile.html">マイページ</a>
+      `;
+    }
+
+    /*
+     * ページ初期化
+     */
+    async function initialize() {
+      if (!supabase) {
+        profileListStatus.textContent = "";
+
+        profileList.innerHTML = `
+          <div class="profile-list-empty">
+            Supabaseの接続設定を読み込めませんでした。
+          </div>
+        `;
+
+        return;
+      }
+
+      try {
+        await window.OTOAuth.ready;
+
+        currentUser = await window.OTOAuth.getCurrentUser();
+
+        await renderHeaderAccount();
+
+        await loadProfiles();
+
+      } catch (error) {
+        console.error("プロフィール一覧の初期化エラー:", error);
+
+        profileListStatus.textContent = "";
+
+        profileList.innerHTML = `
+          <div class="profile-list-empty">
+            ページの読み込みに失敗しました。<br>
+            ページを再読み込みしてください。
+          </div>
+        `;
+      }
+    }
+
+    /*
+     * 検索イベント
+     */
+    profileSearchForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      currentPage = 1;
+      displayProfiles(profileSearch.value);
+    });
+
+    profileSearch.addEventListener("input", function() {
+      currentPage = 1;
+      displayProfiles(profileSearch.value);
+    });
+
+    initialize();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>活動の詳細 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .activity-detail{width:min(900px,calc(100% - 40px));margin:45px auto 80px}
+    .activity-detail-image{width:100%;max-height:520px;aspect-ratio:16/9;background:#f0f0f0;overflow:hidden;display:flex;justify-content:center;align-items:center;margin-bottom:32px}
+    .activity-detail-image img{display:block;width:100%;height:100%;max-height:520px;object-fit:contain}
+    .activity-detail-placeholder{color:#777;font-size:14px;letter-spacing:4px}
+    .activity-detail h1{font-size:clamp(28px,5vw,42px);line-height:1.4;margin:0 0 18px;overflow-wrap:anywhere}
+    .activity-detail-tags{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 30px}
+    .activity-detail-tag{border:1px solid #ddd;padding:6px 12px;font-size:14px;border-radius:4px}
+    .activity-detail-info{display:grid;grid-template-columns:150px minmax(0,1fr);border-top:1px solid #e5e5e1;margin-bottom:32px}
+    .activity-detail-info dt,.activity-detail-info dd{margin:0;padding:16px 10px;border-bottom:1px solid #e5e5e1;line-height:1.8;overflow-wrap:anywhere}
+    .activity-detail-info dt{color:#666;font-size:14px}
+    .activity-detail-info dd{white-space:pre-wrap}
+    .activity-author-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
+    .activity-author-link:hover{color:#555}
+    .activity-detail-section{margin-top:42px}
+    .activity-detail-section h2{font-size:22px;margin-bottom:16px}
+    .activity-detail-description{white-space:pre-wrap;overflow-wrap:anywhere;line-height:2}
+    .activity-dream-section{padding:25px;background:#f6f6f6;border-left:3px solid #333}
+    .activity-dream-section h2{margin-top:0}
+    .activity-media-player{display:block;width:100%;max-height:520px;margin-top:15px;background:#111}
+    .activity-audio-player{display:block;width:100%;margin-top:15px}
+    .activity-media-filename{color:#777;font-size:13px;overflow-wrap:anywhere}
+    .activity-media-missing{padding:14px;background:#f5f5f5;color:#666;line-height:1.8}
+    .activity-detail-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .activity-detail-link-card{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 18px;border:1px solid #ddd;background:#fff;color:#222;text-decoration:none;min-width:0;transition:background .2s ease,border-color .2s ease}
+    .activity-detail-link-card:hover{background:#f5f5f2;border-color:#bbb}
+    .activity-detail-link-label{font-weight:700;overflow-wrap:anywhere}
+    .activity-detail-link-arrow{flex-shrink:0;color:#777}
+    .activity-detail-back{display:inline-block;margin-top:28px;color:#333}
+    .activity-related-section{margin-top:45px}
+    .activity-related-section h2{font-size:22px;margin-bottom:15px}
+    .activity-related-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .activity-related-card{display:block;min-width:0;padding:18px;border:1px solid #ddd;background:#fff;color:inherit;text-decoration:none;transition:background .2s ease,border-color .2s ease}
+    .activity-related-card:hover{background:#f7f7f4;border-color:#bbb}
+    .activity-related-title{font-weight:700;line-height:1.7;overflow-wrap:anywhere}
+    .activity-related-meta{margin-top:8px;color:#666;font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+    .activity-related-description{margin-top:10px;color:#555;font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+    .activity-related-more{display:inline-block;margin-top:13px;font-size:13px;font-weight:700}
+    .activity-related-empty{padding:20px;background:#f7f7f4;color:#666;line-height:1.9}
+    .activity-detail-edit,.activity-detail-delete{display:inline-block;margin-top:30px;padding:12px 18px;border:1px solid #222;background:#fff;color:#222;cursor:pointer;font-weight:700}
+    .activity-detail-edit:hover{background:#f5f5f2}
+    .activity-detail-delete{margin-left:10px;border-color:#c0392b;color:#c0392b}
+    .activity-detail-delete:hover{background:#fff8f7}
+    .activity-detail-empty{padding:45px 20px;background:#f7f7f7;line-height:1.9}
+    .activity-edit-panel{margin-top:35px;padding:30px;background:#fff;border:1px solid #e5e5e1}
+    .activity-edit-panel h2{font-size:24px;margin-bottom:10px}
+    .activity-edit-note{color:#777;font-size:13px;line-height:1.8;margin-bottom:25px}
+    .activity-edit-panel label{display:block;margin-bottom:20px;font-weight:700}
+    .activity-edit-panel input:not([type="checkbox"]),.activity-edit-panel select,.activity-edit-panel textarea{display:block;width:100%;margin-top:8px;padding:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#171717;font:inherit}
+    .activity-edit-panel textarea{min-height:120px;resize:vertical}
+    .activity-edit-panel input[type="file"]{padding:8px;font-size:13px}
+    .activity-edit-panel input:focus,.activity-edit-panel select:focus,.activity-edit-panel textarea:focus{outline:2px solid #bbb;outline-offset:1px}
+    .activity-edit-panel .edit-file-note{color:#777;font-size:12px;font-weight:normal;line-height:1.7;margin-top:6px}
+    .activity-edit-panel .edit-current-file{font-size:13px;color:#666;font-weight:normal;overflow-wrap:anywhere;margin-top:8px}
+    .activity-edit-panel .edit-remove-option{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:13px;font-weight:normal}
+    .activity-edit-panel .edit-remove-option input{margin-top:5px;flex:0 0 auto}
+    .edit-links-heading{margin:28px 0 8px;font-size:19px}
+    .edit-links-note{margin-bottom:20px;color:#777;font-size:13px;line-height:1.8}
+    .edit-image-preview{display:block;width:min(320px,100%);max-height:240px;object-fit:contain;background:#f2f2f2;margin-top:12px}
+    .edit-actions{display:flex;gap:10px;margin-top:25px}
+    .edit-save-button,.edit-cancel-button{flex:1;padding:14px 16px;border:1px solid #171717;font-weight:700;cursor:pointer}
+    .edit-save-button{background:#171717;color:#fff}
+    .edit-save-button:hover{background:#333}
+    .edit-cancel-button{background:#fff;color:#171717}
+    .edit-cancel-button:hover{background:#f5f5f2}
+    .edit-save-button:disabled{opacity:.6;cursor:wait}
+    [hidden]{display:none!important}
+    @media(max-width:600px){
+      .activity-detail{width:calc(100% - 30px);margin-top:25px}
+      .activity-detail-info{grid-template-columns:105px minmax(0,1fr)}
+      .activity-detail-info dt,.activity-detail-info dd{padding:12px 7px}
+      .activity-dream-section{padding:18px}
+      .activity-detail-links,.activity-related-grid{grid-template-columns:1fr}
+      .activity-edit-panel{padding:20px}
+      .edit-actions{flex-direction:column}
+      .activity-detail-delete{margin-left:0}
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す <span class="menu-chevron" aria-hidden="true">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">01</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">02</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">03</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブや音楽イベントを見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">04</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>活動の詳細</h1>
+  <p>活動の内容も、作品も、夢や目標も。</p>
+</section>
+
+<main class="activity-detail" id="activityDetail">
+  <p>活動情報を読み込んでいます…</p>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const ACTIVITY_MEDIA_BUCKET = "oto-activity-media";
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
+const MAX_MEDIA_SIZE = 100 * 1024 * 1024;
+
+const LINK_FIELDS = [
+  { id: "editYouTube", label: "YouTube" },
+  { id: "editYouTubeMusic", label: "YouTube Music" },
+  { id: "editInstagram", label: "Instagram" },
+  { id: "editTikTok", label: "TikTok" },
+  { id: "editX", label: "X" },
+  { id: "editSpotify", label: "Spotify" },
+  { id: "editAmazonMusic", label: "Amazon Music" },
+  { id: "editSoundCloud", label: "SoundCloud" },
+  { id: "editWebsite", label: "公式サイト・その他" }
+];
+
+const ACTIVITY_TYPES = [
+  "バンド",
+  "ソロ活動",
+  "作曲",
+  "作詞",
+  "編曲",
+  "DTM・トラックメイク",
+  "MIX・マスタリング",
+  "MV・映像制作",
+  "ジャケット・デザイン",
+  "写真・撮影",
+  "DJ",
+  "ライブ活動",
+  "その他"
+];
+
+const supabase = window.OTO_SUPABASE;
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.href
+      : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function getPostLinks(post) {
+  if (Array.isArray(post.links) && post.links.length > 0) {
+    return post.links.map(function(item) {
+      return {
+        label: String(item.label || "活動リンク"),
+        url: safeHttpUrl(item.url)
+      };
+    }).filter(function(item) {
+      return item.url &&
+        !["ニコニコ動画", "ニコニコ", "Bandcamp"].includes(item.label);
+    });
+  }
+
+  const oldLink = safeHttpUrl(post.link);
+  return oldLink ? [{ label: "活動リンク", url: oldLink }] : [];
+}
+
+function formatPostedDate(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  }).format(date);
+}
+
+function getRelatedRecruitTitle(post) {
+  const title = String(post.title || "").trim();
+
+  if (["募集", "メンバー募集", "メンバー・協力者募集"].includes(title)) {
+    const firstLine = String(post.description || "")
+      .split(/\r?\n/)[0]
+      .trim();
+
+    return firstLine && firstLine.length <= 80
+      ? firstLine
+      : "メンバー・協力者募集";
+  }
+
+  return title || "メンバー・協力者募集";
+}
+
+function getRelatedActivitySummary(value, maxLength) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+
+  return text.length > maxLength
+    ? text.slice(0, maxLength) + "…"
+    : text;
+}
+
+function normalizeActivityPost(row) {
+  const data = row && row.data && typeof row.data === "object"
+    ? row.data
+    : {};
+
+  return {
+    ...data,
+    id: row.id,
+    post_type: row.post_type || "",
+    userId: row.user_id,
+    createdAt: row.created_at || data.createdAt || "",
+    updatedAt: row.updated_at || data.updatedAt || "",
+    videoPath: data.videoPath || "",
+    audioPath: data.audioPath || ""
+  };
+}
+
+function getMediaPublicUrl(path) {
+  if (!path) return "";
+
+  const result = supabase.storage
+    .from(ACTIVITY_MEDIA_BUCKET)
+    .getPublicUrl(path);
+
+  return result?.data?.publicUrl || "";
+}
+
+async function fetchProfile(userId) {
+  if (!userId) return null;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, data")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("プロフィールを読み込めませんでした:", error.message);
+    return null;
+  }
+
+  return data?.data || null;
+}
+
+async function fetchRelatedPosts(userId) {
+  if (!userId) return { members: [], lives: [] };
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, user_id, post_type, data, created_at")
+    .eq("user_id", userId)
+    .in("post_type", ["member", "live"])
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("関連投稿の取得に失敗しました:", error);
+    return { members: [], lives: [], error: true };
+  }
+
+  const rows = (data || []).map(normalizeActivityPost);
+
+  const members = rows.filter(function(item) {
+    return item.post_type === "member";
+  });
+
+  const lives = rows.filter(function(item) {
+    return item.post_type === "live";
+  });
+
+  return { members, lives };
+}
+
+async function renderActivityRelatedPosts(userId) {
+  const memberContainer = document.getElementById("activityRelatedMembers");
+  const liveContainer = document.getElementById("activityRelatedLives");
+
+  if (!memberContainer || !liveContainer) return;
+
+  const related = await fetchRelatedPosts(userId);
+
+  if (related.error) {
+    memberContainer.innerHTML =
+      '<div class="activity-related-empty">関連情報を読み込めませんでした。</div>';
+
+    liveContainer.innerHTML =
+      '<div class="activity-related-empty">関連情報を読み込めませんでした。</div>';
+
+    return;
+  }
+
+  if (related.members.length === 0) {
+    memberContainer.innerHTML = `
+      <div class="activity-related-empty">
+        この投稿者のメンバー募集情報はまだありません。
+      </div>`;
+  } else {
+    memberContainer.innerHTML = `
+      <div class="activity-related-grid">
+        ${related.members.map(function(item) {
+          const metadata = [
+            item.type || "メンバー・協力者募集",
+            item.genre || "",
+            item.area || ""
+          ].filter(Boolean).join(" / ");
+
+          const description = getRelatedActivitySummary(item.description, 150);
+          const detailUrl = "member-detail.html?id=" + encodeURIComponent(item.id);
+
+          return `
+            <a class="activity-related-card" href="${detailUrl}">
+              <div class="activity-related-title">${escapeHtml(getRelatedRecruitTitle(item))}</div>
+              ${metadata ? `<div class="activity-related-meta">${escapeHtml(metadata)}</div>` : ""}
+              ${description ? `<div class="activity-related-description">${escapeHtml(description)}</div>` : ""}
+              <span class="activity-related-more">募集の詳細を見る →</span>
+            </a>`;
+        }).join("")}
+      </div>`;
+  }
+
+  if (related.lives.length === 0) {
+    liveContainer.innerHTML = `
+      <div class="activity-related-empty">
+        この投稿者が告知したライブ情報はまだありません。
+      </div>`;
+  } else {
+    liveContainer.innerHTML = `
+      <div class="activity-related-grid">
+        ${related.lives.map(function(item) {
+          const metadata = [
+            item.date ? formatPostedDate(item.date) : "",
+            item.place || "",
+            item.status || ""
+          ].filter(Boolean).join(" / ");
+
+          const description = getRelatedActivitySummary(item.description, 150);
+          const detailUrl = "live-detail.html?id=" + encodeURIComponent(item.id);
+
+          return `
+            <a class="activity-related-card" href="${detailUrl}">
+              <div class="activity-related-title">${escapeHtml(item.name || "ライブ・イベント")}</div>
+              ${metadata ? `<div class="activity-related-meta">${escapeHtml(metadata)}</div>` : ""}
+              ${description ? `<div class="activity-related-description">${escapeHtml(description)}</div>` : ""}
+              <span class="activity-related-more">ライブの詳細を見る →</span>
+            </a>`;
+        }).join("")}
+      </div>`;
+  }
+}
+
+function showNotFound(message) {
+  const detail = document.getElementById("activityDetail");
+
+  detail.innerHTML = `
+    <div class="activity-detail-empty">
+      <h2>活動が見つかりません</h2>
+      <p>${escapeHtml(message || "投稿が削除されたか、指定された活動情報が存在しません。")}</p>
+      <a class="activity-detail-back" href="bands.html">← 音楽活動一覧に戻る</a>
+    </div>`;
+}
+
+function compressImage(file) {
+  return new Promise(function(resolve, reject) {
+    if (!file) return resolve("");
+
+    if (!file.type.startsWith("image/")) {
+      return reject(new Error("画像ファイルを選択してください。"));
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      return reject(new Error("写真は8MB以下のファイルを選択してください。"));
+    }
+
+    const reader = new FileReader();
+
+    reader.onerror = function() {
+      reject(new Error("写真を読み込めませんでした。"));
+    };
+
+    reader.onload = function() {
+      const image = new Image();
+
+      image.onerror = function() {
+        reject(new Error("この写真を読み込めませんでした。"));
+      };
+
+      image.onload = function() {
+        const maxSide = 900;
+        const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          return reject(new Error("写真を処理できませんでした。"));
+        }
+
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        try {
+          resolve(canvas.toDataURL("image/jpeg", 0.72));
+        } catch (error) {
+          reject(new Error("写真を圧縮できませんでした。"));
+        }
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function safeFileName(name) {
+  return String(name || "media")
+    .replace(/[^\w.\-()\u3040-\u30ff\u4e00-\u9faf]/g, "_");
+}
+
+async function uploadActivityMedia(userId, postId, file, kind) {
+  const path =
+    `${userId}/${postId}/${kind}_${Date.now()}_${safeFileName(file.name)}`;
+
+  const { error } = await supabase.storage
+    .from(ACTIVITY_MEDIA_BUCKET)
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type || undefined
+    });
+
+  if (error) {
+    throw new Error(
+      "動画・音声をアップロードできませんでした。Storageの設定を確認してください。(" +
+      error.message + ")"
+    );
+  }
+
+  return path;
+}
+
+async function removeActivityMedia(paths) {
+  const validPaths = (paths || []).filter(Boolean);
+  if (validPaths.length === 0) return;
+
+  const { error } = await supabase.storage
+    .from(ACTIVITY_MEDIA_BUCKET)
+    .remove(validPaths);
+
+  if (error) {
+    console.warn("メディアファイルを削除できませんでした:", error.message);
+  }
+}
+
+async function displayActivityDetail() {
+  const detail = document.getElementById("activityDetail");
+  const params = new URLSearchParams(window.location.search);
+  const activityId = params.get("id");
+
+  if (!activityId) {
+    showNotFound();
+    return;
+  }
+
+  try {
+    await window.OTOAuth.ready;
+
+    const currentUser = await window.OTOAuth.getCurrentUser();
+
+    const { data: row, error } = await supabase
+      .from("posts")
+      .select("id, user_id, data, created_at, updated_at")
+      .eq("id", activityId)
+      .eq("post_type", "activity")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!row) {
+      showNotFound();
+      return;
+    }
+
+    const post = normalizeActivityPost(row);
+    const owner = Boolean(currentUser && currentUser.id === post.userId);
+
+    const profile = await fetchProfile(post.userId);
+
+    const authorName =
+      profile?.name ||
+      profile?.nickname ||
+      profile?.displayName ||
+      "プロフィール未登録";
+
+    const authorMarkup = profile && post.userId
+      ? `<a class="activity-author-link" href="profile-detail.html?id=${encodeURIComponent(post.userId)}">${escapeHtml(authorName)}</a>`
+      : escapeHtml(authorName);
+
+    document.title = (post.title || "活動の詳細") + " - OTO LINK";
+
+    const photoMarkup = post.imageData
+      ? `<img src="${escapeHtml(post.imageData)}" alt="${escapeHtml(post.title || "活動")}の写真">`
+      : `<span class="activity-detail-placeholder">OTO LINK</span>`;
+
+    const postedDate = formatPostedDate(post.createdAt);
+
+    const videoPath = post.videoPath || "";
+    const audioPath = post.audioPath || "";
+
+    const videoUrl = getMediaPublicUrl(videoPath);
+    const audioUrl = getMediaPublicUrl(audioPath);
+
+    const links = getPostLinks(post);
+
+    const linksMarkup = links.length > 0 ? `
+      <section class="activity-detail-section">
+        <h2>活動リンク・SNS・作品</h2>
+        <div class="activity-detail-links">
+          ${links.map(function(item) {
+            return `
+              <a class="activity-detail-link-card"
+                 href="${escapeHtml(item.url)}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                <span class="activity-detail-link-label">${escapeHtml(item.label)}</span>
+                <span class="activity-detail-link-arrow">↗</span>
+              </a>`;
+          }).join("")}
+        </div>
+      </section>` : "";
+
+    detail.innerHTML = `
+      <div class="activity-detail-image">${photoMarkup}</div>
+
+      <h1>${escapeHtml(post.title || "")}</h1>
+
+      <div class="activity-detail-tags">
+        <span class="activity-detail-tag">${escapeHtml(post.type || "")}</span>
+        <span class="activity-detail-tag">${escapeHtml(post.genre || "")}</span>
+      </div>
+
+      <dl class="activity-detail-info">
+        <dt>活動名</dt>
+        <dd>${escapeHtml(post.title || "")}</dd>
+
+        <dt>活動の種類</dt>
+        <dd>${escapeHtml(post.type || "")}</dd>
+
+        <dt>ジャンル</dt>
+        <dd>${escapeHtml(post.genre || "")}</dd>
+
+        <dt>活動地域</dt>
+        <dd>${escapeHtml(post.area || "")}</dd>
+
+        <dt>投稿者</dt>
+        <dd>${authorMarkup}</dd>
+
+        ${postedDate ? `
+          <dt>投稿日</dt>
+          <dd>${escapeHtml(postedDate)}</dd>
+        ` : ""}
+      </dl>
+
+      <section class="activity-detail-section">
+        <h2>活動の説明</h2>
+        <p class="activity-detail-description">${escapeHtml(post.description || "")}</p>
+      </section>
+
+      ${post.concept ? `
+        <section class="activity-detail-section">
+          <h2>活動のコンセプト・きっかけ</h2>
+          <p class="activity-detail-description">${escapeHtml(post.concept)}</p>
+        </section>
+      ` : ""}
+
+      ${(videoPath || audioPath) ? `
+        <section class="activity-detail-section">
+          <h2>動画・音声</h2>
+
+          ${videoPath ? `
+            <div>
+              <h3>動画</h3>
+              <video
+                id="activityVideo"
+                class="activity-media-player"
+                controls
+                playsinline
+                preload="metadata"
+              ></video>
+              <p class="activity-media-filename">${escapeHtml(post.videoFileName || "")}</p>
+              <p class="activity-media-missing" id="videoMessage" hidden></p>
+            </div>
+          ` : ""}
+
+          ${audioPath ? `
+            <div class="activity-detail-section">
+              <h3>音声</h3>
+              <audio
+                id="activityAudio"
+                class="activity-audio-player"
+                controls
+                preload="metadata"
+              ></audio>
+              <p class="activity-media-filename">${escapeHtml(post.audioFileName || "")}</p>
+              <p class="activity-media-missing" id="audioMessage" hidden></p>
+            </div>
+          ` : ""}
+        </section>
+      ` : ""}
+
+      ${post.dream ? `
+        <section class="activity-detail-section activity-dream-section">
+          <h2>この活動で叶えたい夢・目標</h2>
+          <p class="activity-detail-description">${escapeHtml(post.dream)}</p>
+        </section>
+      ` : ""}
+
+      ${linksMarkup}
+
+      <section class="activity-related-section">
+        <h2>この投稿者のメンバー募集</h2>
+        <div id="activityRelatedMembers"><p>読み込んでいます…</p></div>
+      </section>
+
+      <section class="activity-related-section">
+        <h2>この投稿者のライブ告知</h2>
+        <div id="activityRelatedLives"><p>読み込んでいます…</p></div>
+      </section>
+
+      <a class="activity-detail-back" href="bands.html">
+        ← 音楽活動一覧に戻る
+      </a>
+
+      ${owner ? `
+        <div>
+          <button
+            type="button"
+            class="activity-detail-edit"
+            id="editActivityButton"
+          >投稿を編集</button>
+
+          <button
+            type="button"
+            class="activity-detail-delete"
+            id="deleteActivity"
+          >自分の投稿を削除</button>
+        </div>
+
+        <section
+          id="editActivityPanel"
+          class="activity-edit-panel"
+          hidden
+        ></section>
+      ` : ""}
+    `;
+
+    if (videoPath) {
+      const player = document.getElementById("activityVideo");
+
+      if (videoUrl) {
+        player.src = videoUrl;
+      } else {
+        player.hidden = true;
+        const message = document.getElementById("videoMessage");
+        message.textContent = "動画を読み込めませんでした。";
+        message.hidden = false;
+      }
+
+      player.addEventListener("error", function() {
+        player.hidden = true;
+        const message = document.getElementById("videoMessage");
+        message.textContent =
+          "動画を再生できませんでした。Storageの公開設定を確認してください。";
+        message.hidden = false;
+      });
+    }
+
+    if (audioPath) {
+      const player = document.getElementById("activityAudio");
+
+      if (audioUrl) {
+        player.src = audioUrl;
+      } else {
+        player.hidden = true;
+        const message = document.getElementById("audioMessage");
+        message.textContent = "音声を読み込めませんでした。";
+        message.hidden = false;
+      }
+
+      player.addEventListener("error", function() {
+        player.hidden = true;
+        const message = document.getElementById("audioMessage");
+        message.textContent =
+          "音声を再生できませんでした。Storageの公開設定を確認してください。";
+        message.hidden = false;
+      });
+    }
+
+    await renderActivityRelatedPosts(post.userId);
+
+    if (owner) {
+      document.getElementById("editActivityButton").addEventListener(
+        "click",
+        function() {
+          openEditForm(post);
+        }
+      );
+
+      document.getElementById("deleteActivity").addEventListener(
+        "click",
+        async function() {
+          const activeUser = await window.OTOAuth.getCurrentUser();
+
+          if (!activeUser || activeUser.id !== post.userId) {
+            alert("自分の投稿だけ削除できます。ログイン状態も確認してください。");
+            return;
+          }
+
+          if (!confirm("この音楽活動の投稿を削除しますか？")) return;
+
+          try {
+            const latestUser = await window.OTOAuth.getCurrentUser();
+
+            if (!latestUser || latestUser.id !== post.userId) {
+              throw new Error(
+                "ログイン状態が変わったため削除できませんでした。再読み込みしてください。"
+              );
+            }
+
+            const { data: deleted, error: deleteError } = await supabase
+              .from("posts")
+              .delete()
+              .eq("id", post.id)
+              .eq("post_type", "activity")
+              .eq("user_id", latestUser.id)
+              .select("id")
+              .maybeSingle();
+
+            if (deleteError) throw deleteError;
+
+            if (!deleted) {
+              throw new Error(
+                "投稿を削除できませんでした。権限または投稿状態を確認してください。"
+              );
+            }
+
+            await removeActivityMedia([post.videoPath, post.audioPath]);
+            window.location.href = "bands.html";
+
+          } catch (error) {
+            console.error(error);
+            alert(error.message || "投稿を削除できませんでした。");
+          }
+        }
+      );
+    }
+
+  } catch (error) {
+    console.error("活動詳細の読み込みに失敗しました:", error);
+
+    showNotFound(
+      "活動情報を読み込めませんでした。時間をおいて再読み込みしてください。"
+    );
+  }
+}
+
+function openEditForm(post) {
+  const panel = document.getElementById("editActivityPanel");
+  const editButton = document.getElementById("editActivityButton");
+
+  if (!panel || !editButton) return;
+
+  if (!panel.hidden) {
+    panel.hidden = true;
+    editButton.textContent = "投稿を編集";
+    return;
+  }
+
+  const options = ACTIVITY_TYPES.map(function(type) {
+    return `
+      <option
+        value="${escapeHtml(type)}"
+        ${post.type === type ? "selected" : ""}
+      >${escapeHtml(type)}</option>
+    `;
+  }).join("");
+
+  const linkFieldsHtml = LINK_FIELDS.map(function(field) {
+    return `
+      <label>
+        ${escapeHtml(field.label)} URL（任意）
+        <input
+          type="url"
+          id="${field.id}"
+          inputmode="url"
+        >
+      </label>
+    `;
+  }).join("");
+
+  const links = getPostLinks(post);
+
+  const legacyLink = links.find(function(item) {
+    return item.label === "活動リンク";
+  });
+
+  panel.innerHTML = `
+    <h2>音楽活動を編集</h2>
+
+    <p class="activity-edit-note">
+      内容を変更して保存すると、活動一覧と詳細ページの両方に反映されます。
+      ファイルを選び直さなければ、現在の写真・動画・音声はそのまま残ります。
+    </p>
+
+    <form id="editActivityForm">
+      <label>
+        活動名
+        <input
+          type="text"
+          id="editTitle"
+          value="${escapeHtml(post.title || "")}"
+          required
+        >
+      </label>
+
+      <label>
+        活動の種類
+        <select id="editType" required>
+          <option value="">選択してください</option>
+          ${options}
+        </select>
+      </label>
+
+      <label>
+        ジャンル
+        <input
+          type="text"
+          id="editGenre"
+          value="${escapeHtml(post.genre || "")}"
+          required
+        >
+      </label>
+
+      <label>
+        活動地域
+        <input
+          type="text"
+          id="editArea"
+          value="${escapeHtml(post.area || "")}"
+          required
+        >
+      </label>
+
+      <label>
+        活動の説明
+        <textarea id="editDescription" required>${escapeHtml(post.description || "")}</textarea>
+      </label>
+
+      <label>
+        活動のコンセプト・きっかけ（任意）
+        <textarea id="editConcept">${escapeHtml(post.concept || "")}</textarea>
+      </label>
+
+      <label>
+        夢・目標（任意）
+        <textarea id="editDream">${escapeHtml(post.dream || "")}</textarea>
+      </label>
+
+      <h3 class="edit-links-heading">活動リンク</h3>
+
+      <p class="edit-links-note">
+        変更したいURLを入力してください。空欄にすると、そのリンクは保存されません。
+      </p>
+
+      ${linkFieldsHtml}
+
+      <label>
+        アーティスト写真・活動写真（任意）
+        <input
+          type="file"
+          id="editImage"
+          accept="image/jpeg,image/png,image/webp"
+        >
+
+        <p class="edit-file-note">
+          新しい写真を選ぶと置き換えます。何も選ばなければ現在の写真を維持します。
+        </p>
+
+        ${post.imageData ? `
+          <img
+            id="editImagePreview"
+            class="edit-image-preview"
+            src="${escapeHtml(post.imageData)}"
+            alt="現在の活動写真"
+          >
+
+          <label class="edit-remove-option">
+            <input type="checkbox" id="removeImage">
+            <span>現在の写真を削除する</span>
+          </label>
+        ` : `
+          <img
+            id="editImagePreview"
+            class="edit-image-preview"
+            alt="新しい写真のプレビュー"
+            hidden
+          >
+        `}
+      </label>
+
+      <label>
+        動画（任意）
+        <input
+          type="file"
+          id="editVideo"
+          accept="video/*"
+        >
+
+        <p class="edit-file-note">
+          新しい動画を選択すると置き換えます。100MB以下。
+        </p>
+
+        <p class="edit-current-file">
+          現在の動画：${escapeHtml(post.videoFileName || (post.videoPath ? "登録済み" : "なし"))}
+        </p>
+
+        ${post.videoPath ? `
+          <label class="edit-remove-option">
+            <input type="checkbox" id="removeVideo">
+            <span>現在の動画を削除する</span>
+          </label>
+        ` : ""}
+      </label>
+
+      <label>
+        音声（任意）
+        <input
+          type="file"
+          id="editAudio"
+          accept="audio/*"
+        >
+
+        <p class="edit-file-note">
+          新しい音声を選択すると置き換えます。100MB以下。
+        </p>
+
+        <p class="edit-current-file">
+          現在の音声：${escapeHtml(post.audioFileName || (post.audioPath ? "登録済み" : "なし"))}
+        </p>
+
+        ${post.audioPath ? `
+          <label class="edit-remove-option">
+            <input type="checkbox" id="removeAudio">
+            <span>現在の音声を削除する</span>
+          </label>
+        ` : ""}
+      </label>
+
+      <div class="edit-actions">
+        <button
+          type="submit"
+          class="edit-save-button"
+          id="saveActivityChanges"
+        >
+          変更を保存する
+        </button>
+
+        <button
+          type="button"
+          class="edit-cancel-button"
+          id="cancelActivityChanges"
+        >
+          キャンセル
+        </button>
+      </div>
+    </form>
+  `;
+
+  LINK_FIELDS.forEach(function(field) {
+    const savedLink = links.find(function(item) {
+      return item.label === field.label;
+    });
+
+    const input = document.getElementById(field.id);
+
+    if (savedLink && input) {
+      input.value = savedLink.url;
+    }
+  });
+
+  if (legacyLink) {
+    const websiteInput = document.getElementById("editWebsite");
+
+    if (websiteInput && !websiteInput.value) {
+      websiteInput.value = legacyLink.url;
+    }
+  }
+
+  panel.hidden = false;
+  editButton.textContent = "編集フォームを閉じる";
+
+  panel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  const imageInput = document.getElementById("editImage");
+  const preview = document.getElementById("editImagePreview");
+  const removeImageCheckbox = document.getElementById("removeImage");
+
+  imageInput.addEventListener("change", async function() {
+    const file = imageInput.files[0];
+
+    if (!file) {
+      if (post.imageData && preview) {
+        preview.src = post.imageData;
+        preview.hidden = false;
+      } else if (preview) {
+        preview.removeAttribute("src");
+        preview.hidden = true;
+      }
+
+      return;
+    }
+
+    if (removeImageCheckbox) {
+      removeImageCheckbox.checked = false;
+    }
+
+    try {
+      const imageData = await compressImage(file);
+      preview.src = imageData;
+      preview.hidden = false;
+    } catch (error) {
+      imageInput.value = "";
+      alert(error.message);
+    }
+  });
+
+  if (removeImageCheckbox) {
+    removeImageCheckbox.addEventListener("change", function() {
+      if (this.checked && !imageInput.files[0]) {
+        preview.hidden = true;
+      } else {
+        preview.hidden = false;
+      }
+    });
+  }
+
+  document.getElementById("editActivityForm").addEventListener(
+    "submit",
+    async function(event) {
+      event.preventDefault();
+
+      const initialUser = await window.OTOAuth.getCurrentUser();
+
+      if (!initialUser || initialUser.id !== post.userId) {
+        alert("自分の投稿だけ編集できます。ログイン状態も確認してください。");
+        return;
+      }
+
+      const userIdAtStart = initialUser.id;
+      const saveButton = document.getElementById("saveActivityChanges");
+
+      const title = document.getElementById("editTitle").value.trim();
+      const type = document.getElementById("editType").value;
+      const genre = document.getElementById("editGenre").value.trim();
+      const area = document.getElementById("editArea").value.trim();
+      const description = document.getElementById("editDescription").value.trim();
+      const concept = document.getElementById("editConcept").value.trim();
+      const dream = document.getElementById("editDream").value.trim();
+
+      const newImageFile = imageInput.files[0];
+      const newVideoFile = document.getElementById("editVideo").files[0];
+      const newAudioFile = document.getElementById("editAudio").files[0];
+
+      const removeImage = Boolean(
+        document.getElementById("removeImage")?.checked
+      );
+
+      const removeVideo = Boolean(
+        document.getElementById("removeVideo")?.checked
+      );
+
+      const removeAudio = Boolean(
+        document.getElementById("removeAudio")?.checked
+      );
+
+      if (!title || !type || !genre || !area || !description) {
+        alert("活動名・活動の種類・ジャンル・地域・説明を入力してください。");
+        return;
+      }
+
+      if (newVideoFile) {
+        if (!newVideoFile.type.startsWith("video/")) {
+          alert("動画ファイルを選択してください。");
+          return;
+        }
+
+        if (newVideoFile.size > MAX_MEDIA_SIZE) {
+          alert("動画は100MB以下にしてください。");
+          return;
+        }
+      }
+
+      if (newAudioFile) {
+        if (!newAudioFile.type.startsWith("audio/")) {
+          alert("音声ファイルを選択してください。");
+          return;
+        }
+
+        if (newAudioFile.size > MAX_MEDIA_SIZE) {
+          alert("音声は100MB以下にしてください。");
+          return;
+        }
+      }
+
+      const updatedLinks = [];
+
+      for (const field of LINK_FIELDS) {
+        const value = document.getElementById(field.id).value.trim();
+
+        if (!value) continue;
+
+        const url = safeHttpUrl(value);
+
+        if (!url) {
+          alert(
+            field.label +
+            "のURLを確認してください。https:// または http:// で始まるURLを入力してください。"
+          );
+
+          document.getElementById(field.id).focus();
+          return;
+        }
+
+        updatedLinks.push({
+          label: field.label,
+          url: url
+        });
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "保存しています…";
+
+      const newlyUploadedPaths = [];
+
+      try {
+        let imageData = post.imageData || "";
+
+        if (newImageFile) {
+          imageData = await compressImage(newImageFile);
+        } else if (removeImage) {
+          imageData = "";
+        }
+
+        const userBeforeUpload = await window.OTOAuth.getCurrentUser();
+
+        if (!userBeforeUpload || userBeforeUpload.id !== userIdAtStart) {
+          throw new Error(
+            "ログイン状態が変わったため、変更を保存できませんでした。"
+          );
+        }
+
+        let videoPath = post.videoPath || "";
+        let audioPath = post.audioPath || "";
+
+        if (newVideoFile) {
+          videoPath = await uploadActivityMedia(
+            userIdAtStart,
+            post.id,
+            newVideoFile,
+            "video"
+          );
+
+          newlyUploadedPaths.push(videoPath);
+
+        } else if (removeVideo) {
+          videoPath = "";
+        }
+
+        if (newAudioFile) {
+          audioPath = await uploadActivityMedia(
+            userIdAtStart,
+            post.id,
+            newAudioFile,
+            "audio"
+          );
+
+          newlyUploadedPaths.push(audioPath);
+
+        } else if (removeAudio) {
+          audioPath = "";
+        }
+
+        const userBeforeCommit = await window.OTOAuth.getCurrentUser();
+
+        if (!userBeforeCommit || userBeforeCommit.id !== userIdAtStart) {
+          throw new Error(
+            "ログイン状態が変わったため、変更を保存できませんでした。"
+          );
+        }
+
+        const updatedPost = {
+          ...post,
+          title: title,
+          type: type,
+          genre: genre,
+          area: area,
+          description: description,
+          concept: concept,
+          dream: dream,
+          links: updatedLinks,
+          link: updatedLinks.length > 0
+            ? updatedLinks[0].url
+            : "",
+          imageData: imageData,
+          videoPath: videoPath,
+          audioPath: audioPath,
+          videoFileName: videoPath
+            ? (newVideoFile ? newVideoFile.name : (post.videoFileName || ""))
+            : "",
+          audioFileName: audioPath
+            ? (newAudioFile ? newAudioFile.name : (post.audioFileName || ""))
+            : ""
+        };
+
+        const { data: updated, error } = await supabase
+          .from("posts")
+          .update({ data: updatedPost })
+          .eq("id", post.id)
+          .eq("post_type", "activity")
+          .eq("user_id", userIdAtStart)
+          .select("id")
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!updated) {
+          throw new Error(
+            "投稿を更新できませんでした。権限または投稿状態を確認してください。"
+          );
+        }
+
+        const oldPathsToRemove = [];
+
+        if (post.videoPath && post.videoPath !== videoPath) {
+          oldPathsToRemove.push(post.videoPath);
+        }
+
+        if (post.audioPath && post.audioPath !== audioPath) {
+          oldPathsToRemove.push(post.audioPath);
+        }
+
+        await removeActivityMedia(oldPathsToRemove);
+
+        alert("音楽活動の情報を更新しました。");
+        window.location.reload();
+
+      } catch (error) {
+        console.error("活動情報の更新に失敗しました:", error);
+
+        await removeActivityMedia(newlyUploadedPaths);
+
+        alert(error.message || "更新できませんでした。");
+
+        saveButton.disabled = false;
+        saveButton.textContent = "変更を保存する";
+      }
+    }
+  );
+
+  document.getElementById("cancelActivityChanges").addEventListener(
+    "click",
+    function() {
+      panel.hidden = true;
+      editButton.textContent = "投稿を編集";
+      panel.innerHTML = "";
+
+      editButton.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  );
+}
+
+async function initializeActivityDetail() {
+  if (!supabase) {
+    showNotFound("Supabaseの接続設定を読み込めませんでした。");
+    return;
+  }
+
+  await displayActivityDetail();
+}
+
+initializeActivityDetail();
+</script>
+
+</body>
+</html>

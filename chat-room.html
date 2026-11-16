@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>会話 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .room-page {
+      width: min(850px, calc(100% - 32px));
+      margin: 32px auto 70px;
+    }
+
+    .room-back {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: #333;
+    }
+
+    .room-panel {
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .room-heading {
+      padding: 20px;
+      border-bottom: 1px solid #e5e5e1;
+    }
+
+    .room-heading h1 {
+      margin: 0;
+      font-size: 23px;
+      overflow-wrap: anywhere;
+    }
+
+    .room-heading p {
+      margin: 7px 0 0;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .room-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 300px;
+      max-height: 55vh;
+      overflow-y: auto;
+      padding: 20px;
+      background: #fafaf8;
+    }
+
+    .room-empty {
+      margin: auto;
+      text-align: center;
+      color: #777;
+      line-height: 1.8;
+    }
+
+    .room-message {
+      max-width: 82%;
+      align-self: flex-start;
+      padding: 12px 14px;
+      background: #fff;
+      border: 1px solid #e5e5e1;
+      overflow-wrap: anywhere;
+    }
+
+    .room-message.mine {
+      align-self: flex-end;
+      background: #efeee8;
+      border-color: #deddd5;
+    }
+
+    .room-message-author {
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .room-message-text {
+      white-space: pre-wrap;
+      line-height: 1.8;
+    }
+
+    .room-message-time {
+      margin-top: 7px;
+      font-size: 11px;
+      color: #888;
+      text-align: right;
+    }
+
+    .room-form {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 16px;
+      border-top: 1px solid #e5e5e1;
+    }
+
+    .room-form textarea {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+      max-height: 160px;
+      resize: vertical;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #ccc;
+      font: inherit;
+    }
+
+    .room-send {
+      padding: 13px 20px;
+      border: 0;
+      background: #191813;
+      color: #fffdf2;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .room-send:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .room-login-note {
+      padding: 18px;
+      border-top: 1px solid #e5e5e1;
+      line-height: 1.8;
+    }
+
+    .room-members {
+      padding: 12px 20px;
+      border-top: 1px solid #e5e5e1;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .room-page {
+        width: calc(100% - 24px);
+        margin-top: 24px;
+      }
+
+      .room-heading {
+        padding: 16px;
+      }
+
+      .room-heading h1 {
+        font-size: 20px;
+      }
+
+      .room-messages {
+        min-height: 250px;
+        padding: 12px;
+      }
+
+      .room-message {
+        max-width: 92%;
+      }
+
+      .room-form {
+        padding: 10px;
+        gap: 7px;
+      }
+
+      .room-send {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブやイベントを見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount"></div>
+</header>
+
+<section class="page-header">
+  <h1 id="pageTitle">チャット</h1>
+  <p id="pageDescription">音楽仲間と会話しよう。</p>
+</section>
+
+<main class="room-page">
+  <a href="chat.html" class="room-back">← チャット一覧に戻る</a>
+
+  <section class="room-panel">
+    <div class="room-heading">
+      <h1 id="roomTitle">読み込み中…</h1>
+      <p id="roomSubtitle"></p>
+    </div>
+
+    <div id="roomMembers" class="room-members" hidden></div>
+
+    <div id="messages" class="room-messages" aria-live="polite">
+      <p class="room-empty">メッセージを読み込んでいます…</p>
+    </div>
+
+    <form id="messageForm" class="room-form" hidden>
+      <textarea
+        id="messageInput"
+        maxlength="2000"
+        placeholder="メッセージを入力…"
+        required
+      ></textarea>
+
+      <button type="submit" class="room-send" id="sendButton" disabled>
+        送信
+      </button>
+    </form>
+
+    <div id="loginNote" class="room-login-note" hidden>
+      チャットを利用するにはログインしてください。
+      <a href="login.html">ログイン</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const params = new URLSearchParams(window.location.search);
+const roomType = params.get("type") || "public";
+const otherUserId = params.get("with");
+const groupId = params.get("id");
+
+const supabase = window.OTO_SUPABASE;
+
+const messageForm = document.getElementById("messageForm");
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const messagesContainer = document.getElementById("messages");
+const roomMembers = document.getElementById("roomMembers");
+
+let currentUser = null;
+let currentUserId = null;
+let roomId = null;
+let otherUserName = "名前未設定";
+let memberNames = {};
+let isSending = false;
+let isLoading = false;
+let pollingTimer = null;
+let initialized = false;
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function isValidUuid(value) {
+  return typeof value === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+function showMessage(text) {
+  messagesContainer.innerHTML =
+    '<p class="room-empty">' + escapeHtml(text) + "</p>";
+}
+
+function formatTime(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
+function updateSendButton() {
+  sendButton.disabled =
+    !currentUserId ||
+    !messageInput.value.trim() ||
+    isSending;
+}
+
+messageInput.addEventListener("input", updateSendButton);
+
+async function getProfileName(userId) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, data")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("プロフィール取得エラー:", error);
+    return "名前未設定";
+  }
+
+  return data?.data?.name || "名前未設定";
+}
+
+async function loadProfileNames(userIds) {
+  const uniqueIds = [...new Set(userIds.filter(Boolean))];
+
+  if (uniqueIds.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, data")
+    .in("id", uniqueIds);
+
+  if (error) {
+    console.error("プロフィール一覧取得エラー:", error);
+    return;
+  }
+
+  (data || []).forEach(function(profile) {
+    memberNames[profile.id] =
+      profile.data?.name || "名前未設定";
+  });
+}
+
+async function initializePublicRoom() {
+  const { data, error } = await supabase
+    .from("chat_rooms")
+    .select("id, name")
+    .eq("room_type", "public")
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new Error("公開チャットの部屋が見つかりません。");
+  }
+
+  roomId = data.id;
+
+  document.getElementById("roomTitle").textContent =
+    data.name || "チャット広場";
+
+  document.getElementById("pageTitle").textContent = "チャット広場";
+
+  document.getElementById("roomSubtitle").textContent =
+    "みんなで自由に会話できる共通チャット。";
+}
+
+async function initializeGroupRoom() {
+  if (!isValidUuid(groupId)) {
+    throw new Error("グループIDが正しくありません。");
+  }
+
+  const { data: room, error: roomError } = await supabase
+    .from("chat_rooms")
+    .select("id, name, room_type")
+    .eq("id", groupId)
+    .eq("room_type", "group")
+    .maybeSingle();
+
+  if (roomError) throw roomError;
+  if (!room) throw new Error("グループが見つかりません。");
+
+  const { data: membership, error: membershipError } =
+    await supabase
+      .from("chat_room_members")
+      .select("room_id")
+      .eq("room_id", groupId)
+      .eq("user_id", currentUserId)
+      .maybeSingle();
+
+  if (membershipError) throw membershipError;
+
+  if (!membership) {
+    throw new Error("このグループに参加していないため、閲覧できません。");
+  }
+
+  roomId = room.id;
+
+  document.getElementById("roomTitle").textContent =
+    room.name || "グループチャット";
+
+  document.getElementById("pageTitle").textContent =
+    room.name || "グループチャット";
+
+  document.getElementById("roomSubtitle").textContent =
+    "グループメンバーとの会話";
+
+  const { data: members, error: membersError } =
+    await supabase
+      .from("chat_room_members")
+      .select("user_id")
+      .eq("room_id", roomId);
+
+  if (membersError) throw membersError;
+
+  const memberIds = (members || []).map(function(member) {
+    return member.user_id;
+  });
+
+  await loadProfileNames(memberIds);
+
+  const names = memberIds.map(function(id) {
+    return memberNames[id] || "名前未設定";
+  });
+
+  roomMembers.textContent =
+    "メンバー：" + names.join("、");
+
+  roomMembers.hidden = false;
+}
+
+async function initializeDmRoom() {
+  if (!isValidUuid(otherUserId)) {
+    throw new Error("相手のユーザーIDが正しくありません。");
+  }
+
+  if (otherUserId === currentUserId) {
+    throw new Error("自分自身とのDMは開けません。");
+  }
+
+  otherUserName = await getProfileName(otherUserId);
+
+  const roomTitle = otherUserName + " さんとのDM";
+
+  document.getElementById("roomTitle").textContent = roomTitle;
+  document.getElementById("pageTitle").textContent = roomTitle;
+
+  document.getElementById("roomSubtitle").textContent =
+    "1対1のダイレクトメッセージ";
+
+  document.title = roomTitle + " - OTO LINK";
+}
+
+async function loadMessages(scrollToBottom = false) {
+  if (!currentUserId || isLoading) return;
+
+  if (roomType !== "dm" && !roomId) return;
+
+  isLoading = true;
+
+  const previousScrollTop = messagesContainer.scrollTop;
+
+  const wasNearBottom =
+    messagesContainer.scrollHeight -
+    messagesContainer.scrollTop -
+    messagesContainer.clientHeight < 80;
+
+  try {
+    let data;
+    let error;
+
+    if (roomType === "dm") {
+      const filter =
+        "and(sender_id.eq." + currentUserId +
+        ",receiver_id.eq." + otherUserId +
+        "),and(sender_id.eq." + otherUserId +
+        ",receiver_id.eq." + currentUserId + ")";
+
+      const result = await supabase
+        .from("messages")
+        .select("id, sender_id, receiver_id, content, created_at")
+        .or(filter)
+        .order("created_at", { ascending: true });
+
+      data = result.data;
+      error = result.error;
+
+    } else {
+      const result = await supabase
+        .from("room_messages")
+        .select("id, room_id, sender_id, content, created_at")
+        .eq("room_id", roomId)
+        .order("created_at", { ascending: true });
+
+      data = result.data;
+      error = result.error;
+    }
+
+    if (error) {
+      console.error("メッセージ取得エラー:", error);
+      showMessage("メッセージを読み込めませんでした。");
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      showMessage("まだメッセージはありません。最初のメッセージを送ってみよう。");
+      return;
+    }
+
+    if (roomType !== "dm") {
+      const senderIds = data.map(function(message) {
+        return message.sender_id;
+      });
+
+      await loadProfileNames(senderIds);
+    }
+
+    messagesContainer.innerHTML = data.map(function(message) {
+      const mine = message.sender_id === currentUserId;
+
+      let author;
+
+      if (mine) {
+        author = "あなた";
+      } else if (roomType === "dm") {
+        author = otherUserName;
+      } else {
+        author = memberNames[message.sender_id] || "名前未設定";
+      }
+
+      return `
+        <article class="room-message${mine ? " mine" : ""}">
+          <div class="room-message-author">
+            ${escapeHtml(author)}
+          </div>
+          <div class="room-message-text">${escapeHtml(message.content)}</div>
+          <div class="room-message-time">
+            ${escapeHtml(formatTime(message.created_at))}
+          </div>
+        </article>
+      `;
+    }).join("");
+
+    if (scrollToBottom || wasNearBottom) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } else {
+      messagesContainer.scrollTop = previousScrollTop;
+    }
+
+  } catch (error) {
+    console.error("メッセージ読み込みエラー:", error);
+    showMessage("メッセージの読み込み中にエラーが発生しました。");
+  } finally {
+    isLoading = false;
+  }
+}
+
+async function sendMessage(event) {
+  event.preventDefault();
+
+  if (!currentUserId || isSending) return;
+
+  if (roomType !== "dm" && !roomId) return;
+
+  const content = messageInput.value.trim();
+
+  if (!content) {
+    updateSendButton();
+    return;
+  }
+
+  if (content.length > 2000) {
+    alert("メッセージは2000文字以内で入力してください。");
+    return;
+  }
+
+  isSending = true;
+  updateSendButton();
+
+  try {
+    let error;
+
+    if (roomType === "dm") {
+      const result = await supabase
+        .from("messages")
+        .insert({
+          sender_id: currentUserId,
+          receiver_id: otherUserId,
+          content: content
+        });
+
+      error = result.error;
+
+    } else {
+      const result = await supabase
+        .from("room_messages")
+        .insert({
+          room_id: roomId,
+          sender_id: currentUserId,
+          content: content
+        });
+
+      error = result.error;
+    }
+
+    if (error) {
+      console.error("メッセージ送信エラー:", error);
+      alert("メッセージを送信できませんでした。");
+      return;
+    }
+
+    messageInput.value = "";
+    await loadMessages(true);
+    messageInput.focus();
+
+  } catch (error) {
+    console.error("送信処理エラー:", error);
+    alert("メッセージの送信中にエラーが発生しました。");
+  } finally {
+    isSending = false;
+    updateSendButton();
+  }
+}
+
+function showRoomError(error) {
+  console.error("チャット初期化エラー:", error);
+
+  document.getElementById("roomTitle").textContent =
+    "チャットを開けません";
+
+  document.getElementById("roomSubtitle").textContent =
+    error.message || "読み込み中にエラーが発生しました。";
+
+  showMessage("チャットを開けませんでした。");
+  messageForm.hidden = true;
+}
+
+async function initializeRoom() {
+  if (initialized) return;
+  initialized = true;
+
+  try {
+    if (!supabase) {
+      throw new Error("Supabaseが初期化されていません。");
+    }
+
+    await window.OTOAuth.ready;
+
+    currentUser = await window.OTOAuth.getCurrentUser();
+
+    if (!currentUser) {
+      document.getElementById("roomTitle").textContent =
+        "ログインが必要です";
+
+      document.getElementById("pageTitle").textContent =
+        "ログインが必要です";
+
+      showMessage("ログインするとチャットを利用できます。");
+
+      messageForm.hidden = true;
+      document.getElementById("loginNote").hidden = false;
+      return;
+    }
+
+    currentUserId = currentUser.id;
+
+    if (window.OTOAuth.updateHeaderAccount) {
+      await window.OTOAuth.updateHeaderAccount();
+    }
+
+    if (roomType === "public") {
+      await initializePublicRoom();
+
+    } else if (roomType === "group") {
+      await initializeGroupRoom();
+
+    } else if (roomType === "dm") {
+      await initializeDmRoom();
+
+    } else {
+      throw new Error("指定されたチャット形式が正しくありません。");
+    }
+
+    document.getElementById("loginNote").hidden = true;
+    messageForm.hidden = false;
+
+    messageForm.addEventListener("submit", sendMessage);
+
+    await loadMessages(true);
+
+    pollingTimer = window.setInterval(function() {
+      loadMessages(false);
+    }, 5000);
+
+  } catch (error) {
+    showRoomError(error);
+  }
+}
+
+window.addEventListener("beforeunload", function() {
+  if (pollingTimer) {
+    window.clearInterval(pollingTimer);
+  }
+});
+
+initializeRoom();
+</script>
+
+</body>
+</html>

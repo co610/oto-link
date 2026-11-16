@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音楽活動を投稿 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .activity-image-field input[type="file"],
+    .activity-media-field input[type="file"] {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .activity-file-note {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 7px;
+    }
+
+    .activity-image-preview {
+      display: block;
+      max-width: 100%;
+      width: 320px;
+      max-height: 240px;
+      object-fit: contain;
+      margin-top: 12px;
+      background: #f2f2f2;
+    }
+
+    .activity-links-heading {
+      margin: 30px 0 8px;
+      font-size: 18px;
+    }
+
+    .activity-links-note {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .activity-file-name {
+      color: #555;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+    <details class="global-search-menu">
+      <summary>
+        探す <span class="menu-chevron" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">01</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">02</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">03</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブや音楽イベントを見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">04</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </details>
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+  <div class="header-account" id="headerAccount">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>音楽活動を投稿する</h1>
+  <p>活動内容や作品、夢・目標を紹介しよう。</p>
+</section>
+
+<main>
+  <section class="post-section">
+    <div class="post-form-box" id="postArea"></div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const ACTIVITY_MEDIA_BUCKET = "oto-activity-media";
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
+const MAX_MEDIA_SIZE = 100 * 1024 * 1024;
+
+const LINK_FIELDS = [
+  { id: "activityYouTube", label: "YouTube" },
+  { id: "activityInstagram", label: "Instagram" },
+  { id: "activityTikTok", label: "TikTok" },
+  { id: "activityX", label: "X" },
+  { id: "activitySpotify", label: "Spotify" },
+  { id: "activitySoundCloud", label: "SoundCloud" },
+  { id: "activityWebsite", label: "公式サイト・その他" }
+];
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+}
+
+function compressImage(file) {
+  return new Promise(function(resolve, reject) {
+    if (!file) {
+      resolve("");
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("画像ファイルを選択してください。"));
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      reject(new Error("写真は8MB以下のファイルを選択してください。"));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onerror = function() {
+      reject(new Error("写真を読み込めませんでした。"));
+    };
+
+    reader.onload = function() {
+      const image = new Image();
+
+      image.onerror = function() {
+        reject(new Error("この写真を読み込めませんでした。"));
+      };
+
+      image.onload = function() {
+        const maxSide = 900;
+        const scale = Math.min(
+          1,
+          maxSide / Math.max(image.width, image.height)
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          reject(new Error("写真を処理できませんでした。"));
+          return;
+        }
+
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        try {
+          resolve(canvas.toDataURL("image/jpeg", 0.72));
+        } catch (error) {
+          reject(new Error("写真を圧縮できませんでした。"));
+        }
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function configureMediaInput(inputId, nameId, kind) {
+  const input = document.getElementById(inputId);
+  const name = document.getElementById(nameId);
+
+  input.addEventListener("change", function() {
+    const file = input.files[0];
+    name.textContent = "";
+
+    if (!file) return;
+
+    const isCorrectType = kind === "video"
+      ? file.type.startsWith("video/")
+      : file.type.startsWith("audio/");
+
+    if (!isCorrectType) {
+      alert(
+        kind === "video"
+          ? "動画ファイルを選択してください。"
+          : "音声ファイルを選択してください。"
+      );
+
+      input.value = "";
+      return;
+    }
+
+    if (file.size > MAX_MEDIA_SIZE) {
+      alert("動画・音声はそれぞれ100MB以下のファイルを選択してください。");
+      input.value = "";
+      return;
+    }
+
+    name.textContent =
+      "選択中：" + file.name +
+      "（" + (file.size / (1024 * 1024)).toFixed(1) + "MB）";
+  });
+}
+
+function createSafeFileName(fileName) {
+  return String(fileName || "media")
+    .replace(/[^\w.\-]/g, "_")
+    .slice(-100);
+}
+
+async function uploadActivityMedia(userId, postId, file, kind) {
+  if (!file) return "";
+
+  const fileName = createSafeFileName(file.name);
+  const path =
+    userId + "/" + postId + "/" +
+    kind + "_" + Date.now() + "_" + fileName;
+
+  const result = await window.OTO_SUPABASE
+    .storage
+    .from(ACTIVITY_MEDIA_BUCKET)
+    .upload(path, file, {
+      contentType: file.type,
+      upsert: false
+    });
+
+  if (result.error) {
+    throw new Error(
+      kind === "video"
+        ? "動画をアップロードできませんでした：" + result.error.message
+        : "音声をアップロードできませんでした：" + result.error.message
+    );
+  }
+
+  return path;
+}
+
+async function removeUploadedMedia(paths) {
+  const validPaths = paths.filter(Boolean);
+
+  if (validPaths.length === 0) return;
+
+  const result = await window.OTO_SUPABASE
+    .storage
+    .from(ACTIVITY_MEDIA_BUCKET)
+    .remove(validPaths);
+
+  if (result.error) {
+    console.error("アップロード済みメディアの削除に失敗しました。", result.error);
+  }
+}
+
+async function renderHeaderAccount() {
+  const headerAccount = document.getElementById("headerAccount");
+  const user = await window.OTOAuth.getCurrentUser();
+
+  if (!user) {
+    headerAccount.innerHTML = `
+      <a href="login.html">ログイン</a>
+      <a href="signup.html">新規登録</a>
+    `;
+    return;
+  }
+
+  let displayName = "マイページ";
+
+  try {
+    const profileResult = await window.OTO_SUPABASE
+      .from("profiles")
+      .select("data")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const profile = profileResult.data?.data || null;
+
+    if (profile) {
+      displayName =
+        profile.nickname ||
+        profile.name ||
+        profile.displayName ||
+        "マイページ";
+    }
+  } catch (error) {
+    console.error("プロフィールを取得できませんでした。", error);
+  }
+
+  headerAccount.innerHTML = `
+    <a href="profile.html">${escapeHtml(displayName)}</a>
+    <button type="button" id="logoutButton">ログアウト</button>
+  `;
+
+  document.getElementById("logoutButton").addEventListener(
+    "click",
+    async function() {
+      await window.OTOAuth.logout();
+      window.location.href = "index.html";
+    }
+  );
+}
+
+async function setupPostArea() {
+  const postArea = document.getElementById("postArea");
+
+  await window.OTOAuth.ready;
+  await renderHeaderAccount();
+
+  const currentUser = await window.OTOAuth.getCurrentUser();
+
+  if (!currentUser) {
+    postArea.innerHTML = `
+      <div class="post-login-box">
+        <h2>音楽活動を共有する</h2>
+        <p>ログインすると、写真・動画・音声付きで活動を投稿できます。</p>
+        <a href="login.html" class="profile-button post-login-button">
+          ログインして投稿する
+        </a>
+      </div>
+    `;
+    return;
+  }
+
+  const linkFieldsHtml = LINK_FIELDS.map(function(field) {
+    return `
+      <label>
+        ${escapeHtml(field.label)} URL（任意）
+        <input
+          type="url"
+          id="${field.id}"
+          inputmode="url"
+        >
+      </label>
+    `;
+  }).join("");
+
+  postArea.innerHTML = `
+    <div class="post-form-box-inner">
+      <h2>自分の音楽活動を共有する</h2>
+      <p class="post-note">
+        活動内容や作品、夢・目標を紹介できます。
+      </p>
+
+      <form id="activityPostForm">
+        <label>
+          活動名
+          <input type="text" id="activityTitle" required>
+        </label>
+
+        <label>
+          活動の種類
+          <select id="activityType" required>
+            <option value="">選択してください</option>
+            <option value="バンド">バンド</option>
+            <option value="ソロ活動">ソロ活動</option>
+            <option value="作曲">作曲</option>
+            <option value="作詞">作詞</option>
+            <option value="編曲">編曲</option>
+            <option value="DTM・トラックメイク">DTM・トラックメイク</option>
+            <option value="MIX・マスタリング">MIX・マスタリング</option>
+            <option value="MV・映像制作">MV・映像制作</option>
+            <option value="ジャケット・デザイン">ジャケット・デザイン</option>
+            <option value="写真・撮影">写真・撮影</option>
+            <option value="DJ">DJ</option>
+            <option value="ライブ活動">ライブ活動</option>
+            <option value="その他">その他</option>
+          </select>
+        </label>
+
+        <label>
+          ジャンル
+          <input type="text" id="activityGenre" required>
+        </label>
+
+        <label>
+          活動地域
+          <input type="text" id="activityArea" required>
+        </label>
+
+        <label>
+          活動の説明
+          <textarea id="activityDescription" required></textarea>
+        </label>
+
+        <label>
+          活動のコンセプト・きっかけ（任意）
+          <textarea id="activityConcept"></textarea>
+        </label>
+
+        <label>
+          夢・目標（任意）
+          <textarea
+            id="activityDream"
+            placeholder="この活動で実現したいこと、届けたい音楽や作品への思いなど"
+          ></textarea>
+        </label>
+
+        <h3 class="activity-links-heading">活動リンク</h3>
+        <p class="activity-links-note">
+          YouTube、Instagram、音楽配信、公式サイトなどを複数登録できます。使う欄だけ入力してください。
+        </p>
+
+        ${linkFieldsHtml}
+
+        <label class="activity-image-field">
+          アーティスト写真・活動写真（任意）
+          <input
+            type="file"
+            id="activityImage"
+            accept="image/jpeg,image/png,image/webp"
+          >
+          <p class="activity-file-note">
+            JPEG・PNG・WebP対応。画像は8MB以下。自動で縮小します。
+          </p>
+          <img
+            id="imagePreview"
+            class="activity-image-preview"
+            alt="選択した写真のプレビュー"
+            hidden
+          >
+        </label>
+
+        <label class="activity-media-field">
+          動画（任意）
+          <input type="file" id="activityVideo" accept="video/*">
+          <p class="activity-file-note">
+            動画は100MB以下。詳細ページで再生できます。
+          </p>
+          <span class="activity-file-name" id="videoFileName"></span>
+        </label>
+
+        <label class="activity-media-field">
+          音声（任意）
+          <input type="file" id="activityAudio" accept="audio/*">
+          <p class="activity-file-note">
+            音声は100MB以下。詳細ページで再生できます。
+          </p>
+          <span class="activity-file-name" id="audioFileName"></span>
+        </label>
+
+        <button type="submit" class="profile-button" id="submitActivity">
+          音楽活動を共有する
+        </button>
+      </form>
+    </div>
+  `;
+
+  const imageInput = document.getElementById("activityImage");
+  const preview = document.getElementById("imagePreview");
+
+  imageInput.addEventListener("change", async function() {
+    const file = imageInput.files[0];
+
+    if (!file) {
+      preview.hidden = true;
+      preview.removeAttribute("src");
+      return;
+    }
+
+    try {
+      const imageData = await compressImage(file);
+      preview.src = imageData;
+      preview.hidden = false;
+    } catch (error) {
+      imageInput.value = "";
+      preview.hidden = true;
+      alert(error.message);
+    }
+  });
+
+  configureMediaInput("activityVideo", "videoFileName", "video");
+  configureMediaInput("activityAudio", "audioFileName", "audio");
+
+  document.getElementById("activityPostForm").addEventListener(
+    "submit",
+    async function(event) {
+      event.preventDefault();
+
+      const submitButton = document.getElementById("submitActivity");
+
+      if (submitButton.disabled) return;
+
+      let activeUser;
+
+      try {
+        activeUser = await window.OTOAuth.requireUser();
+      } catch (error) {
+        alert("ログイン状態を確認できませんでした。もう一度ログインしてください。");
+        return;
+      }
+
+      if (!activeUser) return;
+
+      const videoFile =
+        document.getElementById("activityVideo").files[0];
+
+      const audioFile =
+        document.getElementById("activityAudio").files[0];
+
+      const imageFile = imageInput.files[0];
+
+      if (videoFile && videoFile.size > MAX_MEDIA_SIZE) {
+        alert("動画は100MB以下にしてください。");
+        return;
+      }
+
+      if (audioFile && audioFile.size > MAX_MEDIA_SIZE) {
+        alert("音声は100MB以下にしてください。");
+        return;
+      }
+
+      const links = [];
+
+      for (const field of LINK_FIELDS) {
+        const value =
+          document.getElementById(field.id).value.trim();
+
+        if (!value) continue;
+
+        const url = safeHttpUrl(value);
+
+        if (!url) {
+          alert(
+            field.label +
+            "のURLを確認してください。https:// または http:// で始まるURLを入力してください。"
+          );
+
+          document.getElementById(field.id).focus();
+          return;
+        }
+
+        links.push({
+          label: field.label,
+          url: url
+        });
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "投稿しています…";
+
+      const postId = crypto.randomUUID();
+      const uploadedPaths = [];
+
+      try {
+        const imageData = imageFile
+          ? await compressImage(imageFile)
+          : "";
+
+        const videoPath = await uploadActivityMedia(
+          activeUser.id,
+          postId,
+          videoFile,
+          "video"
+        );
+
+        if (videoPath) uploadedPaths.push(videoPath);
+
+        const audioPath = await uploadActivityMedia(
+          activeUser.id,
+          postId,
+          audioFile,
+          "audio"
+        );
+
+        if (audioPath) uploadedPaths.push(audioPath);
+
+        const newPost = {
+          id: postId,
+          userId: String(activeUser.id),
+          title: document.getElementById("activityTitle").value.trim(),
+          type: document.getElementById("activityType").value,
+          genre: document.getElementById("activityGenre").value.trim(),
+          area: document.getElementById("activityArea").value.trim(),
+          description: document.getElementById("activityDescription").value.trim(),
+          concept: document.getElementById("activityConcept").value.trim(),
+          dream: document.getElementById("activityDream").value.trim(),
+
+          links: links,
+          link: links.length > 0 ? links[0].url : "",
+
+          imageData: imageData,
+
+          videoPath: videoPath,
+          videoFileName: videoFile ? videoFile.name : "",
+
+          audioPath: audioPath,
+          audioFileName: audioFile ? audioFile.name : "",
+
+          createdAt: new Date().toISOString()
+        };
+
+        const result = await window.OTO_SUPABASE
+          .from("posts")
+          .insert({
+            id: postId,
+            user_id: activeUser.id,
+            post_type: "activity",
+            data: newPost
+          })
+          .select("id")
+          .single();
+
+        if (result.error) {
+          throw new Error("投稿を保存できませんでした：" + result.error.message);
+        }
+
+        alert("音楽活動を共有しました。");
+
+        window.location.href =
+          "activity-detail.html?id=" + encodeURIComponent(postId);
+
+      } catch (error) {
+        await removeUploadedMedia(uploadedPaths);
+
+        console.error("音楽活動の投稿に失敗しました。", error);
+        alert(error.message || "投稿できませんでした。");
+
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "音楽活動を共有する";
+      }
+    }
+  );
+}
+
+setupPostArea().catch(function(error) {
+  console.error("ページの初期化に失敗しました。", error);
+
+  document.getElementById("postArea").innerHTML = `
+    <div class="post-login-box">
+      <h2>ページを読み込めませんでした</h2>
+      <p>時間をおいて、もう一度ページを開いてください。</p>
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>

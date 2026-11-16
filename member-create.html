@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メンバー・協力者を募集 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .member-create {
+      max-width: 800px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    .member-create-form {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      padding: 32px;
+    }
+
+    .member-create-form h2 {
+      margin: 0 0 12px;
+    }
+
+    .member-create-form > p {
+      line-height: 1.8;
+      color: #777;
+      margin-bottom: 28px;
+    }
+
+    .member-create-form label {
+      display: block;
+      margin-bottom: 22px;
+      font-weight: 600;
+    }
+
+    .member-create-form input,
+    .member-create-form select,
+    .member-create-form textarea {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid #d5d5d5;
+      background: #ffffff;
+      font: inherit;
+      color: inherit;
+      border-radius: 0;
+    }
+
+    .member-create-form input:focus,
+    .member-create-form select:focus,
+    .member-create-form textarea:focus {
+      outline: 2px solid #888888;
+      outline-offset: 1px;
+    }
+
+    .member-create-form textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .member-create-note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #777;
+      margin-top: 6px;
+    }
+
+    .member-create-links-title {
+      margin: 32px 0 8px;
+    }
+
+    .member-create-file-name {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #777;
+      overflow-wrap: anywhere;
+    }
+
+    .member-create-submit {
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+      padding: 15px;
+      border: none;
+      background: #191813;
+      color: #ffffff;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .member-create-submit:hover {
+      opacity: 0.85;
+    }
+
+    .member-create-submit:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    .member-login-box {
+      max-width: 650px;
+      margin: 40px auto 80px;
+      padding: 32px 24px;
+      border: 1px solid #e0e0e0;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .member-login-box p {
+      line-height: 1.8;
+    }
+
+    .member-login-box a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 13px 24px;
+      background: #191813;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .member-login-box a:hover {
+      opacity: 0.85;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .member-create {
+        margin-top: 24px;
+        padding: 0 14px;
+      }
+
+      .member-create-form {
+        padding: 22px 16px;
+      }
+
+      .member-login-box {
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>メンバー・協力者を募集する</h1>
+  <p>音楽を一緒につくる仲間や、活動を支える人を探そう。</p>
+</section>
+
+<main class="member-create">
+  <div id="memberCreateArea">
+    <p>読み込み中...</p>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<!-- Supabaseライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase設定 -->
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+
+<!-- 認証処理 -->
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const MAX_AUDIO_SIZE = 50 * 1024 * 1024;
+const MEMBER_AUDIO_BUCKET = "oto-member-audio";
+
+const MEMBER_LINK_FIELDS = [
+  { id: "recruitYouTube", label: "YouTube" },
+  { id: "recruitYouTubeMusic", label: "YouTube Music" },
+  { id: "recruitSpotify", label: "Spotify" },
+  { id: "recruitAmazonMusic", label: "Amazon Music" },
+  { id: "recruitSoundCloud", label: "SoundCloud" },
+  { id: "recruitOtherUrl", label: "その他のURL" }
+];
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+}
+
+// Storageのパスに使用するファイル名を整える
+function sanitizeAudioFileName(fileName) {
+  const safeName = String(fileName || "audio")
+    .replace(/[\/\\?%*:|"<>]/g, "_")
+    .replace(/[\u0000-\u001f]/g, "_")
+    .trim();
+
+  return safeName || "audio";
+}
+
+function renderLoginRequired() {
+  const area = document.getElementById("memberCreateArea");
+
+  area.innerHTML = `
+    <div class="member-login-box">
+      <h2>ログインが必要です</h2>
+      <p>
+        メンバー・協力者の募集を投稿するにはログインしてください。
+        募集一覧や詳細の閲覧は、ログインしなくてもできます。
+      </p>
+      <a href="login.html?returnTo=member-create.html">
+        ログインして募集する
+      </a>
+    </div>
+  `;
+}
+
+function renderMemberForm() {
+  const area = document.getElementById("memberCreateArea");
+
+  const linkFieldsHtml = MEMBER_LINK_FIELDS.map(function(field) {
+    return `
+      <label>
+        ${escapeHtml(field.label)}（任意）
+        <input
+          type="url"
+          id="${field.id}"
+          inputmode="url"
+          placeholder="https://..."
+        >
+      </label>
+    `;
+  }).join("");
+
+  area.innerHTML = `
+    <form id="memberCreateForm" class="member-create-form">
+      <h2>募集内容を入力</h2>
+      <p>
+        演奏だけでなく、作曲・作詞・MIX・映像制作など、
+        幅広い音楽活動の仲間を募集できます。
+      </p>
+
+      <label>
+        募集タイトル
+        <input
+          type="text"
+          id="recruitTitle"
+          maxlength="100"
+          required
+          placeholder="例：一緒にオリジナル曲を制作する仲間"
+        >
+      </label>
+
+      <label>
+        募集する分野
+        <select id="recruitType" required>
+          <option value="">選択してください</option>
+          <option value="バンドメンバー">バンドメンバー</option>
+          <option value="ボーカル">ボーカル</option>
+          <option value="ギター">ギター</option>
+          <option value="ベース">ベース</option>
+          <option value="ドラム">ドラム</option>
+          <option value="キーボード">キーボード</option>
+          <option value="その他の楽器演奏">その他の楽器演奏</option>
+          <option value="作曲">作曲</option>
+          <option value="作詞">作詞</option>
+          <option value="編曲">編曲</option>
+          <option value="DTM・トラックメイク">DTM・トラックメイク</option>
+          <option value="MIX・マスタリング">MIX・マスタリング</option>
+          <option value="MV・映像制作">MV・映像制作</option>
+          <option value="ジャケット・デザイン">ジャケット・デザイン</option>
+          <option value="写真・撮影">写真・撮影</option>
+          <option value="DJ">DJ</option>
+          <option value="ライブ・イベント企画">ライブ・イベント企画</option>
+          <option value="ライブ・イベントスタッフ">ライブ・イベントスタッフ</option>
+          <option value="その他">その他</option>
+        </select>
+      </label>
+
+      <label>
+        ジャンル（任意）
+        <input
+          type="text"
+          id="recruitGenre"
+          placeholder="例：ロック、ポップス、エレクトロニカ"
+        >
+      </label>
+
+      <label>
+        活動のテーマ・方向性（任意）
+        <input
+          type="text"
+          id="recruitTheme"
+          placeholder="例：オリジナル曲中心、映像と音楽を組み合わせる"
+        >
+      </label>
+
+      <label>
+        活動地域
+        <input
+          type="text"
+          id="recruitArea"
+          required
+          placeholder="例：岐阜県、オンライン"
+        >
+      </label>
+
+      <label>
+        募集内容
+        <textarea
+          id="recruitDescription"
+          required
+          maxlength="5000"
+          placeholder="募集する理由、活動内容、求める人、活動頻度など"
+        ></textarea>
+      </label>
+
+      <h3 class="member-create-links-title">参考音源・作品リンク</h3>
+      <p class="member-create-note">
+        参考にしてほしい音源や作品があれば登録してください。
+        複数のリンクを設定できます。
+      </p>
+
+      ${linkFieldsHtml}
+
+      <label>
+        音源ファイル（任意）
+        <input
+          type="file"
+          id="recruitAudio"
+          accept="audio/*"
+        >
+        <span class="member-create-note">
+          音声ファイルは50MB以下です。
+        </span>
+        <span
+          id="recruitAudioName"
+          class="member-create-file-name"
+        ></span>
+      </label>
+
+      <button
+        type="submit"
+        class="member-create-submit"
+        id="submitMemberPost"
+      >
+        募集を共有する
+      </button>
+    </form>
+  `;
+
+  setupMemberForm();
+}
+
+function setupMemberForm() {
+  const form = document.getElementById("memberCreateForm");
+  const audioInput = document.getElementById("recruitAudio");
+  const audioName = document.getElementById("recruitAudioName");
+
+  audioInput.addEventListener("change", function() {
+    const file = audioInput.files[0];
+
+    audioName.textContent = "";
+
+    if (!file) return;
+
+    if (!file.type.startsWith("audio/")) {
+      alert("音声ファイルを選択してください。");
+      audioInput.value = "";
+      return;
+    }
+
+    if (file.size > MAX_AUDIO_SIZE) {
+      alert("音源ファイルは50MB以下にしてください。");
+      audioInput.value = "";
+      return;
+    }
+
+    audioName.textContent =
+      "選択中：" + file.name +
+      "（" + (file.size / (1024 * 1024)).toFixed(1) + "MB）";
+  });
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const submitButton =
+      document.getElementById("submitMemberPost");
+
+    if (submitButton.disabled) return;
+
+    // 投稿時にもログイン状態を確認する
+    const activeUser = await window.OTOAuth.requireUser();
+
+    if (!activeUser) return;
+
+    const title =
+      document.getElementById("recruitTitle").value.trim();
+
+    const type =
+      document.getElementById("recruitType").value;
+
+    const area =
+      document.getElementById("recruitArea").value.trim();
+
+    const description =
+      document.getElementById("recruitDescription").value.trim();
+
+    const audioFile = audioInput.files[0];
+
+    if (!title || !type || !area || !description) {
+      alert("募集タイトル・分野・地域・募集内容を入力してください。");
+      return;
+    }
+
+    if (audioFile && !audioFile.type.startsWith("audio/")) {
+      alert("音声ファイルを選択してください。");
+      return;
+    }
+
+    if (audioFile && audioFile.size > MAX_AUDIO_SIZE) {
+      alert("音源ファイルは50MB以下にしてください。");
+      return;
+    }
+
+    const links = [];
+
+    for (const field of MEMBER_LINK_FIELDS) {
+      const value = document.getElementById(field.id).value.trim();
+
+      if (!value) continue;
+
+      const url = safeHttpUrl(value);
+
+      if (!url) {
+        alert(
+          field.label +
+          "のURLを確認してください。http:// または https:// から始まるURLを入力してください。"
+        );
+
+        document.getElementById(field.id).focus();
+        return;
+      }
+
+      links.push({
+        label: field.label,
+        url: url
+      });
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "投稿しています…";
+
+    const postId = crypto.randomUUID();
+
+    let audioPath = "";
+    let audioUrl = "";
+
+    try {
+      // 音声ファイルをSupabase Storageにアップロード
+      if (audioFile) {
+        const safeFileName =
+          sanitizeAudioFileName(audioFile.name);
+
+        audioPath =
+          activeUser.id + "/" +
+          postId + "/" +
+          safeFileName;
+
+        const {
+          error: uploadError
+        } = await window.OTO_SUPABASE
+          .storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .upload(audioPath, audioFile, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: audioFile.type || "application/octet-stream"
+          });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const {
+          data: publicUrlData
+        } = window.OTO_SUPABASE
+          .storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .getPublicUrl(audioPath);
+
+        audioUrl = publicUrlData.publicUrl;
+      }
+
+      // 投稿データをSupabaseのpostsテーブルに保存
+      const newPost = {
+        id: postId,
+        userId: String(activeUser.id),
+        title: title,
+        type: type,
+        genre: document.getElementById("recruitGenre").value.trim(),
+        theme: document.getElementById("recruitTheme").value.trim(),
+        area: area,
+        description: description,
+        links: links,
+        audioPath: audioPath,
+        audioUrl: audioUrl,
+        audioFileName: audioFile ? audioFile.name : "",
+        createdAt: new Date().toISOString()
+      };
+
+      const {
+        error: insertError
+      } = await window.OTO_SUPABASE
+        .from("posts")
+        .insert({
+          id: postId,
+          user_id: activeUser.id,
+          post_type: "member",
+          data: newPost
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      alert("メンバー・協力者の募集を共有しました。");
+
+      window.location.href =
+        "member-detail.html?id=" + encodeURIComponent(postId);
+
+    } catch (error) {
+      console.error("メンバー募集の投稿エラー:", error);
+
+      // 投稿に失敗した場合、アップロード済みの音声を削除する
+      if (audioPath) {
+        const {
+          error: deleteError
+        } = await window.OTO_SUPABASE
+          .storage
+          .from(MEMBER_AUDIO_BUCKET)
+          .remove([audioPath]);
+
+        if (deleteError) {
+          console.error(
+            "音声ファイルの後処理に失敗しました:",
+            deleteError
+          );
+        }
+      }
+
+      alert(
+        "募集を保存できませんでした。\n" +
+        (error.message || "時間をおいてもう一度お試しください。")
+      );
+
+      submitButton.disabled = false;
+      submitButton.textContent = "募集を共有する";
+    }
+  });
+}
+
+async function initializeMemberCreate() {
+  const area = document.getElementById("memberCreateArea");
+
+  try {
+    if (!window.OTO_SUPABASE || !window.OTOAuth) {
+      throw new Error(
+        "Supabaseまたは認証機能を読み込めませんでした。"
+      );
+    }
+
+    // 認証状態の初期化を待つ
+    const user = await window.OTOAuth.getCurrentUser();
+
+    if (!user) {
+      renderLoginRequired();
+      return;
+    }
+
+    renderMemberForm();
+
+  } catch (error) {
+    console.error("メンバー募集ページの初期化エラー:", error);
+
+    area.innerHTML = `
+      <div class="member-login-box">
+        <h2>ページを読み込めませんでした</h2>
+        <p>
+          ${escapeHtml(error.message)}
+        </p>
+        <a href="member-create.html">再読み込み</a>
+      </div>
+    `;
+  }
+}
+
+initializeMemberCreate();
+</script>
+
+</body>
+</html>

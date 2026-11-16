@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>チャット - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chat-page {
+      width: min(1000px, calc(100% - 32px));
+      margin: 36px auto 70px;
+    }
+
+    .chat-intro {
+      margin-bottom: 28px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    .chat-feature {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .chat-feature-card {
+      display: block;
+      padding: 24px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      color: #171717;
+      text-decoration: none;
+      transition: background .2s, border-color .2s;
+    }
+
+    .chat-feature-card:hover,
+    .chat-feature-card:focus-visible,
+    .chat-group:hover {
+      background: #f7f7f4;
+      border-color: #d2d2cc;
+    }
+
+    .chat-feature-card:focus-visible {
+      outline: 2px solid #222;
+      outline-offset: 3px;
+    }
+
+    .chat-feature-card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .chat-feature-card p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .chat-section {
+      margin-top: 38px;
+      scroll-margin-top: 24px;
+    }
+
+    .chat-section h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .chat-group-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chat-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .chat-group-info {
+      min-width: 0;
+    }
+
+    .chat-group-info strong {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .chat-group-info small {
+      display: block;
+      margin-top: 5px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    .chat-button {
+      flex-shrink: 0;
+      display: inline-block;
+      padding: 10px 15px;
+      border: 1px solid #222;
+      background: #222;
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .chat-button.secondary {
+      background: #fff;
+      color: #222;
+    }
+
+    .chat-button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .chat-empty {
+      padding: 22px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .chat-group-form {
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .chat-group-form h3 {
+      margin-top: 0;
+    }
+
+    .chat-group-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .chat-group-form input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 8px 0 18px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      font: inherit;
+    }
+
+    .chat-select-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 12px 0 18px;
+    }
+
+    .chat-select-item {
+      display: flex !important;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 12px;
+      border: 1px solid #e5e5e1;
+      font-weight: normal !important;
+      overflow-wrap: anywhere;
+    }
+
+    .chat-select-item input {
+      margin-top: 5px;
+    }
+
+    .chat-select-item small {
+      display: block;
+      margin-top: 4px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    .chat-note {
+      margin: 10px 0 0;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    header .global-search-menu {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    header .global-search-menu > summary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 13px;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    header .global-search-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    header .global-search-menu[open] {
+      z-index: 1000;
+    }
+
+    header .global-search-panel {
+      position: absolute !important;
+      top: calc(100% + 10px) !important;
+      left: 0 !important;
+      display: block !important;
+      width: 430px !important;
+      max-width: calc(100vw - 40px) !important;
+      box-sizing: border-box;
+      padding: 10px !important;
+      background: #fff !important;
+      border: 1px solid #deded9 !important;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .1) !important;
+      z-index: 1001;
+    }
+
+    header .global-search-card {
+      display: grid !important;
+      grid-template-columns: 44px minmax(0, 1fr) 20px !important;
+      align-items: center;
+      gap: 12px;
+      min-height: 76px;
+      box-sizing: border-box;
+      padding: 14px 15px !important;
+      color: #171717;
+      background: #fff;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+
+    header .global-search-card:hover {
+      background: #f5f5f2 !important;
+      border-color: #e1e1dc !important;
+      transform: translateX(2px);
+    }
+
+    header .global-search-icon {
+      width: 42px;
+      height: 42px;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      background: #eeeeeb;
+      font-size: 21px;
+    }
+
+    header .global-search-text {
+      display: block !important;
+      min-width: 0;
+    }
+
+    header .global-search-text strong {
+      display: block !important;
+      margin-bottom: 2px;
+      font-size: 14px;
+      white-space: normal;
+    }
+
+    header .global-search-text small {
+      display: block !important;
+      color: #858585;
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: normal;
+    }
+
+    header .global-search-arrow {
+      display: block !important;
+      color: #888;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .chat-feature,
+      .chat-select-list {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-group {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .chat-button {
+        padding: 9px 11px;
+      }
+
+      header .global-search-panel {
+        width: 430px !important;
+        max-width: calc(100vw - 24px) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount"></div>
+</header>
+
+<section class="page-header">
+  <h1>チャット</h1>
+  <p>音楽の話から、新しいつながりを。</p>
+</section>
+
+<main class="chat-page">
+  <p class="chat-intro">
+    1対1で話したり、みんなで話したり。
+    音楽仲間との交流に使おう。
+  </p>
+
+  <section class="chat-feature">
+    <a class="chat-feature-card" href="chat-room.html?type=public">
+      <h2>チャット広場 →</h2>
+      <p>みんなで自由に会話できる共通チャット。</p>
+    </a>
+
+    <a class="chat-feature-card" href="chat-dm.html">
+      <h2>ダイレクトメッセージ →</h2>
+      <p>プロフィールから話したい相手を選んで会話する。</p>
+    </a>
+  </section>
+
+  <section class="chat-section">
+    <h2>グループチャット</h2>
+    <div id="groupList" class="chat-group-list">
+      <div class="chat-empty">読み込み中...</div>
+    </div>
+
+    <div class="chat-group-form">
+      <h3>グループを作成</h3>
+
+      <label for="groupName">グループ名</label>
+      <input
+        type="text"
+        id="groupName"
+        maxlength="40"
+        placeholder="例：バンドメンバー"
+      >
+
+      <label>メンバーを選ぶ</label>
+      <div id="memberSelectList" class="chat-select-list">
+        <p class="chat-note">メンバーを読み込み中...</p>
+      </div>
+
+      <button type="button" class="chat-button" id="createGroupButton" disabled>
+        グループを作成
+      </button>
+
+      <p id="groupFormMessage" class="chat-note" role="status">
+        ログイン状態を確認しています。
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+let currentUser = null;
+let profiles = [];
+
+const groupList = document.getElementById("groupList");
+const memberSelectList = document.getElementById("memberSelectList");
+const createGroupButton = document.getElementById("createGroupButton");
+const groupNameInput = document.getElementById("groupName");
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function showGroupMessage(message) {
+  document.getElementById("groupFormMessage").textContent = message;
+}
+
+function getProfileName(userId) {
+  const profile = profiles.find(function(item) {
+    return String(item.id) === String(userId);
+  });
+
+  return profile?.data?.name || "名前未設定";
+}
+
+async function renderHeaderAccount() {
+  if (window.OTOAuth &&
+      typeof window.OTOAuth.updateHeaderAccount === "function") {
+    await window.OTOAuth.updateHeaderAccount();
+  }
+}
+
+function showLoginRequired() {
+  groupList.innerHTML = `
+    <div class="chat-empty">
+      グループチャットを見るにはログインしてください。
+      <a href="login.html">ログインはこちら</a>
+    </div>
+  `;
+
+  memberSelectList.innerHTML = `
+    <p class="chat-note">
+      グループを作成するにはログインしてください。
+    </p>
+  `;
+
+  createGroupButton.disabled = true;
+  showGroupMessage("グループを作成するにはログインしてください。");
+}
+
+async function loadProfiles() {
+  const { data, error } = await window.OTO_SUPABASE
+    .from("profiles")
+    .select("id, data");
+
+  if (error) {
+    console.error("プロフィール取得エラー:", error);
+    memberSelectList.innerHTML = `
+      <p class="chat-note">
+        メンバーを読み込めませんでした。
+      </p>
+    `;
+    return;
+  }
+
+  profiles = data || [];
+  renderMemberSelectList();
+}
+
+function renderMemberSelectList() {
+  const otherProfiles = profiles.filter(function(profile) {
+    return profile.id && profile.id !== currentUser.id;
+  });
+
+  if (otherProfiles.length === 0) {
+    memberSelectList.innerHTML = `
+      <p class="chat-note">選択できるメンバーがいません。</p>
+    `;
+    return;
+  }
+
+  memberSelectList.innerHTML = otherProfiles.map(function(profile) {
+    const userId = String(profile.id);
+    const name = profile.data?.name || "名前未設定";
+    const detail =
+      profile.data?.instrument ||
+      profile.data?.part ||
+      profile.data?.activity ||
+      "";
+
+    return `
+      <label class="chat-select-item">
+        <input
+          type="checkbox"
+          name="groupMember"
+          value="${escapeHtml(userId)}"
+        >
+        <span>
+          <strong>${escapeHtml(name)}</strong>
+          <small>${escapeHtml(detail)}</small>
+        </span>
+      </label>
+    `;
+  }).join("");
+}
+
+async function renderGroupList() {
+  const { data: memberships, error: membershipError } =
+    await window.OTO_SUPABASE
+      .from("chat_room_members")
+      .select("room_id")
+      .eq("user_id", currentUser.id);
+
+  if (membershipError) {
+    console.error("グループ参加情報取得エラー:", membershipError);
+    groupList.innerHTML = `
+      <div class="chat-empty">
+        グループ一覧を読み込めませんでした。
+      </div>
+    `;
+    return;
+  }
+
+  const roomIds = [...new Set(
+    (memberships || []).map(function(item) {
+      return item.room_id;
+    })
+  )];
+
+  if (roomIds.length === 0) {
+    groupList.innerHTML = `
+      <div class="chat-empty">
+        参加しているグループはまだありません。
+        下のフォームからグループを作成できます。
+      </div>
+    `;
+    return;
+  }
+
+  const { data: rooms, error: roomError } = await window.OTO_SUPABASE
+    .from("chat_rooms")
+    .select("id, name, room_type, created_at")
+    .in("id", roomIds)
+    .eq("room_type", "group")
+    .order("created_at", { ascending: false });
+
+  if (roomError) {
+    console.error("グループ取得エラー:", roomError);
+    groupList.innerHTML = `
+      <div class="chat-empty">
+        グループ一覧を読み込めませんでした。
+      </div>
+    `;
+    return;
+  }
+
+  if (!rooms || rooms.length === 0) {
+    groupList.innerHTML = `
+      <div class="chat-empty">
+        参加しているグループはまだありません。
+        下のフォームからグループを作成できます。
+      </div>
+    `;
+    return;
+  }
+
+  const { data: allMembers, error: allMembersError } =
+    await window.OTO_SUPABASE
+      .from("chat_room_members")
+      .select("room_id, user_id")
+      .in("room_id", rooms.map(function(room) {
+        return room.id;
+      }));
+
+  if (allMembersError) {
+    console.error("メンバー情報取得エラー:", allMembersError);
+  }
+
+  groupList.innerHTML = rooms.map(function(room) {
+    const roomMembers = (allMembers || []).filter(function(member) {
+      return member.room_id === room.id;
+    });
+
+    const memberNames = roomMembers.map(function(member) {
+      return getProfileName(member.user_id);
+    });
+
+    const groupUrl = "chat-room.html?type=group&id=" +
+      encodeURIComponent(room.id);
+
+    return `
+      <article class="chat-group">
+        <div class="chat-group-info">
+          <strong>${escapeHtml(room.name || "グループチャット")}</strong>
+          <small>
+            メンバー：
+            ${escapeHtml(memberNames.join("、") || "メンバー情報なし")}
+          </small>
+        </div>
+        <a class="chat-button" href="${groupUrl}">
+          チャットを開く
+        </a>
+      </article>
+    `;
+  }).join("");
+}
+
+async function createGroup() {
+  if (!currentUser) {
+    showGroupMessage("グループを作成するにはログインしてください。");
+    return;
+  }
+
+  const groupName = groupNameInput.value.trim();
+
+  if (!groupName) {
+    showGroupMessage("グループ名を入力してください。");
+    groupNameInput.focus();
+    return;
+  }
+
+  const selectedMembers = Array.from(
+    document.querySelectorAll('input[name="groupMember"]:checked')
+  ).map(function(input) {
+    return input.value;
+  });
+
+  const memberIds = [...new Set([
+    currentUser.id,
+    ...selectedMembers
+  ])];
+
+  if (memberIds.length < 2) {
+    showGroupMessage("自分以外のメンバーを1人以上選んでください。");
+    return;
+  }
+
+  createGroupButton.disabled = true;
+  showGroupMessage("グループを作成しています...");
+
+  try {
+    const { data: newRoom, error: roomError } =
+      await window.OTO_SUPABASE
+        .from("chat_rooms")
+        .insert({
+          name: groupName,
+          room_type: "group",
+          created_by: currentUser.id
+        })
+        .select("id")
+        .single();
+
+    if (roomError) throw roomError;
+
+    const memberRows = memberIds.map(function(userId) {
+      return {
+        room_id: newRoom.id,
+        user_id: userId
+      };
+    });
+
+    const { error: membersError } = await window.OTO_SUPABASE
+      .from("chat_room_members")
+      .insert(memberRows);
+
+    if (membersError) {
+      console.error("メンバー登録エラー:", membersError);
+      showGroupMessage(
+        "グループは作成されましたが、メンバー登録に失敗しました。管理者に確認してください。"
+      );
+      await renderGroupList();
+      return;
+    }
+
+    groupNameInput.value = "";
+
+    document.querySelectorAll('input[name="groupMember"]:checked')
+      .forEach(function(input) {
+        input.checked = false;
+      });
+
+    showGroupMessage("グループを作成しました。");
+
+    await renderGroupList();
+
+    window.location.href =
+      "chat-room.html?type=group&id=" +
+      encodeURIComponent(newRoom.id);
+
+  } catch (error) {
+    console.error("グループ作成エラー:", error);
+    showGroupMessage(
+      "グループを作成できませんでした。入力内容やデータベースの権限を確認してください。"
+    );
+  } finally {
+    createGroupButton.disabled = false;
+  }
+}
+
+async function initializeChatPage() {
+  try {
+    await window.OTOAuth.ready;
+
+    currentUser = await window.OTOAuth.getCurrentUser();
+
+    await renderHeaderAccount();
+
+    if (!currentUser) {
+      showLoginRequired();
+      return;
+    }
+
+    createGroupButton.disabled = false;
+
+    showGroupMessage("グループを作成できます。");
+
+    await loadProfiles();
+    await renderGroupList();
+
+  } catch (error) {
+    console.error("チャットページ初期化エラー:", error);
+
+    groupList.innerHTML = `
+      <div class="chat-empty">
+        チャット情報を読み込めませんでした。
+        ページを再読み込みしてください。
+      </div>
+    `;
+
+    showGroupMessage("ログイン状態の確認に失敗しました。");
+  }
+}
+
+createGroupButton.addEventListener("click", createGroup);
+
+initializeChatPage();
+</script>
+
+</body>
+</html>

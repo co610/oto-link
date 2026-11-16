@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規登録 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-input-wrap input {
+      width: 100%;
+      padding-right: 48px;
+      box-sizing: border-box;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 5px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .password-toggle svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す
+        <span class="menu-chevron">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>新規登録</h1>
+  <p>OTO LINKを始めよう</p>
+</section>
+
+<section class="profile-create">
+  <div class="profile-form">
+    <h2>アカウントを作成</h2>
+
+    <label>
+      メールアドレス
+      <input
+        type="email"
+        id="email"
+        placeholder="example@email.com"
+        autocomplete="email"
+      >
+    </label>
+
+    <label>
+      パスワード
+      <div class="password-input-wrap">
+        <input
+          type="password"
+          id="password"
+          placeholder="パスワード"
+          autocomplete="new-password"
+        >
+
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="パスワードを表示"
+          aria-pressed="false"
+          data-password-target="password"
+        >
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </label>
+
+    <label>
+      パスワード（確認）
+      <div class="password-input-wrap">
+        <input
+          type="password"
+          id="passwordConfirm"
+          placeholder="もう一度入力"
+          autocomplete="new-password"
+        >
+
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="確認用パスワードを表示"
+          aria-pressed="false"
+          data-password-target="passwordConfirm"
+        >
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </label>
+
+    <button
+      type="button"
+      class="profile-button"
+      id="signupButton"
+      onclick="signup()"
+    >
+      新規登録
+    </button>
+
+    <p class="form-link">
+      すでにアカウントを持っている人は
+      <a href="login.html">ログイン</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<!-- Supabaseライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase設定 -->
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+
+<!-- OTO LINK共通認証 -->
+<script src="auth.js"></script>
+
+<script>
+
+// パスワード表示・非表示用アイコン
+function getEyeIcon(isVisible) {
+
+  // パスワード表示中：斜線あり
+  if (isVisible) {
+    return `
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round">
+        <path d="M3 3L21 21"/>
+        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+        <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.5 4.5 9 7-.2 1-1 2.2-2 3.2"/>
+        <path d="M6.2 6.2C4.2 7.5 2.5 9.8 2 12c.5 2.5 4 7 10 7 1.3 0 2.5-.3 3.5-.8"/>
+      </svg>
+    `;
+  }
+
+  // パスワード非表示：斜線なし
+  return `
+    <svg viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2"
+         stroke-linecap="round">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  `;
+}
+
+
+// パスワード表示・非表示
+document.querySelectorAll(".password-toggle").forEach(function(button) {
+  button.addEventListener("click", function() {
+
+    const targetId = this.dataset.passwordTarget;
+    const passwordInput = document.getElementById(targetId);
+
+    const isHidden = passwordInput.type === "password";
+
+    passwordInput.type = isHidden ? "text" : "password";
+
+    this.innerHTML = getEyeIcon(isHidden);
+
+    this.setAttribute(
+      "aria-label",
+      isHidden ? "パスワードを非表示" : "パスワードを表示"
+    );
+
+    this.setAttribute("aria-pressed", String(isHidden));
+  });
+});
+
+
+// 新規登録処理
+async function signup() {
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const passwordConfirm =
+    document.getElementById("passwordConfirm").value;
+
+  const signupButton =
+    document.getElementById("signupButton");
+
+  if (email === "" || password === "" || passwordConfirm === "") {
+    alert("すべての項目を入力してください。");
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    alert("パスワードが一致していません。");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("パスワードは6文字以上にしてください。");
+    return;
+  }
+
+  if (!window.OTO_SUPABASE) {
+    alert("Supabaseに接続できません。ページを再読み込みしてください。");
+    return;
+  }
+
+  signupButton.disabled = true;
+  signupButton.textContent = "登録中...";
+
+  try {
+    const {
+      data,
+      error
+    } = await window.OTO_SUPABASE.auth.signUp({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      console.error("Supabase登録エラー:", error);
+
+      if (
+        error.message.toLowerCase().includes("already registered") ||
+        error.message.toLowerCase().includes("already exists")
+      ) {
+        alert("このメールアドレスはすでに登録されています。");
+      } else if (
+        error.message.toLowerCase().includes("password")
+      ) {
+        alert("パスワードの条件を満たしていません。");
+      } else {
+        alert("登録に失敗しました。\n" + error.message);
+      }
+
+      return;
+    }
+
+    if (data.session) {
+      alert("アカウントを作成しました。");
+
+      window.location.href = "profile.html";
+      return;
+    }
+
+    alert(
+      "アカウントの登録を受け付けました。\n\n" +
+      "登録したメールアドレスに認証メールが届いている場合は、" +
+      "メール内のリンクを開いて認証を完了してください。\n\n" +
+      "認証後、ログインしてください。"
+    );
+
+    window.location.href = "login.html";
+
+  } catch (error) {
+    console.error("登録処理エラー:", error);
+
+    alert(
+      "登録処理中にエラーが発生しました。\n" +
+      "時間をおいてもう一度お試しください。"
+    );
+
+  } finally {
+    signupButton.disabled = false;
+    signupButton.textContent = "新規登録";
+  }
+}
+
+</script>
+
+</body>
+</html>

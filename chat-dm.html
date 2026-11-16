@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダイレクトメッセージ - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .dm-page {
+      width: min(1000px, calc(100% - 32px));
+      margin: 36px auto 70px;
+    }
+
+    .dm-intro {
+      margin-bottom: 24px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .dm-back {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: #555;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .dm-back:hover {
+      text-decoration: underline;
+    }
+
+    .dm-search {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .dm-search label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .dm-search-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dm-search input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid #ccc;
+      border-radius: 0;
+      font: inherit;
+    }
+
+    .dm-search input:focus {
+      outline: 2px solid #333;
+      outline-offset: 2px;
+    }
+
+    .dm-search button {
+      padding: 12px 20px;
+      border: 1px solid #222;
+      background: #222;
+      color: #fff;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .dm-search button:hover {
+      background: #444;
+    }
+
+    .dm-result-count {
+      margin: 0 0 14px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .dm-user-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .dm-user {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .dm-user-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .dm-user-name {
+      display: inline-block;
+      margin: 0 0 8px;
+      color: #171717;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .dm-user-name:hover {
+      text-decoration: underline;
+    }
+
+    .dm-user-detail {
+      margin: 0;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .dm-user-actions {
+      display: flex;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .dm-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid #222;
+      background: #222;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .dm-button:hover {
+      background: #444;
+    }
+
+    .dm-button.secondary {
+      background: #fff;
+      color: #222;
+    }
+
+    .dm-button.secondary:hover {
+      background: #f5f5f2;
+    }
+
+    .dm-empty {
+      padding: 26px 20px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      color: #666;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .dm-empty a {
+      color: #222;
+    }
+
+    @media (max-width: 600px) {
+      .dm-search {
+        padding: 15px;
+      }
+
+      .dm-search-row {
+        flex-direction: column;
+      }
+
+      .dm-search button {
+        width: 100%;
+      }
+
+      .dm-user {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .dm-user-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .dm-button {
+        padding: 10px 8px;
+        white-space: normal;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount"></div>
+</header>
+
+<section class="page-header">
+  <h1>ダイレクトメッセージ</h1>
+  <p>話してみたい音楽仲間を見つけよう。</p>
+</section>
+
+<main class="dm-page">
+  <a class="dm-back" href="chat.html">← チャットに戻る</a>
+
+  <p class="dm-intro">
+    プロフィールを見て、話したい相手を選ぼう。
+    名前や自己紹介、好きな音楽、やってみたいことなどのキーワードで検索できるよ。
+  </p>
+
+  <section class="dm-search" aria-label="プロフィール検索">
+    <label for="dmSearchInput">キーワードで検索</label>
+
+    <div class="dm-search-row">
+      <input
+        type="search"
+        id="dmSearchInput"
+        placeholder="例：ギター、作曲、ボーカル、DTM"
+        autocomplete="off"
+      >
+      <button type="button" id="dmSearchButton">検索</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="dmListHeading">
+    <h2 id="dmListHeading">プロフィール一覧</h2>
+    <p id="dmResultCount" class="dm-result-count" aria-live="polite"></p>
+    <div id="dmUserList" class="dm-user-list"></div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const supabase = window.OTO_SUPABASE;
+
+const dmSearchInput = document.getElementById("dmSearchInput");
+const dmSearchButton = document.getElementById("dmSearchButton");
+const dmUserList = document.getElementById("dmUserList");
+const dmResultCount = document.getElementById("dmResultCount");
+
+let currentUser = null;
+let profiles = [];
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getProfileUserId(profile) {
+  if (!profile || typeof profile !== "object") {
+    return null;
+  }
+
+  const id = profile.userId ?? profile.accountId ?? profile.user_id ?? profile.id;
+
+  return id == null || id === "" ? null : String(id);
+}
+
+function getProfileName(profile) {
+  return profile && profile.name
+    ? String(profile.name)
+    : "名前未設定";
+}
+
+function getProfileDetail(profile) {
+  const details = [];
+
+  if (
+    profile.age !== undefined &&
+    profile.age !== null &&
+    String(profile.age).trim() !== ""
+  ) {
+    details.push(String(profile.age) + "歳");
+  }
+
+  if (profile.grade) {
+    details.push(String(profile.grade));
+  }
+
+  if (profile.activity) {
+    details.push(String(profile.activity));
+  }
+
+  if (profile.instrument) {
+    details.push(String(profile.instrument));
+  }
+
+  if (profile.part && profile.part !== profile.instrument) {
+    details.push(String(profile.part));
+  }
+
+  return details.join(" ・ ");
+}
+
+/*
+ * 検索対象をプロフィール内の文字情報から集める。
+ * パスワード・メールアドレス・IDなどは検索対象にしない。
+ */
+function getSearchableProfileText(profile) {
+  const excludedKeys = new Set([
+    "password",
+    "email",
+    "id",
+    "userid",
+    "user_id",
+    "accountid",
+    "account_id",
+    "createdat",
+    "updatedat",
+    "token"
+  ]);
+
+  const values = [];
+
+  function collect(value, key, depth) {
+    if (depth > 6 || value == null) {
+      return;
+    }
+
+    if (
+      key &&
+      excludedKeys.has(
+        String(key).replace(/[-_\s]/g, "").toLowerCase()
+      )
+    ) {
+      return;
+    }
+
+    if (
+      typeof value === "string" ||
+      typeof value === "number"
+    ) {
+      values.push(String(value));
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach(function(item) {
+        collect(item, "", depth + 1);
+      });
+      return;
+    }
+
+    if (typeof value === "object") {
+      Object.keys(value).forEach(function(childKey) {
+        collect(value[childKey], childKey, depth + 1);
+      });
+    }
+  }
+
+  collect(profile, "", 0);
+
+  return values.join(" ").toLocaleLowerCase("ja");
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .toLocaleLowerCase("ja")
+    .trim();
+}
+
+function getProfileUrl(userId) {
+  return "profile-detail.html?id=" + encodeURIComponent(userId);
+}
+
+function getDmUrl(userId) {
+  return "chat-room.html?type=dm&with=" +
+    encodeURIComponent(userId);
+}
+
+/*
+ * Supabaseのprofilesテーブルからプロフィールを取得する。
+ * profiles.dataにプロフィール情報が保存されている。
+ */
+async function loadProfiles() {
+  dmUserList.innerHTML = `
+    <div class="dm-empty">
+      プロフィールを読み込んでいます。
+    </div>
+  `;
+
+  const result = await supabase
+    .from("profiles")
+    .select("id, data");
+
+  if (result.error) {
+    console.error("プロフィールの取得に失敗しました。", result.error);
+
+    dmResultCount.textContent = "";
+
+    dmUserList.innerHTML = `
+      <div class="dm-empty">
+        プロフィールを読み込めませんでした。<br>
+        時間をおいて、もう一度お試しください。
+      </div>
+    `;
+
+    return;
+  }
+
+  profiles = (result.data || []).map(function(row) {
+    const profileData =
+      row.data && typeof row.data === "object"
+        ? row.data
+        : {};
+
+    return {
+      ...profileData,
+      userId: String(row.id)
+    };
+  });
+
+  renderDmUserList();
+}
+
+/*
+ * プロフィール一覧を表示する。
+ */
+function renderDmUserList() {
+  if (!currentUser) {
+    return;
+  }
+
+  const currentUserId = String(currentUser.id);
+  const keyword = normalizeText(dmSearchInput.value);
+
+  const visibleProfiles = profiles.filter(function(profile) {
+    const userId = getProfileUserId(profile);
+
+    if (!userId) {
+      return false;
+    }
+
+    // 自分自身はDMの相手一覧に表示しない
+    if (userId === currentUserId) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const keywords = keyword
+    ? keyword.split(/\s+/).filter(Boolean)
+    : [];
+
+  const matchedProfiles = visibleProfiles.filter(function(profile) {
+    if (keywords.length === 0) {
+      return true;
+    }
+
+    const searchableText = getSearchableProfileText(profile);
+
+    // 複数のキーワードはすべて含むプロフィールを表示
+    return keywords.every(function(word) {
+      return searchableText.includes(word);
+    });
+  });
+
+  dmResultCount.textContent =
+    matchedProfiles.length + "件のプロフィール";
+
+  if (matchedProfiles.length === 0) {
+    dmUserList.innerHTML = `
+      <div class="dm-empty">
+        ${
+          visibleProfiles.length === 0
+            ? "表示できるプロフィールがありません。"
+            : "キーワードに一致するプロフィールが見つかりませんでした。<br>別のキーワードで検索してみてください。"
+        }
+      </div>
+    `;
+
+    return;
+  }
+
+  dmUserList.innerHTML = matchedProfiles.map(function(profile) {
+    const userId = getProfileUserId(profile);
+    const name = getProfileName(profile);
+    const detail = getProfileDetail(profile);
+
+    const profileUrl = getProfileUrl(userId);
+    const dmUrl = getDmUrl(userId);
+
+    return `
+      <article class="dm-user">
+        <div class="dm-user-info">
+          <a
+            class="dm-user-name"
+            href="${escapeHtml(profileUrl)}"
+          >${escapeHtml(name)}</a>
+
+          <p class="dm-user-detail">${
+            detail
+              ? escapeHtml(detail)
+              : "プロフィールを見てみよう。"
+          }</p>
+        </div>
+
+        <div class="dm-user-actions">
+          <a
+            class="dm-button secondary"
+            href="${escapeHtml(profileUrl)}"
+          >プロフィール</a>
+
+          <a
+            class="dm-button"
+            href="${escapeHtml(dmUrl)}"
+          >メッセージ</a>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+/*
+ * ヘッダーのアカウント表示
+ */
+async function renderHeaderAccount() {
+  const headerAccount = document.getElementById("headerAccount");
+
+  if (
+    window.OTOAuth &&
+    typeof window.OTOAuth.updateHeaderAccount === "function"
+  ) {
+    await window.OTOAuth.updateHeaderAccount();
+    return;
+  }
+
+  if (!currentUser) {
+    headerAccount.innerHTML = `
+      <a href="login.html">ログイン</a>
+      <a href="signup.html">新規登録</a>
+    `;
+    return;
+  }
+
+  headerAccount.innerHTML = `
+    <a href="profile.html">マイページ</a>
+    <button type="button" id="dmLogoutButton">ログアウト</button>
+  `;
+
+  const logoutButton = document.getElementById("dmLogoutButton");
+
+  logoutButton.addEventListener("click", async function() {
+    await window.OTOAuth.logout();
+    location.href = "login.html";
+  });
+}
+
+/*
+ * ページ初期化
+ */
+async function initializeDmPage() {
+  if (!supabase) {
+    dmUserList.innerHTML = `
+      <div class="dm-empty">
+        Supabaseの接続設定を読み込めませんでした。
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    await window.OTOAuth.ready;
+
+    // ログインしていない場合はログインページへ移動
+    currentUser = await window.OTOAuth.requireUser();
+
+    if (!currentUser) {
+      return;
+    }
+
+    await renderHeaderAccount();
+
+    await loadProfiles();
+
+  } catch (error) {
+    console.error("DMページの初期化に失敗しました。", error);
+
+    dmUserList.innerHTML = `
+      <div class="dm-empty">
+        ページの読み込みに失敗しました。<br>
+        ページを再読み込みしてください。
+      </div>
+    `;
+  }
+}
+
+/*
+ * 検索イベント
+ */
+dmSearchButton.addEventListener("click", renderDmUserList);
+
+dmSearchInput.addEventListener("input", renderDmUserList);
+
+dmSearchInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    renderDmUserList();
+  }
+});
+
+initializeDmPage();
+</script>
+
+</body>
+</html>

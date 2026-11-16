@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロフィール詳細 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .profile-detail-page {
+      width: min(900px, calc(100% - 32px));
+      margin: 36px auto 64px;
+    }
+
+    .profile-back {
+      display: inline-block;
+      margin-bottom: 22px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .profile-back:hover {
+      text-decoration: underline;
+    }
+
+    .profile-detail-card {
+      padding: 28px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+    }
+
+    .profile-detail-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e5e5e1;
+    }
+
+    .profile-avatar {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      border: 1px solid #e5e5e1;
+      border-radius: 50%;
+      background: #f4f3ef;
+      color: #555;
+      font-size: 30px;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .profile-name {
+      margin: 0 0 10px;
+      font-size: 28px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-subtitle {
+      margin: 0;
+      color: #666;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .profile-action-button {
+      display: inline-block;
+      padding: 11px 18px;
+      border: 1px solid #222;
+      background: #222;
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .profile-action-button:hover {
+      background: #444;
+    }
+
+    .profile-action-button.secondary {
+      background: #fff;
+      color: #222;
+    }
+
+    .profile-action-button.secondary:hover {
+      background: #f5f5f2;
+    }
+
+    .profile-info-section {
+      padding: 24px 0;
+      border-bottom: 1px solid #e5e5e1;
+    }
+
+    .profile-info-section:last-child {
+      border-bottom: none;
+    }
+
+    .profile-info-section h2 {
+      margin: 0 0 14px;
+      font-size: 19px;
+    }
+
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 12px 18px;
+    }
+
+    .profile-info-label {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .profile-info-value {
+      min-width: 0;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .profile-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .profile-links a {
+      color: #222;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-empty {
+      padding: 28px;
+      border: 1px solid #e5e5e1;
+      background: #fff;
+      line-height: 1.9;
+      color: #666;
+    }
+
+    .profile-error {
+      color: #a32626;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .profile-detail-card {
+        padding: 18px;
+      }
+
+      .profile-detail-top {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .profile-avatar {
+        width: 84px;
+        height: 84px;
+      }
+
+      .profile-name {
+        font-size: 24px;
+      }
+
+      .profile-info-grid {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .profile-info-label {
+        margin-top: 10px;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+      }
+
+      .profile-action-button {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo">OTO LINK</a>
+
+    <nav class="global-nav">
+      <a href="index.html" class="global-home">ホーム</a>
+
+      <details class="global-search-menu">
+        <summary>探す <span class="menu-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="global-search-panel">
+          <a href="bands.html" class="global-search-card">
+            <img class="global-search-icon-image" src="data:image/png;base64,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" alt="">
+            <span class="global-search-text">
+              <strong>音楽活動を探す</strong>
+              <small>いろいろな音楽活動を見つける</small>
+            </span>
+            <span class="global-search-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a href="member.html" class="global-search-card">
+            <img class="global-search-icon-image" src="data:image/png;base64,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" alt="">
+            <span class="global-search-text">
+              <strong>メンバー・協力者を探す</strong>
+              <small>一緒に活動する仲間を見つける</small>
+            </span>
+            <span class="global-search-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a href="live.html" class="global-search-card">
+            <img class="global-search-icon-image" src="data:image/png;base64,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" alt="">
+            <span class="global-search-text">
+              <strong>ライブを探す</strong>
+              <small>ライブや音楽イベントを見つける</small>
+            </span>
+            <span class="global-search-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a href="chat.html" class="global-search-card">
+            <img class="global-search-icon-image" src="data:image/png;base64,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" alt="">
+            <span class="global-search-text">
+              <strong>チャット</strong>
+              <small>音楽仲間と会話する</small>
+            </span>
+            <span class="global-search-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </details>
+
+      <a href="profile-list.html">プロフィール</a>
+      <a href="chat.html">チャット</a>
+    </nav>
+
+    <div class="header-account" id="headerAccount"></div>
+  </header>
+
+  <section class="page-header">
+    <h1>プロフィール</h1>
+    <p>音楽を通じて、新しいつながりを。</p>
+  </section>
+
+  <main class="profile-detail-page">
+    <a href="profile-list.html" class="profile-back">
+      ← プロフィール一覧に戻る
+    </a>
+
+    <div id="profileContent">
+      <div class="profile-empty">プロフィールを読み込んでいます…</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 OTO LINK</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase.js"></script>
+
+  <script>
+    "use strict";
+
+    const params = new URLSearchParams(window.location.search);
+    const targetUserId = params.get("id");
+    const content = document.getElementById("profileContent");
+    const headerAccount = document.getElementById("headerAccount");
+    const otoSupabase = window.OTO_SUPABASE;
+
+    let currentUserId = null;
+    let currentProfileName = "";
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderHeader() {
+      if (currentUserId) {
+        headerAccount.innerHTML = `
+          <a href="profile.html" class="header-account-name">${escapeHtml(currentProfileName)}</a>
+          <a href="#" id="logoutLink">ログアウト</a>
+        `;
+
+        document.getElementById("logoutLink").addEventListener("click", async function(event) {
+          event.preventDefault();
+
+          const { error } = await otoSupabase.auth.signOut();
+
+          if (error) {
+            alert("ログアウトできませんでした。もう一度お試しください。");
+            console.error(error);
+            return;
+          }
+
+          window.location.href = "index.html";
+        });
+      } else {
+        headerAccount.innerHTML = `
+          <a href="login.html">ログイン</a>
+          <a href="signup.html">新規登録</a>
+        `;
+      }
+    }
+
+    function getFirstValue(profile, keys) {
+      for (const key of keys) {
+        const value = profile[key];
+
+        if (
+          value !== undefined &&
+          value !== null &&
+          String(value).trim() !== ""
+        ) {
+          return value;
+        }
+      }
+
+      return "";
+    }
+
+    function normalizeList(value) {
+      if (Array.isArray(value)) {
+        return value.filter(Boolean).join("、");
+      }
+
+      return String(value || "");
+    }
+
+    function renderInfoRow(label, value) {
+      if (value === "" || value === null || value === undefined) {
+        return "";
+      }
+
+      return `
+        <div class="profile-info-label">${escapeHtml(label)}</div>
+        <div class="profile-info-value">${escapeHtml(value)}</div>
+      `;
+    }
+
+    function renderWorks(works) {
+      if (!Array.isArray(works) || works.length === 0) {
+        return "";
+      }
+
+      return `
+        <section class="profile-info-section">
+          <h2>作品・実績</h2>
+          <div class="profile-info-grid">
+            ${works.map(function(work) {
+              const title = escapeHtml(work.title || "タイトル未設定");
+
+              const description = work.description
+                ? `<p class="profile-info-value">${escapeHtml(work.description)}</p>`
+                : "";
+
+              const url = /^https?:\/\//i.test(work.url || "")
+                ? work.url
+                : "";
+
+              return `
+                <div class="profile-work-item">
+                  ${url
+                    ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${title}</a>`
+                    : `<strong>${title}</strong>`}
+                  ${description}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderLinks(links) {
+      if (!Array.isArray(links) || links.length === 0) {
+        return "";
+      }
+
+      const validLinks = links.filter(function(item) {
+        return item && /^https?:\/\//i.test(item.url || "");
+      });
+
+      if (validLinks.length === 0) {
+        return "";
+      }
+
+      return `
+        <section class="profile-info-section">
+          <h2>活動リンク・SNS</h2>
+          <div class="profile-actions">
+            ${validLinks.map(function(item) {
+              return `
+                <a class="profile-action-button secondary"
+                  href="${escapeHtml(item.url)}"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  ${escapeHtml(item.label || item.type || "リンク")}
+                </a>
+              `;
+            }).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    async function loadPostCounts(userId) {
+      const postTypes = ["activity", "member", "live"];
+
+      const results = await Promise.all(
+        postTypes.map(async function(postType) {
+          const { count, error } = await otoSupabase
+            .from("posts")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", userId)
+            .eq("post_type", postType);
+
+          if (error) {
+            console.error(postType + "の件数取得エラー:", error);
+            return null;
+          }
+
+          return count ?? 0;
+        })
+      );
+
+      return {
+        activity: results[0],
+        member: results[1],
+        live: results[2]
+      };
+    }
+
+    function renderProfile(profile, postCounts) {
+      const isOwnProfile = currentUserId &&
+        String(currentUserId) === String(profile.userId);
+
+      const name = getFirstValue(profile, ["name", "nickname"]) || "名前未設定";
+      const grade = getFirstValue(profile, ["grade"]);
+      const status = getFirstValue(profile, ["activityStatus", "status", "activity"]);
+      const area = getFirstValue(profile, ["area"]);
+
+      const parts = normalizeList(
+        profile.parts !== undefined ? profile.parts : profile.part
+      );
+
+      const genres = normalizeList(
+        profile.genres !== undefined ? profile.genres : profile.genre
+      );
+
+      const artist = getFirstValue(profile, ["artist"]);
+
+      const introduction = getFirstValue(profile, [
+        "introduction",
+        "selfIntroduction",
+        "bio",
+        "about"
+      ]);
+
+      const goals = getFirstValue(profile, [
+        "wantToTry",
+        "goals",
+        "dream",
+        "dreams",
+        "futureGoal"
+      ]);
+
+      const iconUrl = getFirstValue(profile, [
+        "avatar",
+        "icon",
+        "iconUrl",
+        "profileImage",
+        "image"
+      ]);
+
+      const dmUrl = currentUserId
+        ? "chat-room.html?type=dm&with=" + encodeURIComponent(profile.userId)
+        : "login.html";
+
+      const editButton = isOwnProfile
+        ? `<a class="profile-action-button secondary" href="profile.html">プロフィールを編集</a>`
+        : "";
+
+      const dmButton = isOwnProfile
+        ? ""
+        : `<a class="profile-action-button" href="${dmUrl}">DMを送る</a>`;
+
+      let avatarHtml;
+
+      if (
+        iconUrl &&
+        (
+          /^https?:\/\//i.test(String(iconUrl)) ||
+          /^data:image\//i.test(String(iconUrl))
+        )
+      ) {
+        avatarHtml = `<img src="${escapeHtml(iconUrl)}" alt="プロフィールアイコン">`;
+      } else {
+        avatarHtml = escapeHtml(name.trim().charAt(0) || "♪");
+      }
+
+      const activityCount = postCounts.activity === null
+        ? "取得できません"
+        : postCounts.activity + "件";
+
+      const memberCount = postCounts.member === null
+        ? "取得できません"
+        : postCounts.member + "件";
+
+      const liveCount = postCounts.live === null
+        ? "取得できません"
+        : postCounts.live + "件";
+
+      content.innerHTML = `
+        <article class="profile-detail-card">
+          <div class="profile-detail-top">
+            <div class="profile-avatar">${avatarHtml}</div>
+
+            <div class="profile-main">
+              <h1 class="profile-name">${escapeHtml(name)}</h1>
+
+              <p class="profile-subtitle">
+                ${escapeHtml([grade, status].filter(Boolean).join(" ・ "))}
+              </p>
+
+              <div class="profile-actions">
+                ${dmButton}
+                ${editButton}
+              </div>
+            </div>
+          </div>
+
+          <section class="profile-info-section">
+            <h2>プロフィール</h2>
+
+            <div class="profile-info-grid">
+              ${renderInfoRow("学年", grade)}
+              ${renderInfoRow("活動地域", area)}
+              ${renderInfoRow("活動状況", status)}
+              ${renderInfoRow("得意分野", parts)}
+              ${renderInfoRow("好きなジャンル", genres)}
+              ${renderInfoRow("好きなアーティスト", artist)}
+            </div>
+          </section>
+
+          <section class="profile-info-section">
+            <h2>自己紹介・やってみたいこと</h2>
+
+            <div class="profile-info-value">
+              ${introduction
+                ? escapeHtml(introduction)
+                : "まだ自己紹介は登録されていません。"}
+            </div>
+          </section>
+
+          ${goals ? `
+            <section class="profile-info-section">
+              <h2>やってみたいこと</h2>
+              <div class="profile-info-value">${escapeHtml(goals)}</div>
+            </section>
+          ` : ""}
+
+          ${renderWorks(profile.works)}
+          ${renderLinks(profile.activityLinks || profile.links)}
+
+          <section class="profile-info-section">
+            <h2>OTO LINKでの活動</h2>
+
+            <div class="profile-info-grid">
+              ${renderInfoRow("共有した音楽活動", activityCount)}
+              ${renderInfoRow("メンバー・協力者募集", memberCount)}
+              ${renderInfoRow("ライブ情報", liveCount)}
+            </div>
+
+            <div class="profile-actions">
+              <a class="profile-action-button secondary" href="bands.html">音楽活動を見る</a>
+              <a class="profile-action-button secondary" href="member.html">募集を見る</a>
+              <a class="profile-action-button secondary" href="live.html">ライブを見る</a>
+            </div>
+          </section>
+        </article>
+      `;
+
+      document.title = name + "のプロフィール - OTO LINK";
+    }
+
+    function showError(message, showEditLink) {
+      content.innerHTML = `
+        <div class="profile-empty profile-error">
+          ${escapeHtml(message)}
+          ${showEditLink
+            ? `<p><a href="profile.html">プロフィールを作成・編集する</a></p>`
+            : ""}
+          <p><a href="profile-list.html">プロフィール一覧に戻る</a></p>
+        </div>
+      `;
+    }
+
+    async function initialize() {
+      try {
+        const { data: authData, error: authError } =
+          await otoSupabase.auth.getUser();
+
+        if (authError) {
+          throw authError;
+        }
+
+        currentUserId = authData && authData.user
+          ? authData.user.id
+          : null;
+
+        if (currentUserId) {
+          const { data: ownProfile } = await otoSupabase
+            .from("profiles")
+            .select("data")
+            .eq("id", currentUserId)
+            .maybeSingle();
+
+          if (ownProfile && ownProfile.data) {
+            currentProfileName = String(
+              ownProfile.data.name ||
+              ownProfile.data.nickname ||
+              ""
+            ).trim();
+          }
+        }
+
+        renderHeader();
+
+        if (!targetUserId) {
+          showError(
+            "プロフィールが指定されていません。プロフィール一覧から選び直してください。",
+            false
+          );
+          return;
+        }
+
+        const { data, error } = await otoSupabase
+          .from("profiles")
+          .select("id,data")
+          .eq("id", targetUserId)
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data || !data.data) {
+          const isOwn = currentUserId &&
+            currentUserId === targetUserId;
+
+          showError(
+            isOwn
+              ? "まだプロフィールが登録されていません。プロフィール編集画面から登録してください。"
+              : "プロフィールが見つかりません。まだ登録されていない可能性があります。",
+            Boolean(isOwn)
+          );
+
+          return;
+        }
+
+        const postCounts = await loadPostCounts(data.id);
+
+        renderProfile(
+          { ...data.data, userId: data.id },
+          postCounts
+        );
+
+      } catch (error) {
+        console.error("プロフィール詳細の読み込みエラー:", error);
+
+        renderHeader();
+
+        showError(
+          "プロフィールを読み込めませんでした。通信状態とSupabaseの設定を確認してください。",
+          false
+        );
+      }
+    }
+
+    initialize();
+  </script>
+</body>
+</html>

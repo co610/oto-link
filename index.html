@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="OTO LINKは、音楽を始めたい人、仲間を探している人、自分の活動を広めたい人をつなぐ音楽コミュニティです。">
+  <title>OTO LINK｜やりたい音楽を、もっと自由に</title>
+
+  <style>
+    /* =========================
+       HOME LAYOUT
+    ========================= */
+
+    .home-hero-inner {
+      width: min(1280px, 100%);
+      min-height: 500px;
+      margin-inline: auto;
+      padding: 64px 48px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: clamp(36px, 5vw, 80px);
+      align-items: center;
+    }
+
+    .home-hero-text {
+      max-width: 800px;
+      min-width: 0;
+    }
+
+    .home-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      line-height: 1.8;
+    }
+
+    .home-hero h1 {
+      font-size: clamp(44px, 4.4vw, 68px);
+      line-height: 1.4;
+      letter-spacing: -0.055em;
+      margin-block: 22px 26px;
+    }
+
+    .home-hero-title-line {
+      white-space: normal;
+    }
+
+    .home-hero-title-line em {
+      font-style: normal;
+      position: relative;
+      display: inline-block;
+    }
+
+    .home-hero-title-line em::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 1px;
+      width: 100%;
+      height: 7px;
+      background: #d8d8d2;
+      z-index: -1;
+    }
+
+    .home-lead {
+      max-width: 620px;
+      line-height: 2;
+    }
+
+    .home-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .home-buttons a,
+    .home-join-button {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      padding: 14px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .home-primary-button,
+    .home-join-button {
+      background: #171717;
+      color: #fff;
+      border: 1px solid #171717;
+    }
+
+    .home-primary-button:hover,
+    .home-join-button:hover {
+      background: #383838;
+      border-color: #383838;
+    }
+
+    .home-secondary-button {
+      color: #171717;
+      border: 1px solid #d4d4d0;
+      background: transparent;
+    }
+
+    .home-secondary-button:hover {
+      border-color: #171717;
+      background: #fff;
+    }
+
+    .home-hero-visual {
+      width: 100%;
+      height: 420px;
+      min-width: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, transparent 49.7%, rgba(0,0,0,0.07) 50%, transparent 50.3%),
+        linear-gradient(45deg, transparent 49.7%, rgba(0,0,0,0.05) 50%, transparent 50.3%);
+      background-size: 100% 100%;
+    }
+
+    .hero-circle {
+      position: relative;
+      width: min(330px, 72%);
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #171717;
+      border-radius: 50%;
+      background: #171717;
+      color: #fff;
+    }
+
+    .hero-circle::before,
+    .hero-circle::after {
+      content: "";
+      position: absolute;
+      inset: 15px;
+      border: 1px solid #deded9;
+      border-radius: 50%;
+    }
+
+    .hero-circle::after {
+      inset: 29px;
+      border-color: #e9e9e5;
+    }
+
+    .hero-circle span {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      margin-left: 0.3em;
+    }
+
+    .hero-circle strong {
+      font-size: clamp(38px, 4vw, 58px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-note {
+      position: absolute;
+      z-index: 2;
+      padding: 9px 13px;
+      border: 1px solid #d7d7d1;
+      background: #fff;
+      color: #333;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+
+    .hero-note-1 {
+      top: 42px;
+      left: 5%;
+    }
+
+    .hero-note-2 {
+      top: 48%;
+      right: 0;
+    }
+
+    .hero-note-3 {
+      bottom: 35px;
+      left: 12%;
+    }
+
+    /* =========================
+       COMMON SECTION
+    ========================= */
+
+    .home-find,
+    .home-flow {
+      width: min(1280px, 100%);
+      margin-inline: auto;
+      padding: 76px 48px;
+      box-sizing: border-box;
+    }
+
+    .home-section-heading {
+      margin-bottom: 34px;
+      display: flex;
+      gap: 40px;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    .home-section-heading h2 {
+      font-size: clamp(30px, 2.4vw, 38px);
+      line-height: 1.45;
+      letter-spacing: -0.04em;
+    }
+
+    .home-section-heading > p {
+      max-width: 380px;
+      line-height: 1.9;
+      font-size: 14px;
+    }
+
+    .home-label {
+      margin-bottom: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      line-height: 1.8;
+    }
+
+    /* =========================
+       FIND CARDS
+    ========================= */
+
+    .home-find .find-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .home-find .find-grid .find-card {
+      position: relative;
+      min-width: 0;
+      min-height: 220px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid #e2e2dd;
+      background: #fff;
+      color: #171717;
+      text-decoration: none;
+      transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    }
+
+    .home-find .find-grid .find-card:hover {
+      border-color: #171717;
+      transform: translateY(-3px);
+      background: #fcfcfa;
+    }
+
+    .home-find .find-card-content {
+      width: 100%;
+      margin-top: -4px;
+    }
+
+    .home-find .find-card .find-card-category {
+      display: block;
+      margin: 0 0 10px !important;
+      padding: 0 !important;
+      line-height: 1.2;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #777;
+    }
+
+    .home-find .find-card h3 {
+      margin: 0 0 10px !important;
+      padding: 0 !important;
+      font-size: clamp(18px, 1.6vw, 24px);
+      line-height: 1.5;
+      letter-spacing: -0.035em;
+    }
+
+    .home-find .find-card p {
+      max-width: 360px;
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.9;
+      color: #555;
+    }
+
+    .home-find .find-card .find-arrow {
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+      font-size: 20px;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .home-find .find-card:hover .find-arrow {
+      transform: translateX(4px);
+    }
+
+    /* =========================
+       ADDITIONAL LINKS
+    ========================= */
+
+    .home-more {
+      width: min(1280px, 100%);
+      margin-inline: auto;
+      padding: 18px 48px 76px;
+      box-sizing: border-box;
+    }
+
+    .home-more-heading {
+      margin-bottom: 18px;
+    }
+
+    .home-more-heading h2 {
+      font-size: clamp(24px, 2vw, 30px);
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+    }
+
+    .home-more-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid #deded8;
+    }
+
+    .home-more-card {
+      min-width: 0;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 16px 14px;
+      border-bottom: 1px solid #deded8;
+      color: #171717;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .home-more-card:not(:nth-child(3n)) {
+      border-right: 1px solid #deded8;
+    }
+
+    .home-more-card:hover {
+      background: #efefeb;
+    }
+
+    .home-more-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .home-more-card small {
+      display: block;
+      color: #777;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .home-more-arrow {
+      flex: 0 0 auto;
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .home-more-card:hover .home-more-arrow {
+      transform: translateX(4px);
+    }
+
+    /* =========================
+       ABOUT OTO LINK
+    ========================= */
+
+    .home-concept {
+      background: #ffffff;
+      border: 0;
+    }
+
+    .home-concept-inner {
+      width: min(1280px, 100%);
+      margin-inline: auto;
+      padding: 78px 48px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 60px;
+      align-items: center;
+    }
+
+    .home-concept-title {
+      min-width: 0;
+    }
+
+    .home-concept-title h2 {
+      font-size: clamp(32px, 2.8vw, 42px);
+      line-height: 1.5;
+      letter-spacing: -0.055em;
+      margin-top: 16px;
+    }
+
+    .home-concept-text {
+      max-width: 620px;
+      min-width: 0;
+    }
+
+    .home-concept-text p {
+      font-size: 12px;
+      line-height: 2.1;
+      margin-bottom: 14px;
+      color: #414141;
+    }
+
+    .home-concept-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* =========================
+       HOW IT WORKS
+    ========================= */
+
+    .home-flow .flow-grid {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1fr)
+        24px
+        minmax(0, 1fr)
+        24px
+        minmax(0, 1fr);
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .home-flow .flow-card {
+      min-width: 0;
+      min-height: 135px;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid #e2e2dd;
+      border-top: 1px solid #171717;
+      background: transparent;
+    }
+
+    .home-flow .flow-card > span {
+      display: none !important;
+    }
+
+    .home-flow .flow-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.5;
+      letter-spacing: -0.035em;
+    }
+
+    .home-flow .flow-card p {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.9;
+      color: #555;
+    }
+
+    .home-flow .flow-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #777;
+    }
+
+    /* =========================
+       JOIN OTO LINK
+    ========================= */
+
+    .home-join {
+      padding: 76px 48px;
+      box-sizing: border-box;
+      background: #ffffff;
+      color: #171717;
+      border: 0;
+    }
+
+    .home-join > div {
+      width: min(1200px, 100%);
+      margin-inline: auto;
+    }
+
+    .home-join .home-label {
+      color: #555555;
+    }
+
+    .home-join h2 {
+      font-size: clamp(34px, 3.6vw, 48px);
+      line-height: 1.45;
+      letter-spacing: -0.055em;
+      margin-block: 16px 20px;
+    }
+
+    .home-join > div > p:not(.home-label) {
+      max-width: 680px;
+      line-height: 1.9;
+      margin-bottom: 24px;
+      color: #4b4b4b;
+      font-size: 12px;
+    }
+
+    .home-join-button {
+      min-height: 44px;
+      padding: 12px 18px;
+      background: #171717;
+      color: #ffffff;
+      border-color: #171717;
+      font-size: 12px;
+    }
+
+    .home-join-button:hover {
+      background: #383838;
+      border-color: #383838;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .home-footer .footer-inner {
+      width: min(1200px, 100%);
+      margin-inline: auto;
+      padding-inline: 35px;
+      box-sizing: border-box;
+      gap: 40px;
+    }
+
+    .home-footer .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+    }
+
+    .home-footer .footer-nav a {
+      font-size: 11px;
+      text-decoration: none;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1100px) {
+      .home-hero-inner {
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+        gap: 36px;
+        padding: 60px 35px;
+      }
+
+      .home-hero h1 {
+        font-size: clamp(40px, 4.5vw, 54px);
+      }
+
+      .home-find,
+      .home-flow {
+        padding: 64px 35px;
+      }
+
+      .home-find .find-grid .find-card {
+        padding: 22px;
+      }
+
+      .home-more {
+        padding: 16px 35px 64px;
+      }
+
+      .home-concept-inner {
+        padding: 64px 35px;
+        gap: 44px;
+      }
+
+      .home-concept-title h2 {
+        font-size: clamp(30px, 3.4vw, 40px);
+      }
+
+      .home-flow .flow-grid {
+        gap: 10px;
+        grid-template-columns:
+          minmax(0, 1fr)
+          22px
+          minmax(0, 1fr)
+          22px
+          minmax(0, 1fr);
+      }
+
+      .home-flow .flow-card {
+        padding: 20px;
+      }
+
+      .home-join {
+        padding: 64px 35px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .home-hero-inner {
+        min-height: auto;
+        padding: 55px 24px 45px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+      }
+
+      .home-kicker {
+        font-size: 9px;
+        letter-spacing: 0.15em;
+      }
+
+      .home-hero h1 {
+        font-size: clamp(36px, 8.5vw, 48px);
+        line-height: 1.45;
+        letter-spacing: -0.05em;
+        margin-block: 18px 20px;
+      }
+
+      .home-lead {
+        font-size: 13px;
+        line-height: 2;
+      }
+
+      .home-buttons {
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .home-buttons a {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 12px;
+        gap: 12px;
+      }
+
+      .home-hero-visual {
+        height: 275px;
+      }
+
+      .hero-circle {
+        width: min(220px, 58%);
+      }
+
+      .hero-circle span {
+        font-size: 13px;
+      }
+
+      .hero-circle strong {
+        font-size: 38px;
+      }
+
+      .hero-note {
+        padding: 8px 10px;
+        font-size: 9px;
+      }
+
+      .hero-note-1 {
+        top: 18px;
+        left: 0;
+      }
+
+      .hero-note-2 {
+        right: 0;
+        top: 46%;
+      }
+
+      .hero-note-3 {
+        left: 8px;
+        bottom: 18px;
+      }
+
+      .home-find,
+      .home-flow {
+        padding: 58px 24px;
+      }
+
+      .home-section-heading {
+        display: block;
+        margin-bottom: 26px;
+      }
+
+      .home-section-heading h2 {
+        font-size: 28px;
+      }
+
+      .home-section-heading > p {
+        margin-top: 12px;
+        font-size: 13px;
+      }
+
+      .home-find .find-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .home-find .find-grid .find-card {
+        min-height: 170px;
+        padding: 24px;
+      }
+
+      .home-find .find-card h3 {
+        font-size: 22px;
+      }
+
+      .home-find .find-card p {
+        font-size: 13px;
+      }
+
+      .home-more {
+        padding: 0 24px 58px;
+      }
+
+      .home-more-heading h2 {
+        font-size: 25px;
+      }
+
+      .home-more-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .home-more-card {
+        min-height: 76px;
+        padding: 18px 8px;
+      }
+
+      .home-more-card:not(:nth-child(3n)) {
+        border-right: none;
+      }
+
+      .home-concept-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 25px;
+        padding: 60px 24px;
+      }
+
+      .home-concept-title h2 {
+        font-size: clamp(30px, 7.2vw, 38px);
+        line-height: 1.5;
+      }
+
+      .home-concept-text p {
+        font-size: 13px;
+      }
+
+      .home-flow .flow-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 5px;
+      }
+
+      .home-flow .flow-card {
+        min-height: 110px;
+        padding: 24px 10px;
+      }
+
+      .home-flow .flow-card h3 {
+        font-size: 20px;
+      }
+
+      .home-flow .flow-line {
+        min-height: 25px;
+        transform: rotate(90deg);
+      }
+
+      .home-join {
+        padding: 60px 24px;
+      }
+
+      .home-join h2 {
+        font-size: clamp(32px, 7.5vw, 43px);
+        line-height: 1.5;
+      }
+
+      .home-join > div > p:not(.home-label) {
+        font-size: 13px;
+        line-height: 1.9;
+      }
+
+      .home-footer .footer-inner {
+        padding-inline: 24px;
+        gap: 28px;
+      }
+
+      .home-footer .footer-nav {
+        gap: 14px 18px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .home-hero-inner {
+        padding-inline: 20px;
+      }
+
+      .home-hero h1 {
+        font-size: 34px;
+      }
+
+      .home-buttons {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .home-buttons a {
+        width: 100%;
+      }
+
+      .home-find,
+      .home-flow {
+        padding-inline: 20px;
+      }
+
+      .home-concept-inner {
+        padding-inline: 20px;
+      }
+
+      .home-more {
+        padding-inline: 20px;
+      }
+
+      .home-join {
+        padding-inline: 20px;
+      }
+
+      .home-footer .footer-inner {
+        padding-inline: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .home-buttons a,
+      .home-find .find-grid .find-card,
+      .home-find .find-card .find-arrow,
+      .home-more-card,
+      .home-more-arrow {
+        transition: none;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="home-page">
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す <span class="menu-chevron" aria-hidden="true">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">01</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">02</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">03</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>ライブや音楽イベントを見つける</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">04</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="home-hero">
+    <div class="home-hero-inner">
+
+      <div class="home-hero-text">
+        <p class="home-kicker">MUSIC COMMUNITY FOR YOUNG CREATORS</p>
+
+        <h1>
+          <span class="home-hero-title-line">
+            やりたい音楽を、<br>
+            <em>もっと自由に。</em>
+          </span>
+        </h1>
+
+        <p class="home-lead">
+          音楽を始めたい。仲間を見つけたい。自分の活動を広めたい。<br>
+          OTO LINKは、音楽をしたい人と人、活動と活動をつなぐコミュニティです。
+        </p>
+
+        <div class="home-buttons">
+          <a href="signup.html" class="home-primary-button">
+            新規登録 <span aria-hidden="true">→</span>
+          </a>
+
+          <a href="bands.html" class="home-secondary-button">
+            音楽活動を探す
+          </a>
+        </div>
+      </div>
+
+      <div class="home-hero-visual" aria-label="OTO LINKのロゴを表現したグラフィック">
+        <div class="hero-note hero-note-1">CREATE</div>
+        <div class="hero-note hero-note-2">CONNECT</div>
+        <div class="hero-note hero-note-3">SHARE</div>
+
+        <div class="hero-circle">
+          <span>OTO</span>
+          <strong>LINK</strong>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FIND -->
+  <section class="home-find">
+    <div class="home-section-heading">
+      <div>
+        <p class="home-label">DISCOVER</p>
+        <h2>次の一歩を、ここから。</h2>
+      </div>
+
+      <p>今の自分に必要な人や活動から、音楽の世界を広げよう。</p>
+    </div>
+
+    <div class="find-grid">
+
+      <a href="bands.html" class="find-card find-card-large">
+        <div class="find-card-content">
+          <div class="find-card-category">01 / ACTIVITY</div>
+          <h3>音楽活動を探す</h3>
+          <p>バンド、ソロ、作曲、映像制作など、さまざまな音楽活動に出会う。</p>
+        </div>
+        <span class="find-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="member.html" class="find-card">
+        <div class="find-card-content">
+          <div class="find-card-category">02 / PEOPLE</div>
+          <h3>仲間を探す</h3>
+          <p>演奏する人も、曲を作る人も。一緒に活動できる仲間を見つけよう。</p>
+        </div>
+        <span class="find-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="live.html" class="find-card">
+        <div class="find-card-content">
+          <div class="find-card-category">03 / LIVE</div>
+          <h3>ライブを探す</h3>
+          <p>出演できるライブや、音楽に関わるイベントを見つけよう。</p>
+        </div>
+        <span class="find-arrow" aria-hidden="true">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- MORE WAYS TO CONNECT -->
+  <section class="home-more">
+    <div class="home-more-heading">
+      <p class="home-label">CONNECT</p>
+      <h2>探すだけじゃない、音楽のつながり。</h2>
+    </div>
+
+    <div class="home-more-grid">
+
+      <a href="profile-list.html" class="home-more-card">
+        <span>
+          <strong>プロフィール</strong>
+          <small>音楽をする人を知る</small>
+        </span>
+        <span class="home-more-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="chat.html" class="home-more-card">
+        <span>
+          <strong>チャット</strong>
+          <small>音楽仲間と会話する</small>
+        </span>
+        <span class="home-more-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="chat-dm.html" class="home-more-card">
+        <span>
+          <strong>ダイレクトメッセージ</strong>
+          <small>相手と個別にやり取りする</small>
+        </span>
+        <span class="home-more-arrow" aria-hidden="true">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CONCEPT -->
+  <section class="home-concept">
+    <div class="home-concept-inner">
+
+      <div class="home-concept-title">
+        <p class="home-label">ABOUT OTO LINK</p>
+        <h2>音楽をしたい。<br>それだけでいい。</h2>
+      </div>
+
+      <div class="home-concept-text">
+        <p>
+          まだ何も決まっていない人。これから音楽を始めたい人。仲間を探している人。すでに活動している人。
+        </p>
+
+        <p>
+          OTO LINKは、音楽をしたい人が出会い、活動を始めたり、自分の音楽を広めたりできる場所です。
+        </p>
+
+        <p>
+          初心者でも、アマチュアでも、活動を始めたばかりでも。演奏だけでなく、作曲、映像制作、音響など、音楽に関わるさまざまな活動をつなぎます。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="home-flow">
+    <div class="home-section-heading">
+      <div>
+        <p class="home-label">HOW IT WORKS</p>
+        <h2>小さなきっかけから、始めよう。</h2>
+      </div>
+    </div>
+
+    <div class="flow-grid">
+
+      <div class="flow-card">
+        <h3>見つける</h3>
+        <p>人、活動、ライブなど、自分が興味のあるものを探す。</p>
+      </div>
+
+      <div class="flow-line" aria-hidden="true">→</div>
+
+      <div class="flow-card">
+        <h3>つながる</h3>
+        <p>プロフィールやチャットを通じて、音楽仲間とつながる。</p>
+      </div>
+
+      <div class="flow-line" aria-hidden="true">→</div>
+
+      <div class="flow-card">
+        <h3>広げる</h3>
+        <p>自分の活動を発信して、新しい音楽や出会いにつなげる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section class="home-join">
+    <div>
+      <p class="home-label">JOIN OTO LINK</p>
+      <h2>君の音楽を、ここから。</h2>
+      <p>
+        まだ何も決まっていなくても大丈夫。<br>
+        気になる活動を探すところから、自分の音楽を始めよう。
+      </p>
+      <a href="signup.html" class="home-join-button">
+        新規登録 <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="home-footer">
+  <div class="footer-inner">
+    <div>
+      <a href="index.html" class="footer-logo">OTO LINK</a>
+      <p>やりたい音楽を、もっと自由に。</p>
+    </div>
+
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <a href="bands.html">音楽活動を探す</a>
+      <a href="member.html">メンバー・協力者を探す</a>
+      <a href="live.html">ライブを探す</a>
+      <a href="profile-list.html">プロフィール</a>
+      <a href="chat.html">チャット</a>
+    </nav>
+  </div>
+
+  <p class="copyright">© 2026 OTO LINK</p>
+</footer>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+
+<!-- 既存の共通認証 -->
+<script src="auth.js"></script>
+
+</body>
+</html>

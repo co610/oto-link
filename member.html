@@ -1,0 +1,923 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メンバー・協力者を探す - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .member-card-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .member-card-title {
+      margin: 12px 0 14px;
+      font-size: 23px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .member-card-link:hover .member-card-title {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .member-card-tags,
+    .member-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 12px 0;
+    }
+
+    .member-card-tag,
+    .member-detail-tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .member-card-summary {
+      margin-top: 14px;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    .member-card-more {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .member-links-heading {
+      margin: 28px 0 8px;
+      font-size: 19px;
+    }
+
+    .member-links-note,
+    .member-file-note {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 17px;
+    }
+
+    .member-file-name {
+      display: block;
+      margin-top: 8px;
+      color: #555;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .member-media-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .member-media-tags span {
+      font-size: 12px;
+      color: #555;
+      background: #f0f0ec;
+      padding: 4px 8px;
+    }
+
+    /* ページネーション */
+    .pagination {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 36px 0 12px;
+    }
+
+    .pagination-button {
+      min-width: 42px;
+      min-height: 42px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      color: #222;
+      font: inherit;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .pagination-button:hover:not(:disabled):not(.is-current) {
+      background: #f3f3f3;
+      border-color: #aaa;
+    }
+
+    .pagination-button.is-current {
+      background: #222;
+      border-color: #222;
+      color: #fff;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    .pagination-button:disabled {
+      color: #aaa;
+      background: #f7f7f7;
+      cursor: not-allowed;
+    }
+
+    .pagination-ellipsis {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      color: #777;
+    }
+
+    .pagination-info {
+      width: 100%;
+      margin-top: 4px;
+      color: #777;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .pagination {
+        gap: 5px;
+        margin-top: 28px;
+      }
+
+      .pagination-button {
+        min-width: 36px;
+        min-height: 38px;
+        padding: 7px 9px;
+        font-size: 14px;
+      }
+
+      .pagination-ellipsis {
+        min-width: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す
+        <span class="menu-chevron">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>メンバー・協力者を探す</h1>
+  <p>一緒に音楽をつくる仲間や、活動を支える人と出会おう。</p>
+</section>
+
+<section class="section">
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="募集タイトル・ジャンル・テーマ・地域などで検索"
+    >
+
+    <button type="button" id="searchButton">検索</button>
+  </div>
+</section>
+
+<section class="section">
+  <h2>募集一覧</h2>
+
+  <div class="member-grid" id="memberList"></div>
+
+  <nav
+    class="pagination"
+    id="memberPagination"
+    aria-label="募集一覧のページ移動"
+    hidden
+  ></nav>
+</section>
+
+<section class="post-section">
+  <div class="post-form-box">
+    <div class="post-form-box-inner">
+      <h2>メンバー・協力者を募集する</h2>
+      <p class="post-note" id="memberCreateLinkNote">
+        一緒に音楽をつくる仲間や、活動を支える人を専用ページから募集できます。
+      </p>
+      <a
+        href="login.html?returnTo=member-create.html"
+        id="memberCreateLink"
+        class="profile-button"
+      >ログインして募集する →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<!-- Supabaseライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase設定 -->
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+
+<!-- 認証処理 -->
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const ITEMS_PER_PAGE = 18;
+const MEMBER_AUDIO_BUCKET = "oto-member-audio";
+
+let currentPage = 1;
+let currentUserId = null;
+let memberPosts = [];
+
+const postCta = document.getElementById("memberCreateLink");
+const postNote = document.getElementById("memberCreateLinkNote");
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+}
+
+/*
+  Supabaseのpostsテーブルから取得したデータを、
+  既存の表示処理で使える形式に整える。
+*/
+function normalizeMemberPost(row) {
+  const data = row.data && typeof row.data === "object"
+    ? row.data
+    : {};
+
+  return {
+    ...data,
+    id: row.id,
+    userId: row.user_id,
+    title: data.title || "",
+    type: data.type || "",
+    genre: data.genre || "",
+    theme: data.theme || "",
+    area: data.area || "",
+    description: data.description || "",
+    links: Array.isArray(data.links) ? data.links : [],
+    audioPath: data.audioPath || "",
+    audioUrl: data.audioUrl || "",
+    audioFileName: data.audioFileName || "",
+    createdAt: data.createdAt || row.created_at || ""
+  };
+}
+
+/* Supabaseから募集一覧を取得 */
+async function loadMemberPosts() {
+  const {
+    data,
+    error
+  } = await window.OTO_SUPABASE
+    .from("posts")
+    .select("id, user_id, data, created_at")
+    .eq("post_type", "member")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  memberPosts = (data || []).map(normalizeMemberPost);
+}
+
+/* 投稿ボタンの表示 */
+function renderPostCta() {
+  if (currentUserId) {
+    postCta.href = "member-create.html";
+    postCta.textContent = "メンバー・協力者を募集する →";
+
+    postNote.textContent =
+      "一緒に音楽をつくる仲間や、活動を支える人を専用ページから募集できます。";
+  } else {
+    postCta.href = "login.html?returnTo=member-create.html";
+    postCta.textContent = "ログインして募集する →";
+
+    postNote.textContent =
+      "投稿するにはログインが必要です。ログイン後、投稿ページに戻れます。";
+  }
+}
+
+function getPostType(post) {
+  return post.type || post.instrument || "";
+}
+
+function getDisplayTitle(post) {
+  const title = String(post.title || "").trim();
+  const bandName = String(post.band || "").trim();
+
+  const genericTitles = [
+    "募集",
+    "メンバー募集",
+    "メンバー・協力者募集"
+  ];
+
+  if (genericTitles.includes(title)) {
+    if (bandName) return bandName;
+
+    const firstLine = String(post.description || "")
+      .split(/\r?\n/)[0]
+      .trim();
+
+    if (firstLine && firstLine.length <= 80) {
+      return firstLine;
+    }
+
+    return "一緒に活動する仲間を探しています";
+  }
+
+  return title || bandName || "メンバー・協力者募集";
+}
+
+function isRemovedRecruitLink(label, url) {
+  const normalizedLabel = String(label || "").trim().toLowerCase();
+
+  const removedLabels = [
+    "ニコニコ動画",
+    "ニコニコ",
+    "niconico",
+    "bandcamp"
+  ];
+
+  if (removedLabels.includes(normalizedLabel)) {
+    return true;
+  }
+
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+
+    return (
+      hostname === "bandcamp.com" ||
+      hostname.endsWith(".bandcamp.com") ||
+      hostname === "nicovideo.jp" ||
+      hostname.endsWith(".nicovideo.jp") ||
+      hostname === "nico.ms" ||
+      hostname === "niconico.com" ||
+      hostname.endsWith(".niconico.com")
+    );
+  } catch (error) {
+    return false;
+  }
+}
+
+function getRecruitLinks(post) {
+  if (Array.isArray(post.links) && post.links.length > 0) {
+    return post.links
+      .map(function(item) {
+        return {
+          label: String(item.label || "参考リンク"),
+          url: safeHttpUrl(item.url)
+        };
+      })
+      .filter(function(item) {
+        return item.url !== "" &&
+          !isRemovedRecruitLink(item.label, item.url);
+      });
+  }
+
+  const oldLink = safeHttpUrl(post.link);
+
+  return oldLink && !isRemovedRecruitLink("参考リンク", oldLink)
+    ? [{ label: "参考リンク", url: oldLink }]
+    : [];
+}
+
+/* ページ番号の表示範囲を決める */
+function getVisiblePages(page, totalPages) {
+  if (totalPages <= 7) {
+    return Array.from(
+      { length: totalPages },
+      function(_, index) {
+        return index + 1;
+      }
+    );
+  }
+
+  const pages = [1];
+
+  if (page > 3) {
+    pages.push("...");
+  }
+
+  const start = Math.max(2, page - 1);
+  const end = Math.min(totalPages - 1, page + 1);
+
+  for (let number = start; number <= end; number++) {
+    pages.push(number);
+  }
+
+  if (page < totalPages - 2) {
+    pages.push("...");
+  }
+
+  pages.push(totalPages);
+
+  return pages;
+}
+
+/* ページ送りを描画する */
+function renderMemberPagination(totalItems) {
+  const pagination = document.getElementById("memberPagination");
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  pagination.innerHTML = "";
+
+  if (totalPages <= 1) {
+    pagination.hidden = true;
+    return;
+  }
+
+  pagination.hidden = false;
+
+  const previousButton = document.createElement("button");
+  previousButton.type = "button";
+  previousButton.className = "pagination-button";
+  previousButton.textContent = "前へ";
+  previousButton.disabled = currentPage <= 1;
+  previousButton.setAttribute("aria-label", "前のページ");
+
+  previousButton.addEventListener("click", function() {
+    if (currentPage > 1) {
+      currentPage--;
+      displayMembers();
+      scrollToMemberList();
+    }
+  });
+
+  pagination.appendChild(previousButton);
+
+  getVisiblePages(currentPage, totalPages).forEach(function(page) {
+    if (page === "...") {
+      const ellipsis = document.createElement("span");
+      ellipsis.className = "pagination-ellipsis";
+      ellipsis.textContent = "…";
+      ellipsis.setAttribute("aria-hidden", "true");
+      pagination.appendChild(ellipsis);
+      return;
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "pagination-button";
+    button.textContent = String(page);
+
+    if (page === currentPage) {
+      button.classList.add("is-current");
+      button.setAttribute("aria-current", "page");
+      button.disabled = true;
+    } else {
+      button.setAttribute("aria-label", page + "ページ目");
+
+      button.addEventListener("click", function() {
+        currentPage = page;
+        displayMembers();
+        scrollToMemberList();
+      });
+    }
+
+    pagination.appendChild(button);
+  });
+
+  const nextButton = document.createElement("button");
+  nextButton.type = "button";
+  nextButton.className = "pagination-button";
+  nextButton.textContent = "次へ";
+  nextButton.disabled = currentPage >= totalPages;
+  nextButton.setAttribute("aria-label", "次のページ");
+
+  nextButton.addEventListener("click", function() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      displayMembers();
+      scrollToMemberList();
+    }
+  });
+
+  pagination.appendChild(nextButton);
+
+  const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endItem = Math.min(
+    currentPage * ITEMS_PER_PAGE,
+    totalItems
+  );
+
+  const info = document.createElement("span");
+  info.className = "pagination-info";
+  info.textContent =
+    totalItems + "件中 " + startItem + "〜" + endItem + "件を表示";
+
+  pagination.appendChild(info);
+}
+
+function scrollToMemberList() {
+  const list = document.getElementById("memberList");
+  if (!list) return;
+
+  const top = list.getBoundingClientRect().top + window.scrollY - 110;
+
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: "smooth"
+  });
+}
+
+/* 募集一覧を表示 */
+function displayMembers() {
+  const list = document.getElementById("memberList");
+
+  const search = document.getElementById("searchInput")
+    .value.trim().toLowerCase();
+
+  const filtered = memberPosts.filter(function(post) {
+    const searchableText = [
+      post.title,
+      post.band,
+      getPostType(post),
+      post.genre,
+      post.theme,
+      post.area,
+      post.description,
+      ...getRecruitLinks(post).map(function(link) {
+        return link.label + " " + link.url;
+      })
+    ].join(" ").toLowerCase();
+
+    return searchableText.includes(search);
+  });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+  if (totalPages === 0) {
+    currentPage = 1;
+  } else if (currentPage > totalPages) {
+    currentPage = totalPages;
+  }
+
+  list.innerHTML = "";
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="empty-message">
+        <p>該当する募集はありません。</p>
+        ${currentUserId
+          ? "<p>下の「メンバー・協力者を募集する」から募集できます。</p>"
+          : ""}
+      </div>
+    `;
+
+    renderMemberPagination(0);
+    return;
+  }
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const pagePosts = filtered.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
+  pagePosts.forEach(function(post) {
+    const card = document.createElement("div");
+    card.className = "member-card";
+
+    const detailUrl =
+      "member-detail.html?id=" + encodeURIComponent(post.id);
+
+    const displayTitle = getDisplayTitle(post);
+    const type = getPostType(post);
+    const description = String(post.description || "");
+
+    const summary = description.length > 120
+      ? description.slice(0, 120) + "…"
+      : description;
+
+    const links = getRecruitLinks(post);
+
+    const hasAudio = Boolean(
+      post.audioPath ||
+      post.audioUrl ||
+      post.audioFileName
+    );
+
+    const mediaTags = [];
+
+    if (hasAudio) {
+      mediaTags.push("音源あり");
+    }
+
+    if (links.length > 0) {
+      mediaTags.push("参考リンクあり");
+    }
+
+    card.innerHTML = `
+      <a href="${detailUrl}" class="member-card-link">
+        <div class="member-icon">👥</div>
+
+        <h3 class="member-card-title">
+          ${escapeHtml(displayTitle)}
+        </h3>
+
+        <div class="member-info">
+          ${post.area ? `<span>${escapeHtml(post.area)}</span>` : ""}
+        </div>
+
+        <div class="member-card-tags">
+          ${type
+            ? `<span class="member-card-tag">${escapeHtml(type)}</span>`
+            : ""}
+          ${post.genre
+            ? `<span class="member-card-tag">${escapeHtml(post.genre)}</span>`
+            : ""}
+        </div>
+
+        ${post.theme
+          ? `<p class="member-card-summary"><strong>テーマ：</strong>${escapeHtml(post.theme.length > 75 ? post.theme.slice(0, 75) + "…" : post.theme)}</p>`
+          : ""}
+
+        <p class="member-card-summary">
+          ${escapeHtml(summary)}
+        </p>
+
+        ${mediaTags.length
+          ? `<div class="member-media-tags">${mediaTags.map(function(tag) {
+              return `<span>${tag}</span>`;
+            }).join("")}</div>`
+          : ""}
+
+        <span class="member-card-more">
+          募集の詳細を見る →
+        </span>
+      </a>
+
+      ${currentUserId && post.userId === currentUserId
+        ? `<button type="button" class="delete-button" data-delete-id="${escapeHtml(post.id)}">自分の投稿を削除</button>`
+        : ""}
+    `;
+
+    const deleteButton = card.querySelector("[data-delete-id]");
+
+    if (deleteButton) {
+      deleteButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        deleteMemberPost(post.id);
+      });
+    }
+
+    list.appendChild(card);
+  });
+
+  renderMemberPagination(filtered.length);
+}
+
+/* 自分の募集を削除 */
+async function deleteMemberPost(id) {
+  try {
+    // 削除時にも最新のログイン状態を確認
+    const activeUser = await window.OTOAuth.getCurrentUser();
+
+    if (!activeUser) {
+      alert("募集を削除するにはログインしてください。");
+      return;
+    }
+
+    const target = memberPosts.find(function(post) {
+      return post.id === id && post.userId === activeUser.id;
+    });
+
+    if (!target) {
+      alert("自分が投稿した募集だけ削除できます。");
+      return;
+    }
+
+    if (!confirm("このメンバー募集を削除しますか？")) {
+      return;
+    }
+
+    /*
+      先にpostsテーブルから削除する。
+      user_idも条件に含め、本人の投稿だけを対象にする。
+    */
+    const {
+      data: deletedRows,
+      error: deleteError
+    } = await window.OTO_SUPABASE
+      .from("posts")
+      .delete()
+      .eq("id", id)
+      .eq("post_type", "member")
+      .eq("user_id", activeUser.id)
+      .select("id");
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    if (!deletedRows || deletedRows.length === 0) {
+      alert("募集を削除できませんでした。ログイン状態を確認してください。");
+      return;
+    }
+
+    // 投稿データの削除後、音声ファイルも削除する
+    if (target.audioPath) {
+      const {
+        error: audioDeleteError
+      } = await window.OTO_SUPABASE
+        .storage
+        .from(MEMBER_AUDIO_BUCKET)
+        .remove([target.audioPath]);
+
+      if (audioDeleteError) {
+        console.error(
+          "音声ファイルの削除エラー:",
+          audioDeleteError
+        );
+
+        alert(
+          "募集は削除しましたが、音声ファイルの削除に失敗しました。"
+        );
+      }
+    }
+
+    // 画面上の一覧も更新
+    memberPosts = memberPosts.filter(function(post) {
+      return post.id !== id;
+    });
+
+    displayMembers();
+
+  } catch (error) {
+    console.error("募集の削除エラー:", error);
+    alert(
+      "募集を削除できませんでした。\n" +
+      (error.message || "時間をおいてもう一度お試しください。")
+    );
+  }
+}
+
+/* 検索条件が変わったら1ページ目から表示 */
+document.getElementById("searchInput").addEventListener(
+  "input",
+  function() {
+    currentPage = 1;
+    displayMembers();
+  }
+);
+
+document.getElementById("searchButton").addEventListener(
+  "click",
+  function() {
+    currentPage = 1;
+    displayMembers();
+  }
+);
+
+document.getElementById("searchInput").addEventListener(
+  "keydown",
+  function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      currentPage = 1;
+      displayMembers();
+    }
+  }
+);
+
+/* ページ初期化 */
+async function initializeMemberPage() {
+  const list = document.getElementById("memberList");
+
+  try {
+    if (!window.OTO_SUPABASE || !window.OTOAuth) {
+      throw new Error(
+        "Supabaseまたは認証機能を読み込めませんでした。"
+      );
+    }
+
+    // 認証状態の初期化を待つ
+    const user = await window.OTOAuth.getCurrentUser();
+
+    currentUserId = user ? user.id : null;
+
+    renderPostCta();
+
+    // Supabaseから募集データを取得
+    await loadMemberPosts();
+
+    displayMembers();
+
+  } catch (error) {
+    console.error("募集一覧の読み込みエラー:", error);
+
+    list.innerHTML = `
+      <div class="empty-message">
+        <p>募集一覧を読み込めませんでした。</p>
+        <p>${escapeHtml(error.message || "時間をおいて再読み込みしてください。")}</p>
+      </div>
+    `;
+  }
+}
+
+initializeMemberPage();
+</script>
+
+</body>
+</html>

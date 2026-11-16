@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ライブの詳細 - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .live-detail-page{width:min(900px,calc(100% - 40px));margin:45px auto 80px}
+    .live-detail-date{color:#666;font-size:14px;letter-spacing:1px;margin-bottom:10px}
+    .live-detail-page h1{margin:0 0 18px;font-size:clamp(28px,5vw,42px);line-height:1.45;overflow-wrap:anywhere}
+    .live-detail-status{display:inline-block;border:1px solid #ddd;padding:6px 11px;font-size:13px;margin-bottom:20px}
+    .live-detail-info{display:grid;grid-template-columns:150px minmax(0,1fr);border-top:1px solid #e5e5e1;margin:25px 0 35px}
+    .live-detail-info dt,.live-detail-info dd{margin:0;padding:15px 10px;border-bottom:1px solid #e5e5e1;line-height:1.8;overflow-wrap:anywhere}
+    .live-detail-info dt{color:#666;font-size:14px}.live-detail-info dd{white-space:pre-wrap}
+    .live-poster-link,.live-external-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
+    .live-poster-link:hover,.live-external-link:hover{color:#555}
+    .live-detail-section{margin-top:42px}.live-detail-section h2{font-size:22px;margin-bottom:16px}
+    .live-detail-description{line-height:2;white-space:pre-wrap;overflow-wrap:anywhere}
+    .live-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .live-link-card{display:flex;justify-content:space-between;align-items:center;gap:12px;min-width:0;padding:17px 18px;border:1px solid #ddd;background:#fff;color:#222;text-decoration:none;overflow-wrap:anywhere}
+    .live-link-card:hover{background:#f5f5f2;border-color:#bbb}.live-link-card span:last-child{color:#777;flex-shrink:0}
+    .live-related-section{margin-top:45px}.live-related-section h2{font-size:22px;margin-bottom:15px}
+    .live-related-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .live-related-card{display:block;min-width:0;padding:18px;border:1px solid #ddd;background:#fff;color:inherit;text-decoration:none;transition:background .2s ease,border-color .2s ease}
+    .live-related-card:hover{background:#f7f7f4;border-color:#bbb}.live-related-title{font-weight:700;line-height:1.7;overflow-wrap:anywhere}
+    .live-related-meta{margin-top:8px;color:#666;font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+    .live-related-more{display:inline-block;margin-top:13px;font-size:13px;font-weight:700}
+    .live-related-empty,.live-detail-empty{padding:22px;background:#f7f7f4;color:#555;line-height:1.9}
+    .live-detail-back{display:inline-block;margin-top:30px;color:#333}
+    .live-detail-owner-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+    .live-detail-edit,.live-detail-delete{padding:12px 18px;cursor:pointer;font:inherit;font-weight:700;background:#fff}
+    .live-detail-edit{border:1px solid #171717;color:#171717}.live-detail-edit:hover{background:#f5f5f2}
+    .live-detail-delete{border:1px solid #c0392b;color:#c0392b}.live-detail-delete:hover{background:#fff8f7}
+    .live-edit-panel{margin-top:25px;padding:28px;border:1px solid #e5e5e1;background:#fff}
+    .live-edit-panel h2{margin:0 0 12px;font-size:24px}
+    .live-edit-note,.live-edit-help{color:#777;font-size:13px;line-height:1.8}
+    .live-edit-panel label{display:block;margin:18px 0;font-weight:700}
+    .live-edit-panel input:not([type="checkbox"]),.live-edit-panel select,.live-edit-panel textarea{display:block;box-sizing:border-box;width:100%;margin-top:8px;padding:12px;border:1px solid #ddd;border-radius:5px;background:#fff;font:inherit}
+    .live-edit-panel textarea{min-height:110px;resize:vertical}
+    .live-edit-panel input:focus,.live-edit-panel select:focus,.live-edit-panel textarea:focus{outline:2px solid #bbb;outline-offset:1px}
+    .live-edit-group{margin-top:28px;padding-top:18px;border-top:1px solid #e5e5e1}
+    .live-edit-group h3{margin:0 0 12px;font-size:19px}
+    .live-edit-actions{display:flex;gap:10px;margin-top:25px}
+    .live-edit-save,.live-edit-cancel{flex:1;padding:14px 16px;border:1px solid #171717;font:inherit;font-weight:700;cursor:pointer}
+    .live-edit-save{background:#171717;color:#fff}.live-edit-save:hover{background:#333}.live-edit-save:disabled{opacity:.6;cursor:wait}
+    .live-edit-cancel{background:#fff;color:#171717}.live-edit-cancel:hover{background:#f5f5f2}
+    [hidden]{display:none!important}
+    @media(max-width:600px){.live-detail-page{width:calc(100% - 30px);margin-top:25px}.live-detail-info{grid-template-columns:105px minmax(0,1fr)}.live-detail-info dt,.live-detail-info dd{padding:12px 7px;font-size:13px}.live-links,.live-related-list{grid-template-columns:1fr}.live-edit-panel{padding:17px}.live-edit-actions{flex-direction:column}}
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+    <details class="global-search-menu">
+      <summary>探す <span class="menu-chevron">⌄</span></summary>
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card"><span class="global-search-icon">🎵</span><span class="global-search-text"><strong>音楽活動を探す</strong><small>いろいろな音楽活動を見つける</small></span><span class="global-search-arrow">→</span></a>
+        <a href="member.html" class="global-search-card"><span class="global-search-icon">👥</span><span class="global-search-text"><strong>メンバー・協力者を探す</strong><small>一緒に活動する仲間を見つける</small></span><span class="global-search-arrow">→</span></a>
+        <a href="live.html" class="global-search-card"><span class="global-search-icon">🎤</span><span class="global-search-text"><strong>ライブを探す</strong><small>ライブ情報を探したり、自分たちのライブを告知したり</small></span><span class="global-search-arrow">→</span></a>
+        <a href="chat.html" class="global-search-card"><span class="global-search-icon">💬</span><span class="global-search-text"><strong>チャット</strong><small>音楽仲間と会話する</small></span><span class="global-search-arrow">→</span></a>
+      </div>
+    </details>
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+  <div class="header-account" id="headerAccount"><a href="login.html">ログイン</a><a href="signup.html">新規登録</a></div>
+</header>
+
+<section class="page-header">
+  <h1>ライブの詳細</h1>
+  <p>開催情報や当日の案内、投稿者の音楽活動・メンバー募集を見よう。</p>
+</section>
+
+<main class="live-detail-page" id="liveDetail"><p>ライブ情報を読み込んでいます…</p></main>
+<footer><p>© 2026 OTO LINK</p></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+<script>
+"use strict";
+
+const LIVE_STATUS_OPTIONS = [
+  "開催予定",
+  "観覧・チケット受付中",
+  "受付終了",
+  "開催終了",
+  "延期",
+  "中止"
+];
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+async function getProfileData(userId) {
+  if (!userId) return null;
+  const result = await window.OTO_SUPABASE
+    .from("profiles")
+    .select("id, data")
+    .eq("id", userId)
+    .maybeSingle();
+  if (result.error) {
+    console.warn("プロフィールを取得できませんでした:", result.error);
+    return null;
+  }
+  return result.data && result.data.data ? result.data.data : null;
+}
+
+async function renderHeaderAccount() {
+  const account = document.getElementById("headerAccount");
+  if (!account) return;
+
+  await window.OTOAuth.ready;
+  const currentUser = await window.OTOAuth.getCurrentUser();
+
+  if (!currentUser) {
+    account.innerHTML = '<a href="login.html">ログイン</a><a href="signup.html">新規登録</a>';
+    return;
+  }
+
+  const profile = await getProfileData(currentUser.id);
+  const displayName = profile && profile.name
+    ? profile.name
+    : (currentUser.user_metadata && currentUser.user_metadata.name) || "マイページ";
+
+  account.innerHTML =
+    '<a href="profile-detail.html?id=' + encodeURIComponent(currentUser.id) + '">' +
+    escapeHtml(displayName) +
+    '</a><a href="index.html" id="headerLogout">ログアウト</a>';
+
+  const logoutLink = document.getElementById("headerLogout");
+  if (logoutLink) {
+    logoutLink.addEventListener("click", async function(event) {
+      event.preventDefault();
+      try {
+        await window.OTOAuth.logout();
+        window.location.href = "index.html";
+      } catch (error) {
+        alert(error.message || "ログアウトできませんでした。");
+      }
+    });
+  }
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function normalizeOptionalTime(value, label) {
+  let time = String(value || "").trim();
+  if (!time) return "";
+
+  time = time
+    .replace(/[０-９]/g, function(char) {
+      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(/：/g, ":");
+
+  let match = time.match(/^(\d{1,2}):(\d{2})$/);
+
+  if (!match && /^\d{3,4}$/.test(time)) {
+    const hourPart = time.length === 3 ? time.slice(0, 1) : time.slice(0, 2);
+    const minutePart = time.slice(-2);
+    match = [time, hourPart, minutePart];
+  }
+
+  if (!match) {
+    throw new Error(label + "は「18:30」または「1830」の形式で入力してください。");
+  }
+
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    throw new Error(label + "は00:00〜23:59の範囲で入力してください。");
+  }
+
+  return String(hours).padStart(2, "0") + ":" + String(minutes).padStart(2, "0");
+}
+
+function formatJapaneseDate(dateString) {
+  if (!dateString) return "日程未設定";
+  const date = new Date(dateString + "T00:00:00");
+  if (Number.isNaN(date.getTime())) return "日程未設定";
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric", month: "long", day: "numeric", weekday: "short"
+  }).format(date);
+}
+
+function addInfoRow(rows, label, value) {
+  if (value === undefined || value === null || String(value).trim() === "") return;
+  rows.push(`<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`);
+}
+
+function getActivityTitle(post) {
+  return String(post.title || post.band || post.name || "タイトル未設定");
+}
+
+function getActivityType(post) {
+  return String(post.type || post.genre || "音楽活動");
+}
+
+function getMemberType(post) {
+  return String(post.type || post.instrument || "メンバー・協力者募集");
+}
+
+function getRecruitTitle(post) {
+  const title = String(post.title || "").trim();
+  if (["募集", "メンバー募集", "メンバー・協力者募集"].includes(title)) {
+    const firstLine = String(post.description || "").split(/\r?\n/)[0].trim();
+    return firstLine && firstLine.length <= 80 ? firstLine : "メンバー・協力者募集";
+  }
+  return title || "メンバー・協力者募集";
+}
+
+function renderRelatedPosts(userId, activityPosts, memberPosts) {
+  const activitySection = document.getElementById("liveRelatedActivities");
+  const memberSection = document.getElementById("liveRelatedMembers");
+
+  const activities = userId
+    ? activityPosts.filter(function(post) { return String(post.userId) === String(userId); })
+    : [];
+  const recruitments = userId
+    ? memberPosts.filter(function(post) { return String(post.userId) === String(userId); })
+    : [];
+
+  if (activities.length === 0) {
+    activitySection.innerHTML = `<div class="live-related-empty">この投稿者が共有した音楽活動情報はまだありません。</div>`;
+  } else {
+    activitySection.innerHTML = `<div class="live-related-list">${activities.map(function(post) {
+      const title = getActivityTitle(post);
+      const detailUrl = "activity-detail.html?id=" + encodeURIComponent(post.id);
+      const metadata = [getActivityType(post), post.genre || "", post.area || ""].filter(Boolean).join(" / ");
+      return `<a class="live-related-card" href="${detailUrl}"><div class="live-related-title">${escapeHtml(title)}</div><div class="live-related-meta">${escapeHtml(metadata)}</div><span class="live-related-more">音楽活動の詳細を見る →</span></a>`;
+    }).join("")}</div>`;
+  }
+
+  if (recruitments.length === 0) {
+    memberSection.innerHTML = `<div class="live-related-empty">この投稿者が共有したメンバー募集情報はまだありません。</div>`;
+  } else {
+    memberSection.innerHTML = `<div class="live-related-list">${recruitments.map(function(post) {
+      const title = getRecruitTitle(post);
+      const detailUrl = "member-detail.html?id=" + encodeURIComponent(post.id);
+      const metadata = [getMemberType(post), post.genre || "", post.area || ""].filter(Boolean).join(" / ");
+      return `<a class="live-related-card" href="${detailUrl}"><div class="live-related-title">${escapeHtml(title)}</div><div class="live-related-meta">${escapeHtml(metadata)}</div><span class="live-related-more">メンバー募集の詳細を見る →</span></a>`;
+    }).join("")}</div>`;
+  }
+}
+
+function showNotFound() {
+  document.getElementById("liveDetail").innerHTML = `
+    <div class="live-detail-empty"><h2>ライブ情報が見つかりません</h2><p>投稿が削除されたか、指定されたライブ情報が存在しません。</p><a class="live-detail-back" href="live.html">← ライブ一覧に戻る</a></div>`;
+}
+
+function renderEditInput(id, label, value, type, placeholder, required) {
+  const requiredMarkup = required ? "required" : "";
+  const placeholderMarkup = placeholder ? `placeholder="${escapeHtml(placeholder)}"` : "";
+  const inputModeMarkup = type === "url" ? 'inputmode="url"' : "";
+  return `<label>${escapeHtml(label)}<input type="${type}" id="${id}" value="${escapeHtml(value || "")}" ${placeholderMarkup} ${inputModeMarkup} ${requiredMarkup}></label>`;
+}
+
+function renderEditTextarea(id, label, value, placeholder, required) {
+  const requiredMarkup = required ? "required" : "";
+  const placeholderMarkup = placeholder ? `placeholder="${escapeHtml(placeholder)}"` : "";
+  return `<label>${escapeHtml(label)}<textarea id="${id}" ${placeholderMarkup} ${requiredMarkup}>${escapeHtml(value || "")}</textarea></label>`;
+}
+
+function buildStatusOptions(currentStatus) {
+  const options = LIVE_STATUS_OPTIONS.slice();
+
+  // 古い投稿の状態を、編集せずに保存した際に勝手に変更しないための互換処理。
+  if (currentStatus && !options.includes(currentStatus)) {
+    options.unshift(currentStatus);
+  }
+
+  return options.map(function(status) {
+    const selected = status === currentStatus ? "selected" : "";
+    const legacyLabel = !LIVE_STATUS_OPTIONS.includes(status) ? "（既存の状態）" : "";
+    return `<option value="${escapeHtml(status)}" ${selected}>${escapeHtml(status + legacyLabel)}</option>`;
+  }).join("");
+}
+
+async function openLiveEditForm(post) {
+  const activeUser = await window.OTOAuth.getCurrentUser();
+  if (!activeUser || String(activeUser.id) !== String(post.userId)) {
+    alert("自分のライブ投稿だけ編集できます。ログイン状態も確認してください。");
+    return;
+  }
+
+  const panel = document.getElementById("editLivePanel");
+  const editButton = document.getElementById("editLivePost");
+  if (!panel || !editButton) return;
+
+  if (!panel.hidden) {
+    panel.hidden = true;
+    panel.innerHTML = "";
+    editButton.textContent = "投稿を編集";
+    return;
+  }
+
+  panel.innerHTML = `
+    <h2>ライブ情報を編集</h2>
+    <p class="live-edit-note">開催情報を変更して保存できます。時間は「18:30」または「1830」の形式で入力してください。任意の項目は空欄にできます。</p>
+    <form id="editLiveForm">
+      <div class="live-edit-group">
+        <h3>基本情報</h3>
+        ${renderEditInput("editLiveName", "ライブ名・イベント名", post.name, "text", "例：高校生ライブ OTO LINK", true)}
+        ${renderEditInput("editLiveDate", "開催日", post.date, "date", "", true)}
+        ${renderEditInput("editLiveOpenTime", "開場時間（任意）", post.openTime, "text", "例：18:00", false)}
+        ${renderEditInput("editLiveStartTime", "開演時間（任意）", post.startTime, "text", "例：18:30", false)}
+        ${renderEditInput("editLiveEndTime", "終演予定時間（任意）", post.endTime, "text", "例：20:30", false)}
+        <p class="live-edit-help">「18:30」のほか、「1830」のような4桁入力にも対応しています。</p>
+        <label>開催状況<select id="editLiveStatus" required>${buildStatusOptions(post.status || "開催予定")}</select></label>
+        ${renderEditInput("editLiveGenre", "ジャンル・イベントの種類（任意）", post.genre, "text", "例：ロック、弾き語り、学生ライブ", false)}
+        ${renderEditTextarea("editLivePerformers", "出演者・出演アーティスト（任意）", post.performers, "出演者名や出演順など", false)}
+        ${renderEditTextarea("editLiveDescription", "ライブの説明・イベント内容", post.description, "どんなライブなのか、何を楽しめるのかを書こう", true)}
+      </div>
+
+      <div class="live-edit-group">
+        <h3>会場・観覧情報</h3>
+        ${renderEditInput("editLivePlace", "会場名・場所", post.place, "text", "例：岐阜市文化センター", true)}
+        ${renderEditInput("editLiveAddress", "会場住所（任意）", post.address, "text", "例：岐阜県岐阜市○○", false)}
+        ${renderEditTextarea("editLiveAccess", "最寄り駅・アクセス（任意）", post.access, "最寄り駅、徒歩時間、駐車場など", false)}
+        ${renderEditInput("editLiveAudience", "観覧対象・参加条件（任意）", post.audience, "text", "例：一般観覧可、高校生限定", false)}
+        ${renderEditInput("editLiveAgeLimit", "年齢制限（任意）", post.ageLimit, "text", "例：年齢制限なし、18歳以上", false)}
+      </div>
+
+      <div class="live-edit-group">
+        <h3>チケット情報</h3>
+        ${renderEditInput("editLiveTicketPrice", "入場料金（任意）", post.ticketPrice, "text", "例：前売1,500円／当日2,000円", false)}
+        ${renderEditTextarea("editLiveTicketMethod", "予約・購入方法（任意）", post.ticketMethod, "予約方法、支払い方法、受付期間など", false)}
+        ${renderEditInput("editLiveTicketUrl", "チケット予約・購入URL（任意）", post.ticketUrl, "url", "https://...", false)}
+      </div>
+
+      <div class="live-edit-group">
+        <h3>主催者・問い合わせ先</h3>
+        ${renderEditInput("editLiveOrganizer", "主催者名（任意）", post.organizer, "text", "", false)}
+        ${renderEditInput("editLiveContact", "問い合わせ先（任意）", post.contact, "text", "メールアドレス、問い合わせ窓口など", false)}
+        ${renderEditInput("editLiveOfficialUrl", "公式サイトURL（任意）", post.officialUrl, "url", "https://...", false)}
+        ${renderEditInput("editLiveSocialUrl", "公式SNS・告知URL（任意）", post.socialUrl, "url", "https://...", false)}
+      </div>
+
+      <div class="live-edit-group">
+        <h3>当日の案内</h3>
+        ${renderEditTextarea("editLiveEquipment", "音響・会場設備（任意）", post.equipment, "マイク、アンプ、ドラムセット、PA設備など", false)}
+        ${renderEditTextarea("editLiveGoods", "グッズ・物販情報（任意）", post.goods, "物販の有無、販売するものなど", false)}
+        ${renderEditInput("editLiveGoodsTime", "物販時間（任意）", post.goodsTime, "text", "例：開場後、終演後", false)}
+        ${renderEditTextarea("editLiveNotice", "お知らせ・変更情報（任意）", post.notice, "追加情報、変更、当日の連絡など", false)}
+        ${renderEditTextarea("editLiveNotes", "注意事項・備考（任意）", post.notes, "撮影可否、再入場、持ち物など", false)}
+      </div>
+
+      <div class="live-edit-actions">
+        <button type="submit" class="live-edit-save" id="saveLiveChanges">変更を保存する</button>
+        <button type="button" class="live-edit-cancel" id="cancelLiveChanges">キャンセル</button>
+      </div>
+    </form>
+  `;
+
+  panel.hidden = false;
+  editButton.textContent = "編集フォームを閉じる";
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  document.getElementById("editLiveForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const currentUser = await window.OTOAuth.getCurrentUser();
+    if (!currentUser || String(currentUser.id) !== String(post.userId)) {
+      alert("自分のライブ投稿だけ編集できます。ログイン状態も確認してください。");
+      return;
+    }
+
+
+    const userIdAtStart = String(currentUser.id);
+
+    const requiredFields = [
+      ["editLiveName", "ライブ名・イベント名"],
+      ["editLiveDate", "開催日"],
+      ["editLivePlace", "会場名・場所"],
+      ["editLiveDescription", "ライブの説明・イベント内容"]
+    ];
+
+    for (const [id, label] of requiredFields) {
+      const input = document.getElementById(id);
+      if (!input.value.trim()) {
+        alert(label + "を入力してください。");
+        input.focus();
+        return;
+      }
+    }
+
+    let openTime;
+    let startTime;
+    let endTime;
+
+    try {
+      openTime = normalizeOptionalTime(document.getElementById("editLiveOpenTime").value, "開場時間");
+      startTime = normalizeOptionalTime(document.getElementById("editLiveStartTime").value, "開演時間");
+      endTime = normalizeOptionalTime(document.getElementById("editLiveEndTime").value, "終演予定時間");
+    } catch (error) {
+      alert(error.message);
+      const invalidTimeInput = ["editLiveOpenTime", "editLiveStartTime", "editLiveEndTime"].find(function(id) {
+        const input = document.getElementById(id);
+        if (!input.value.trim()) return false;
+        try {
+          normalizeOptionalTime(input.value, "時間");
+          return false;
+        } catch (validationError) {
+          return true;
+        }
+      });
+      if (invalidTimeInput) document.getElementById(invalidTimeInput).focus();
+      return;
+    }
+
+    const urlFields = [
+      ["editLiveTicketUrl", "チケット予約・購入URL", "ticketUrl"],
+      ["editLiveOfficialUrl", "公式サイトURL", "officialUrl"],
+      ["editLiveSocialUrl", "公式SNS・告知URL", "socialUrl"]
+    ];
+    const checkedUrls = {};
+
+    for (const [id, label, key] of urlFields) {
+      const value = document.getElementById(id).value.trim();
+      if (!value) {
+        checkedUrls[key] = "";
+        continue;
+      }
+      const safeUrl = safeHttpUrl(value);
+      if (!safeUrl) {
+        alert(label + "は https:// または http:// から始まるURLを入力してください。");
+        document.getElementById(id).focus();
+        return;
+      }
+      checkedUrls[key] = safeUrl;
+    }
+
+    const saveButton = document.getElementById("saveLiveChanges");
+    saveButton.disabled = true;
+    saveButton.textContent = "保存しています…";
+
+    try {
+      const currentUserBeforeSave = await window.OTOAuth.getCurrentUser();
+      if (!currentUserBeforeSave || String(currentUserBeforeSave.id) !== userIdAtStart || String(post.userId) !== userIdAtStart) {
+        throw new Error("ログイン状態が変わったため、保存できませんでした。");
+      }
+
+      const updatedPost = {
+        ...post,
+        name: document.getElementById("editLiveName").value.trim(),
+        date: document.getElementById("editLiveDate").value,
+        openTime: openTime,
+        startTime: startTime,
+        endTime: endTime,
+        status: document.getElementById("editLiveStatus").value,
+        genre: document.getElementById("editLiveGenre").value.trim(),
+        performers: document.getElementById("editLivePerformers").value.trim(),
+        description: document.getElementById("editLiveDescription").value.trim(),
+        place: document.getElementById("editLivePlace").value.trim(),
+        address: document.getElementById("editLiveAddress").value.trim(),
+        access: document.getElementById("editLiveAccess").value.trim(),
+        audience: document.getElementById("editLiveAudience").value.trim(),
+        ageLimit: document.getElementById("editLiveAgeLimit").value.trim(),
+        ticketPrice: document.getElementById("editLiveTicketPrice").value.trim(),
+        ticketMethod: document.getElementById("editLiveTicketMethod").value.trim(),
+        ticketUrl: checkedUrls.ticketUrl,
+        organizer: document.getElementById("editLiveOrganizer").value.trim(),
+        contact: document.getElementById("editLiveContact").value.trim(),
+        officialUrl: checkedUrls.officialUrl,
+        socialUrl: checkedUrls.socialUrl,
+        equipment: document.getElementById("editLiveEquipment").value.trim(),
+        goods: document.getElementById("editLiveGoods").value.trim(),
+        goodsTime: document.getElementById("editLiveGoodsTime").value.trim(),
+        notice: document.getElementById("editLiveNotice").value.trim(),
+        notes: document.getElementById("editLiveNotes").value.trim()
+      };
+
+      const updateResult = await window.OTO_SUPABASE
+        .from("posts")
+        .update({ data: updatedPost })
+        .eq("id", post.id)
+        .eq("post_type", "live")
+        .eq("user_id", currentUserBeforeSave.id)
+        .select("id")
+        .maybeSingle();
+
+      if (updateResult.error) throw updateResult.error;
+      if (!updateResult.data) throw new Error("更新対象のライブ投稿が見つかりませんでした。");
+
+      alert("ライブ情報を更新しました。");
+      window.location.reload();
+    } catch (error) {
+      alert(error.message || "ライブ情報を更新できませんでした。ブラウザーの保存容量を確認してください。");
+      saveButton.disabled = false;
+      saveButton.textContent = "変更を保存する";
+    }
+  });
+
+  document.getElementById("cancelLiveChanges").addEventListener("click", function() {
+    panel.hidden = true;
+    panel.innerHTML = "";
+    editButton.textContent = "投稿を編集";
+  });
+}
+
+async function displayLiveDetail() {
+  const detail = document.getElementById("liveDetail");
+  const params = new URLSearchParams(window.location.search);
+  const liveId = params.get("id");
+
+  if (!liveId) {
+    showNotFound();
+    return;
+  }
+
+  const postResult = await window.OTO_SUPABASE
+    .from("posts")
+    .select("id, user_id, data, created_at, updated_at")
+    .eq("id", liveId)
+    .eq("post_type", "live")
+    .maybeSingle();
+
+  if (postResult.error) throw postResult.error;
+  const row = postResult.data;
+  if (!row) {
+    showNotFound();
+    return;
+  }
+
+  const post = {
+    ...(row.data || {}),
+    id: row.id,
+    userId: row.user_id,
+    createdAt: row.created_at || (row.data && row.data.createdAt) || null,
+    updatedAt: row.updated_at || (row.data && row.data.updatedAt) || null
+  };
+
+  const [poster, currentUser, relatedResult] = await Promise.all([
+    getProfileData(row.user_id),
+    window.OTOAuth.getCurrentUser(),
+    window.OTO_SUPABASE
+      .from("posts")
+      .select("id, user_id, post_type, data, created_at")
+      .in("post_type", ["activity", "member"])
+      .eq("user_id", row.user_id)
+      .order("created_at", { ascending: false })
+  ]);
+
+  if (relatedResult.error) throw relatedResult.error;
+
+  const posterName = poster && poster.name ? poster.name : "プロフィール未登録";
+  const posterMarkup = row.user_id
+    ? `<a class="live-poster-link" href="profile-detail.html?id=${encodeURIComponent(row.user_id)}">${escapeHtml(posterName)}</a>`
+    : escapeHtml(posterName);
+  const isOwner = Boolean(currentUser && String(currentUser.id) === String(row.user_id));
+
+  const relatedPosts = (relatedResult.data || []).map(function(item) {
+    return { ...(item.data || {}), id: item.id, userId: item.user_id, postType: item.post_type, createdAt: item.created_at || (item.data && item.data.createdAt) || null };
+  });
+  const activityPosts = relatedPosts.filter(function(item) { return item.postType === "activity"; });
+  const memberPosts = relatedPosts.filter(function(item) { return item.postType === "member"; });
+
+  document.title = (post.name || "ライブの詳細") + " - OTO LINK";
+
+  const rows = [];
+  addInfoRow(rows, "ライブ名・イベント名", post.name);
+  addInfoRow(rows, "開催日", formatJapaneseDate(post.date));
+  addInfoRow(rows, "開場時間", post.openTime);
+  addInfoRow(rows, "開演時間", post.startTime);
+  addInfoRow(rows, "終演予定時間", post.endTime);
+  addInfoRow(rows, "会場名・場所", post.place);
+  addInfoRow(rows, "会場住所", post.address);
+  addInfoRow(rows, "最寄り駅・アクセス", post.access);
+  addInfoRow(rows, "開催状況", post.status);
+  addInfoRow(rows, "ジャンル・イベントの種類", post.genre);
+  addInfoRow(rows, "出演者・出演アーティスト", post.performers);
+  addInfoRow(rows, "観覧対象・参加条件", post.audience);
+  addInfoRow(rows, "年齢制限", post.ageLimit);
+  addInfoRow(rows, "入場料金", post.ticketPrice);
+  addInfoRow(rows, "予約・購入方法", post.ticketMethod);
+  addInfoRow(rows, "主催者", post.organizer);
+  addInfoRow(rows, "問い合わせ先", post.contact);
+  addInfoRow(rows, "音響・会場設備", post.equipment);
+  addInfoRow(rows, "グッズ・物販情報", post.goods);
+  addInfoRow(rows, "物販時間", post.goodsTime);
+  addInfoRow(rows, "注意事項・備考", post.notes);
+  rows.push(`<dt>投稿者</dt><dd>${posterMarkup}</dd>`);
+
+  const linkItems = [
+    ["チケット予約・購入", post.ticketUrl],
+    ["公式サイト", post.officialUrl],
+    ["公式SNS・告知", post.socialUrl]
+  ].map(function(item) {
+    return { label: item[0], url: safeHttpUrl(item[1]) };
+  }).filter(function(item) { return item.url !== ""; });
+
+  const linkMarkup = linkItems.length
+    ? `<section class="live-detail-section"><h2>チケット・公式情報</h2><div class="live-links">${linkItems.map(function(item) {
+        return `<a class="live-link-card" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(item.label)}</strong><span>↗</span></a>`;
+      }).join("")}</div></section>`
+    : "";
+
+  const ownerActionsMarkup = isOwner ? `
+    <div class="live-detail-owner-actions">
+      <button type="button" class="live-detail-edit" id="editLivePost">投稿を編集</button>
+      <button type="button" class="live-detail-delete" id="deleteLivePost">自分の投稿を削除</button>
+    </div>
+    <section id="editLivePanel" class="live-edit-panel" hidden></section>
+  ` : "";
+
+  detail.innerHTML = `
+    <p class="live-detail-date">${escapeHtml(formatJapaneseDate(post.date))}</p>
+    <h1>${escapeHtml(post.name || "ライブ・イベント")}</h1>
+    ${post.status ? `<span class="live-detail-status">${escapeHtml(post.status)}</span>` : ""}
+    <dl class="live-detail-info">${rows.join("")}</dl>
+    ${post.description ? `<section class="live-detail-section"><h2>ライブの説明・イベント内容</h2><p class="live-detail-description">${escapeHtml(post.description)}</p></section>` : ""}
+    ${post.notice ? `<section class="live-detail-section"><h2>お知らせ・変更情報</h2><p class="live-detail-description">${escapeHtml(post.notice)}</p></section>` : ""}
+    ${linkMarkup}
+    <section class="live-related-section"><h2>この投稿者の音楽活動</h2><div id="liveRelatedActivities"></div></section>
+    <section class="live-related-section"><h2>この投稿者のメンバー募集</h2><div id="liveRelatedMembers"></div></section>
+    <a class="live-detail-back" href="live.html">← ライブ一覧に戻る</a>
+    ${ownerActionsMarkup}
+  `;
+
+  renderRelatedPosts(post.userId, activityPosts, memberPosts);
+
+  const editButton = document.getElementById("editLivePost");
+  if (editButton) {
+    editButton.addEventListener("click", function() {
+      openLiveEditForm(post).catch(function(error) { alert(error.message || "編集フォームを開けませんでした。"); });
+    });
+  }
+
+  const deleteButton = document.getElementById("deleteLivePost");
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async function() {
+      try {
+        const activeUser = await window.OTOAuth.getCurrentUser();
+        if (!activeUser || String(activeUser.id) !== String(row.user_id)) {
+          alert("自分のライブ投稿だけ削除できます。ログイン状態も確認してください。");
+          return;
+        }
+        if (!confirm("このライブ情報を削除しますか？")) return;
+
+        const deleteResult = await window.OTO_SUPABASE
+          .from("posts")
+          .delete()
+          .eq("id", post.id)
+          .eq("post_type", "live")
+          .eq("user_id", activeUser.id)
+          .select("id")
+          .maybeSingle();
+
+        if (deleteResult.error) throw deleteResult.error;
+        if (!deleteResult.data) throw new Error("削除対象のライブ投稿が見つかりませんでした。");
+
+        alert("ライブ情報を削除しました。");
+        window.location.href = "live.html";
+      } catch (error) {
+        alert(error.message || "ライブ情報を削除できませんでした。");
+      }
+    });
+  }
+}
+
+async function initLiveDetail() {
+  await window.OTOAuth.ready;
+  await renderHeaderAccount();
+  await displayLiveDetail();
+}
+
+initLiveDetail().catch(function(error) {
+  console.error("ライブ詳細の読み込みに失敗しました:", error);
+  document.getElementById("liveDetail").innerHTML = '<div class="live-detail-empty">ライブ情報を読み込めませんでした。時間をおいて再読み込みしてください。</div>';
+});
+</script>
+</body>
+</html>

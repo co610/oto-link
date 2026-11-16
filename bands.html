@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音楽活動を探す - OTO LINK</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .activity-image-field input[type="file"],
+    .activity-media-field input[type="file"] {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .activity-file-note {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 7px;
+    }
+
+    .activity-image-preview {
+      display: block;
+      max-width: 100%;
+      width: 320px;
+      max-height: 240px;
+      object-fit: contain;
+      margin-top: 12px;
+      background: #f2f2f2;
+    }
+
+    .activity-links-heading {
+      margin: 30px 0 8px;
+      font-size: 18px;
+    }
+
+    .activity-links-note {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .activity-cover {
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .activity-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .activity-cover-placeholder {
+      color: #777;
+      font-size: 13px;
+      letter-spacing: 3px;
+    }
+
+    .activity-card-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .activity-card-link h3 {
+      margin-top: 16px;
+    }
+
+    .activity-card-link:hover h3 {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .activity-card-summary {
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .activity-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0;
+    }
+
+    .activity-tag {
+      display: inline-block;
+      padding: 4px 9px;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    .activity-link-button {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      background: white;
+      color: #222;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+
+    .activity-link-button:hover {
+      background: #f5f5f5;
+    }
+
+    .activity-file-name {
+      color: #555;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">OTO LINK</a>
+
+  <nav class="global-nav">
+    <a href="index.html" class="global-home">ホーム</a>
+
+    <details class="global-search-menu">
+      <summary>
+        探す
+        <span class="menu-chevron">⌄</span>
+      </summary>
+
+      <div class="global-search-panel">
+        <a href="bands.html" class="global-search-card">
+          <span class="global-search-icon">🎵</span>
+          <span class="global-search-text">
+            <strong>音楽活動を探す</strong>
+            <small>いろいろな音楽活動を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="member.html" class="global-search-card">
+          <span class="global-search-icon">👥</span>
+          <span class="global-search-text">
+            <strong>メンバー・協力者を探す</strong>
+            <small>一緒に活動する仲間を見つける</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="live.html" class="global-search-card">
+          <span class="global-search-icon">🎤</span>
+          <span class="global-search-text">
+            <strong>ライブを探す</strong>
+            <small>出演できるライブやイベント</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon">💬</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow">→</span>
+        </a>
+      </div>
+    </details>
+
+    <a href="profile-list.html">プロフィール</a>
+    <a href="chat.html">チャット</a>
+  </nav>
+
+  <div class="header-account" id="headerAccount">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>音楽活動を探す</h1>
+  <p>バンドだけじゃない。いろいろな音楽活動と出会おう。</p>
+</section>
+
+<section class="section">
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="活動名・活動内容・ジャンル・地域などで検索"
+    >
+
+    <button type="button" id="searchButton">
+      検索
+    </button>
+  </div>
+</section>
+
+<section class="section">
+  <h2>音楽活動一覧</h2>
+  <div class="cards" id="activityList"></div>
+</section>
+
+<section class="post-section">
+  <div class="post-form-box">
+    <div class="post-form-box-inner">
+      <h2>音楽活動を共有する</h2>
+      <p class="post-note" id="activityCreateLinkNote">
+        バンド、ソロ活動、作曲、作品制作など、自分の活動を専用ページから投稿できます。
+      </p>
+      <a
+        href="login.html?returnTo=activity-create.html"
+        id="activityCreateLink"
+        class="profile-button"
+      >ログインして投稿する →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 OTO LINK</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+<script>
+"use strict";
+
+const ACTIVITY_MEDIA_BUCKET = "oto-activity-media";
+
+let activityPosts = [];
+let currentUser = null;
+
+const activityList = document.getElementById("activityList");
+const searchInput = document.getElementById("searchInput");
+const postCta = document.getElementById("activityCreateLink");
+const postNote = document.getElementById("activityCreateLinkNote");
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeHttpUrl(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+}
+
+function getPostLinks(post) {
+  if (Array.isArray(post.links) && post.links.length > 0) {
+    return post.links
+      .map(function(item) {
+        return {
+          label: String(item.label || "活動リンク"),
+          url: safeHttpUrl(item.url)
+        };
+      })
+      .filter(function(item) {
+        const removedLabels = ["ニコニコ動画", "ニコニコ", "Bandcamp"];
+
+        return item.url !== "" &&
+          !removedLabels.includes(item.label);
+      });
+  }
+
+  const oldLink = safeHttpUrl(post.link);
+
+  return oldLink
+    ? [{ label: "活動リンク", url: oldLink }]
+    : [];
+}
+
+function normalizeActivityPost(row) {
+  const data = row.data || {};
+
+  return {
+    ...data,
+    id: row.id,
+    userId: row.user_id,
+    createdAt: data.createdAt || row.created_at || "",
+    imageData: data.imageData || "",
+    videoPath: data.videoPath || "",
+    audioPath: data.audioPath || "",
+    videoFileName: data.videoFileName || "",
+    audioFileName: data.audioFileName || ""
+  };
+}
+
+async function renderHeaderAccount() {
+  const headerAccount = document.getElementById("headerAccount");
+
+  currentUser = await window.OTOAuth.getCurrentUser();
+
+  if (!currentUser) {
+    headerAccount.innerHTML = `
+      <a href="login.html">ログイン</a>
+      <a href="signup.html">新規登録</a>
+    `;
+
+    return;
+  }
+
+  let displayName = "マイページ";
+
+  try {
+    const profileResult = await window.OTO_SUPABASE
+      .from("profiles")
+      .select("data")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    const profile = profileResult.data?.data || null;
+
+    if (profile) {
+      displayName =
+        profile.nickname ||
+        profile.name ||
+        profile.displayName ||
+        "マイページ";
+    }
+  } catch (error) {
+    console.error("プロフィールを取得できませんでした。", error);
+  }
+
+  headerAccount.innerHTML = `
+    <a href="profile.html">${escapeHtml(displayName)}</a>
+    <button type="button" id="logoutButton">ログアウト</button>
+  `;
+
+  document.getElementById("logoutButton").addEventListener(
+    "click",
+    async function() {
+      await window.OTOAuth.logout();
+      window.location.href = "index.html";
+    }
+  );
+}
+
+function updatePostCta() {
+  if (currentUser) {
+    postCta.href = "activity-create.html";
+    postCta.textContent = "音楽活動を共有する →";
+
+    postNote.textContent =
+      "バンド、ソロ活動、作曲、作品制作など、自分の活動を専用ページから投稿できます。";
+  } else {
+    postCta.href = "login.html?returnTo=activity-create.html";
+    postCta.textContent = "ログインして投稿する →";
+
+    postNote.textContent =
+      "投稿するにはログインが必要です。ログイン後、投稿ページに戻れます。";
+  }
+}
+
+async function loadActivityPosts() {
+  activityList.innerHTML = `
+    <div class="empty-message">
+      <p>音楽活動を読み込んでいます…</p>
+    </div>
+  `;
+
+  const result = await window.OTO_SUPABASE
+    .from("posts")
+    .select("id, user_id, data, created_at")
+    .eq("post_type", "activity")
+    .order("created_at", { ascending: false });
+
+  if (result.error) {
+    console.error("音楽活動の取得に失敗しました。", result.error);
+
+    activityList.innerHTML = `
+      <div class="empty-message">
+        <p>音楽活動を読み込めませんでした。</p>
+        <p>時間をおいて、もう一度お試しください。</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  activityPosts = (result.data || []).map(normalizeActivityPost);
+
+  displayActivities();
+}
+
+function displayActivities() {
+  const search = searchInput.value.trim().toLowerCase();
+
+  const filtered = activityPosts.filter(function(post) {
+    const searchableText = [
+      post.title,
+      post.type,
+      post.genre,
+      post.area,
+      post.description,
+      post.concept,
+      post.dream
+    ].join(" ").toLowerCase();
+
+    return searchableText.includes(search);
+  });
+
+  activityList.innerHTML = "";
+
+  if (filtered.length === 0) {
+    activityList.innerHTML = `
+      <div class="empty-message">
+        <p>該当する音楽活動はありません。</p>
+        ${currentUser
+          ? "<p>下の「音楽活動を共有する」から投稿できます。</p>"
+          : ""}
+      </div>
+    `;
+
+    return;
+  }
+
+  filtered.forEach(function(post) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const detailUrl =
+      "activity-detail.html?id=" + encodeURIComponent(post.id);
+
+    const photoMarkup = post.imageData
+      ? `<img src="${escapeHtml(post.imageData)}" alt="${escapeHtml(post.title)}の写真">`
+      : `<span class="activity-cover-placeholder">OTO LINK</span>`;
+
+    const description = String(post.description || "");
+
+    const shortDescription = description.length > 110
+      ? description.slice(0, 110) + "…"
+      : description;
+
+    const mediaTags = [];
+
+    if (post.videoPath || post.videoFileName || post.videoMediaId) {
+      mediaTags.push("動画あり");
+    }
+
+    if (post.audioPath || post.audioFileName || post.audioMediaId) {
+      mediaTags.push("音声あり");
+    }
+
+    if (getPostLinks(post).length > 0) {
+      mediaTags.push("リンクあり");
+    }
+
+    const isOwner = Boolean(
+      currentUser && post.userId === currentUser.id
+    );
+
+    card.innerHTML = `
+      <a href="${detailUrl}" class="activity-card-link">
+        <div class="activity-cover">
+          ${photoMarkup}
+        </div>
+
+        <h3>${escapeHtml(post.title)}</h3>
+        <p>${escapeHtml(post.area)}</p>
+
+        <div class="activity-tags">
+          <span class="activity-tag">${escapeHtml(post.type)}</span>
+          <span class="activity-tag">${escapeHtml(post.genre)}</span>
+          ${mediaTags.map(function(tag) {
+            return `<span class="activity-tag">${tag}</span>`;
+          }).join("")}
+        </div>
+
+        <p class="activity-card-summary">
+          ${escapeHtml(shortDescription)}
+        </p>
+
+        <span class="activity-card-more">詳しく見る →</span>
+      </a>
+
+      ${isOwner
+        ? `<button type="button" class="delete-button" data-delete-id="${escapeHtml(post.id)}">自分の投稿を削除</button>`
+        : ""}
+    `;
+
+    const deleteButton = card.querySelector("[data-delete-id]");
+
+    if (deleteButton) {
+      deleteButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        deleteActivity(post.id);
+      });
+    }
+
+    activityList.appendChild(card);
+  });
+}
+
+async function deleteActivity(id) {
+  const activeUser = await window.OTOAuth.getCurrentUser();
+
+  if (!activeUser) {
+    alert("投稿を削除するにはログインしてください。");
+    return;
+  }
+
+  const ownedPost = activityPosts.find(function(post) {
+    return post.id === id && post.userId === activeUser.id;
+  });
+
+  if (!ownedPost) {
+    alert("自分が投稿した音楽活動だけ削除できます。");
+    return;
+  }
+
+  if (!confirm("この音楽活動の投稿を削除しますか？")) {
+    return;
+  }
+
+  // 確認中にログイン状態が変わっていないか再確認する。
+  const latestUser = await window.OTOAuth.getCurrentUser();
+
+  if (!latestUser || latestUser.id !== activeUser.id) {
+    alert("ログイン状態が変わったため削除できませんでした。");
+    return;
+  }
+
+  const target = activityPosts.find(function(post) {
+    return post.id === id && post.userId === latestUser.id;
+  });
+
+  if (!target) {
+    alert("投稿が見つかりませんでした。");
+    return;
+  }
+
+  const result = await window.OTO_SUPABASE
+    .from("posts")
+    .delete()
+    .eq("id", id)
+    .eq("post_type", "activity")
+    .eq("user_id", latestUser.id)
+    .select("id")
+    .maybeSingle();
+
+  if (result.error) {
+    console.error("投稿の削除に失敗しました。", result.error);
+    alert("投稿を削除できませんでした。");
+    return;
+  }
+
+  if (!result.data) {
+    alert("投稿を削除できませんでした。ログイン状態や権限を確認してください。");
+    return;
+  }
+
+  // 投稿データの削除が成功した後、Storage上の動画・音声を削除する。
+  const mediaPaths = [
+    target.videoPath,
+    target.audioPath
+  ].filter(Boolean);
+
+  if (mediaPaths.length > 0) {
+    const storageResult = await window.OTO_SUPABASE
+      .storage
+      .from(ACTIVITY_MEDIA_BUCKET)
+      .remove(mediaPaths);
+
+    if (storageResult.error) {
+      console.error(
+        "動画・音声ファイルの削除に失敗しました。",
+        storageResult.error
+      );
+
+      alert(
+        "投稿は削除しましたが、動画・音声ファイルの削除に失敗しました。"
+      );
+    }
+  }
+
+  activityPosts = activityPosts.filter(function(post) {
+    return post.id !== id;
+  });
+
+  displayActivities();
+}
+
+document.getElementById("searchButton").addEventListener(
+  "click",
+  displayActivities
+);
+
+searchInput.addEventListener("input", displayActivities);
+
+async function initializePage() {
+  await window.OTOAuth.ready;
+  await renderHeaderAccount();
+
+  updatePostCta();
+
+  await loadActivityPosts();
+}
+
+initializePage().catch(function(error) {
+  console.error("ページの初期化に失敗しました。", error);
+
+  activityList.innerHTML = `
+    <div class="empty-message">
+      <p>ページを読み込めませんでした。</p>
+      <p>時間をおいて、もう一度お試しください。</p>
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>
