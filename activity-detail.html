@@ -201,7 +201,7 @@ const ACTIVITY_TYPES = [
   "その他"
 ];
 
-const supabase = window.OTO_SUPABASE;
+const activitySupabase = window.OTO_SUPABASE;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -300,7 +300,7 @@ function normalizeActivityPost(row) {
 function getMediaPublicUrl(path) {
   if (!path) return "";
 
-  const result = supabase.storage
+  const result = activitySupabase.storage
     .from(ACTIVITY_MEDIA_BUCKET)
     .getPublicUrl(path);
 
@@ -310,7 +310,7 @@ function getMediaPublicUrl(path) {
 async function fetchProfile(userId) {
   if (!userId) return null;
 
-  const { data, error } = await supabase
+  const { data, error } = await activitySupabase
     .from("profiles")
     .select("id, data")
     .eq("id", userId)
@@ -327,7 +327,7 @@ async function fetchProfile(userId) {
 async function fetchRelatedPosts(userId) {
   if (!userId) return { members: [], lives: [] };
 
-  const { data, error } = await supabase
+  const { data, error } = await activitySupabase
     .from("posts")
     .select("id, user_id, post_type, data, created_at")
     .eq("user_id", userId)
@@ -506,7 +506,7 @@ async function uploadActivityMedia(userId, postId, file, kind) {
   const path =
     `${userId}/${postId}/${kind}_${Date.now()}_${safeFileName(file.name)}`;
 
-  const { error } = await supabase.storage
+  const { error } = await activitySupabase.storage
     .from(ACTIVITY_MEDIA_BUCKET)
     .upload(path, file, {
       cacheControl: "3600",
@@ -528,7 +528,7 @@ async function removeActivityMedia(paths) {
   const validPaths = (paths || []).filter(Boolean);
   if (validPaths.length === 0) return;
 
-  const { error } = await supabase.storage
+  const { error } = await activitySupabase.storage
     .from(ACTIVITY_MEDIA_BUCKET)
     .remove(validPaths);
 
@@ -552,7 +552,7 @@ async function displayActivityDetail() {
 
     const currentUser = await window.OTOAuth.getCurrentUser();
 
-    const { data: row, error } = await supabase
+    const { data: row, error } = await activitySupabase
       .from("posts")
       .select("id, user_id, data, created_at, updated_at")
       .eq("id", activityId)
@@ -812,7 +812,7 @@ async function displayActivityDetail() {
               );
             }
 
-            const { data: deleted, error: deleteError } = await supabase
+            const { data: deleted, error: deleteError } = await activitySupabase
               .from("posts")
               .delete()
               .eq("id", post.id)
@@ -1310,7 +1310,7 @@ function openEditForm(post) {
             : ""
         };
 
-        const { data: updated, error } = await supabase
+        const { data: updated, error } = await activitySupabase
           .from("posts")
           .update({ data: updatedPost })
           .eq("id", post.id)
@@ -1371,7 +1371,7 @@ function openEditForm(post) {
 }
 
 async function initializeActivityDetail() {
-  if (!supabase) {
+  if (!activitySupabase) {
     showNotFound("Supabaseの接続設定を読み込めませんでした。");
     return;
   }
