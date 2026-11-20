@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>音楽活動を投稿 - OTO LINK</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -274,33 +274,45 @@ function configureMediaInput(inputId, nameId, kind) {
   });
 }
 
+/*
+  Storageに保存するファイル名を安全な形式にする。
+  日本語のファイル名は残し、パスとして問題になる文字を置き換える。
+*/
 function createSafeFileName(fileName) {
-  return String(fileName || "media")
-    .replace(/[^\w.\-]/g, "_")
+  const originalName = String(fileName || "media").trim();
+
+  const safeName = originalName
+    .replace(/[\/\\?%*:|"<>]/g, "_")
+    .replace(/[\u0000-\u001f]/g, "_")
+    .replace(/[^\w.\-()ぁ-んァ-ヶ一-龠]/g, "_")
     .slice(-100);
+
+  return safeName || "media";
 }
 
 async function uploadActivityMedia(userId, postId, file, kind) {
   if (!file) return "";
 
   const fileName = createSafeFileName(file.name);
+
   const path =
-    userId + "/" + postId + "/" +
-    kind + "_" + Date.now() + "_" + fileName;
+    `${userId}/${postId}/${kind}_${Date.now()}_${fileName}`;
 
   const result = await window.OTO_SUPABASE
     .storage
     .from(ACTIVITY_MEDIA_BUCKET)
     .upload(path, file, {
-      contentType: file.type,
-      upsert: false
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type || "application/octet-stream"
     });
 
   if (result.error) {
     throw new Error(
-      kind === "video"
-        ? "動画をアップロードできませんでした：" + result.error.message
-        : "音声をアップロードできませんでした：" + result.error.message
+      (kind === "video"
+        ? "動画をアップロードできませんでした："
+        : "音声をアップロードできませんでした：") +
+      result.error.message
     );
   }
 
@@ -308,7 +320,7 @@ async function uploadActivityMedia(userId, postId, file, kind) {
 }
 
 async function removeUploadedMedia(paths) {
-  const validPaths = paths.filter(Boolean);
+  const validPaths = (paths || []).filter(Boolean);
 
   if (validPaths.length === 0) return;
 
@@ -318,7 +330,10 @@ async function removeUploadedMedia(paths) {
     .remove(validPaths);
 
   if (result.error) {
-    console.error("アップロード済みメディアの削除に失敗しました。", result.error);
+    console.error(
+      "アップロード済みメディアの削除に失敗しました。",
+      result.error
+    );
   }
 }
 
