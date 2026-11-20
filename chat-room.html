@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>会話 - OTO LINK</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -296,7 +297,7 @@ const roomType = params.get("type") || "public";
 const otherUserId = params.get("with");
 const groupId = params.get("id");
 
-const activitySupabase = window.OTO_SUPABASE;
+const chatRoomSupabase = window.OTO_SUPABASE;
 
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
@@ -356,7 +357,7 @@ function updateSendButton() {
 messageInput.addEventListener("input", updateSendButton);
 
 async function getProfileName(userId) {
-  const { data, error } = await activitySupabase
+  const { data, error } = await chatRoomSupabase
     .from("profiles")
     .select("id, data")
     .eq("id", userId)
@@ -375,7 +376,7 @@ async function loadProfileNames(userIds) {
 
   if (uniqueIds.length === 0) return;
 
-  const { data, error } = await activitySupabase
+  const { data, error } = await chatRoomSupabase
     .from("profiles")
     .select("id, data")
     .in("id", uniqueIds);
@@ -392,7 +393,7 @@ async function loadProfileNames(userIds) {
 }
 
 async function initializePublicRoom() {
-  const { data, error } = await activitySupabase
+  const { data, error } = await chatRoomSupabase
     .from("chat_rooms")
     .select("id, name")
     .eq("room_type", "public")
@@ -421,7 +422,7 @@ async function initializeGroupRoom() {
     throw new Error("グループIDが正しくありません。");
   }
 
-  const { data: room, error: roomError } = await activitySupabase
+  const { data: room, error: roomError } = await chatRoomSupabase
     .from("chat_rooms")
     .select("id, name, room_type")
     .eq("id", groupId)
@@ -432,7 +433,7 @@ async function initializeGroupRoom() {
   if (!room) throw new Error("グループが見つかりません。");
 
   const { data: membership, error: membershipError } =
-    await activitySupabase
+    await chatRoomSupabase
       .from("chat_room_members")
       .select("room_id")
       .eq("room_id", groupId)
@@ -457,7 +458,7 @@ async function initializeGroupRoom() {
     "グループメンバーとの会話";
 
   const { data: members, error: membersError } =
-    await activitySupabase
+    await chatRoomSupabase
       .from("chat_room_members")
       .select("user_id")
       .eq("room_id", roomId);
@@ -527,7 +528,7 @@ async function loadMessages(scrollToBottom = false) {
         "),and(sender_id.eq." + otherUserId +
         ",receiver_id.eq." + currentUserId + ")";
 
-      const result = await activitySupabase
+      const result = await chatRoomSupabase
         .from("messages")
         .select("id, sender_id, receiver_id, content, created_at")
         .or(filter)
@@ -537,7 +538,7 @@ async function loadMessages(scrollToBottom = false) {
       error = result.error;
 
     } else {
-      const result = await activitySupabase
+      const result = await chatRoomSupabase
         .from("room_messages")
         .select("id, room_id, sender_id, content, created_at")
         .eq("room_id", roomId)
@@ -632,7 +633,7 @@ async function sendMessage(event) {
     let error;
 
     if (roomType === "dm") {
-      const result = await activitySupabase
+      const result = await chatRoomSupabase
         .from("messages")
         .insert({
           sender_id: currentUserId,
@@ -643,7 +644,7 @@ async function sendMessage(event) {
       error = result.error;
 
     } else {
-      const result = await activitySupabase
+      const result = await chatRoomSupabase
         .from("room_messages")
         .insert({
           room_id: roomId,
@@ -691,7 +692,7 @@ async function initializeRoom() {
   initialized = true;
 
   try {
-    if (!activitySupabase) {
+    if (!chatRoomSupabase) {
       throw new Error("Supabaseが初期化されていません。");
     }
 
