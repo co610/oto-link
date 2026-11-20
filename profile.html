@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -544,6 +543,7 @@
 </head>
 
 <body>
+
 <header>
   <a href="index.html" class="logo">OTO LINK</a>
 
@@ -551,33 +551,45 @@
     <a href="index.html" class="global-home">ホーム</a>
 
     <details class="global-search-menu">
-      <summary>探す <span class="menu-chevron">⌄</span></summary>
+      <summary>
+        探す <span class="menu-chevron" aria-hidden="true">⌄</span>
+      </summary>
+
       <div class="global-search-panel">
         <a href="bands.html" class="global-search-card">
-          <span class="global-search-icon">🎵</span>
+          <span class="global-search-icon" aria-hidden="true">01</span>
           <span class="global-search-text">
             <strong>音楽活動を探す</strong>
             <small>いろいろな音楽活動を見つける</small>
           </span>
-          <span class="global-search-arrow">→</span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
         </a>
 
         <a href="member.html" class="global-search-card">
-          <span class="global-search-icon">👥</span>
+          <span class="global-search-icon" aria-hidden="true">02</span>
           <span class="global-search-text">
             <strong>メンバー・協力者を探す</strong>
             <small>一緒に活動する仲間を見つける</small>
           </span>
-          <span class="global-search-arrow">→</span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
         </a>
 
         <a href="live.html" class="global-search-card">
-          <span class="global-search-icon">🎤</span>
+          <span class="global-search-icon" aria-hidden="true">03</span>
           <span class="global-search-text">
             <strong>ライブを探す</strong>
-            <small>ライブ情報やイベントを見つける</small>
+            <small>ライブや音楽イベントを見つける</small>
           </span>
-          <span class="global-search-arrow">→</span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="chat.html" class="global-search-card">
+          <span class="global-search-icon" aria-hidden="true">04</span>
+          <span class="global-search-text">
+            <strong>チャット</strong>
+            <small>音楽仲間と会話する</small>
+          </span>
+          <span class="global-search-arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </details>
@@ -586,7 +598,10 @@
     <a href="chat.html">チャット</a>
   </nav>
 
-  <div class="header-account"><span id="loginArea"></span></div>
+  <div class="header-account" id="headerAccount">
+    <a href="login.html">ログイン</a>
+    <a href="signup.html">新規登録</a>
+  </div>
 </header>
 
 <section class="page-header">
@@ -935,7 +950,8 @@
     return;
   }
 
-  $("loginArea").innerHTML =
+  // ホームページと同じheaderAccountを使用する。
+  $("headerAccount").innerHTML =
     '<button type="button" id="logoutButton">ログアウト</button>';
 
   $("logoutButton").addEventListener("click", async function () {
@@ -1772,5 +1788,6 @@
   }
 })();
 </script>
+
 </body>
 </html>
